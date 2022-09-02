@@ -15,7 +15,7 @@ hasCJKLanguage: true # 自动检测是否包含 中文日文韩文 如果文章�
 #uglyurls: true
 
 buildDrafts: false
-buildFuture: false
+buildFuture: true
 buildExpired: false
 
 googleAnalytics:  # 谷歌统计
