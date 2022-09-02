@@ -1,6 +1,6 @@
 #baseURL: 
 # baseURL: https://www.sulvblog.cn  # 绑定的域名
-baseURL:  http://liuz0123.gitee.io/zain  # 绑定的域名
+#baseURL:  http://liuz0123.gitee.io/zain  # 绑定的域名
 languageCode: zh-cn # en-us
 title: zain's Blog
 theme: hugo-PaperMod  # 主题名字，和themes文件夹下的一致
@@ -12,7 +12,7 @@ enableRobotsTXT: true # 允许爬虫抓取到搜索引擎，建议 true
 hasCJKLanguage: true # 自动检测是否包含 中文日文韩文 如果文章中使用了很多中文引号的话可以开启
 
 #relativeurls: true
-uglyurls: true
+#uglyurls: true
 
 buildDrafts: false
 buildFuture: false
