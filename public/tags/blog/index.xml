@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>blog on zain&#39;s Blog</title>
+    <link>http://liuz0123.gitee.io/zain/tags/blog/</link>
+    <description>Recent content in blog on zain&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 05 May 2022 00:18:23 +0800</lastBuildDate><atom:link href="http://liuz0123.gitee.io/zain/tags/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Blog</title>
+      <link>http://liuz0123.gitee.io/zain/posts/blog/blog/</link>
+      <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
+      
+      <guid>http://liuz0123.gitee.io/zain/posts/blog/blog/</guid>
+      <description>11 https://www.sulvblog.cn/posts/blog/build_hugo/ https://blog.csdn.net/qq_45975757/article/details/108923612</description>
+    </item>
+    
+  </channel>
+</rss>
