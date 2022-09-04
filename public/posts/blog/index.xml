@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>🧱 建站 on zain&#39;s Blog</title>
-    <link>https://liuz0123.gitee.io/zain/posts/blog/</link>
+    <link>https://liuz0123.gitee.io/lzzain/posts/blog/</link>
     <description>Recent content in 🧱 建站 on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language><atom:link href="https://liuz0123.gitee.io/zain/posts/blog/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh-cn</language><atom:link href="https://liuz0123.gitee.io/lzzain/posts/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Blog</title>
-      <link>https://liuz0123.gitee.io/zain/posts/blog/blog/</link>
+      <link>https://liuz0123.gitee.io/lzzain/posts/blog/blog/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://liuz0123.gitee.io/zain/posts/blog/blog/</guid>
+      <guid>https://liuz0123.gitee.io/lzzain/posts/blog/blog/</guid>
       <description>11 https://www.sulvblog.cn/posts/blog/build_hugo/
 https://blog.csdn.net/qq_45975757/article/details/108923612</description>
     </item>
     
     <item>
       <title>title </title>
-      <link>https://liuz0123.gitee.io/zain/posts/blog/dd/</link>
+      <link>https://liuz0123.gitee.io/lzzain/posts/blog/dd/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://liuz0123.gitee.io/zain/posts/blog/dd/</guid>
+      <guid>https://liuz0123.gitee.io/lzzain/posts/blog/dd/</guid>
       <description>adda</description>
     </item>
     
