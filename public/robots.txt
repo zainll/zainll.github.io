@@ -1,3 +1,0 @@
-User-agent: *
-Disallow:
-Sitemap: https://liuz0123.gitee.io/lzzain/sitemap.xml
