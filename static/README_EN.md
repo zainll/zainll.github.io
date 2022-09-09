@@ -12,7 +12,7 @@ Language：English | [中文](https://github.com/xyming108/sulv-hugo-papermod)
 
 ## 3. Modify information
 
-There are many personal information in the template that need to be configured by yourself. Please be patient to modify it. You can refer to the blogger's website building tutorial:[ https://www.sulvblog.cn/posts/blog/ ]( https://www.sulvblog.cn/posts/blog/ )
+There are many personal information in the template that need to be configured by yourself. Please be patient to modify it. You can refer to the blogger's website building tutorial:[ https://liuz0123.gitee.io/zain/posts/blog/ ]( https://liuz0123.gitee.io/zain/posts/blog/ )
 
 ## 4. Hugo blog exchange group
 
@@ -30,15 +30,15 @@ There are many personal information in the template that need to be configured b
 
 ```
 # Links in SRC must not be added with https:// or http://, and you can choose not to add WWW; If desc is written, the value of desc will be displayed in the browser
-link: {{< link src="www.sulvblog.cn" desc="https://www.sulvblog.cn" >}}
+link: {{< link src="www.sulvblog.cn" desc="https://liuz0123.gitee.io/zain" >}}
 ```
 
 ```
 gallery:
 
 {{< gallery >}}
-{{< figure src="https://www.sulvblog.cn/posts/read/structural_thinking/0.png" >}}
-{{< figure src="https://www.sulvblog.cn/posts/read/structural_thinking/0.png" >}}
+{{< figure src="https://liuz0123.gitee.io/zain/posts/read/structural_thinking/0.png" >}}
+{{< figure src="https://liuz0123.gitee.io/zain/posts/read/structural_thinking/0.png" >}}
 {{< /gallery >}}
 ```
 

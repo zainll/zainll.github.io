@@ -12,7 +12,7 @@
 
 ## 3. 修改信息
 
-模板内部有许多个人信息需要自己配置，请耐心修改完，可以参考博主的建站教程：[https://www.sulvblog.cn/posts/blog/](https://www.sulvblog.cn/posts/blog/)
+模板内部有许多个人信息需要自己配置，请耐心修改完，可以参考博主的建站教程：[https://liuz0123.gitee.io/zain/posts/blog/](https://liuz0123.gitee.io/zain/posts/blog/)
 
 ## 4. Hugo博客交流群
 
@@ -30,15 +30,15 @@
 
 ```
 # src中的链接一定不要加https://或http://，可以选择不加www；若desc写了，则在浏览器会显示desc的值
-link: {{< link src="www.sulvblog.cn" desc="https://www.sulvblog.cn" >}}
+link: {{< link src="www.sulvblog.cn" desc="https://liuz0123.gitee.io/zain" >}}
 ```
 
 ```
 gallery:
 
 {{< gallery >}}
-{{< figure src="https://www.sulvblog.cn/posts/read/structural_thinking/0.png" >}}
-{{< figure src="https://www.sulvblog.cn/posts/read/structural_thinking/0.png" >}}
+{{< figure src="https://liuz0123.gitee.io/zain/posts/read/structural_thinking/0.png" >}}
+{{< figure src="https://liuz0123.gitee.io/zain/posts/read/structural_thinking/0.png" >}}
 {{< /gallery >}}
 ```
 
