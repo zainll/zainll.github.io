@@ -26,6 +26,15 @@
     </item>
     
     <item>
+      <title>tip</title>
+      <link>https://liuz0123.gitee.io/zain/posts/blog/tips/</link>
+      <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/blog/tips/</guid>
+      <description>git git设置默认编辑为vim git config --global core.editor &amp;#34;vim&amp;#34;</description>
+    </item>
+    
+    <item>
       <title>Life</title>
       <link>https://liuz0123.gitee.io/zain/posts/life/life/</link>
       <pubDate>Thu, 05 May 2022 00:18:15 +0800</pubDate>
@@ -71,15 +80,6 @@
     </item>
     
     
-    
-    <item>
-      <title>title </title>
-      <link>https://liuz0123.gitee.io/zain/posts/blog/dd/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/blog/dd/</guid>
-      <description>git git设置默认编辑为vim git config --global core.editor &amp;#34;vim&amp;#34;</description>
-    </item>
     
   </channel>
 </rss>
