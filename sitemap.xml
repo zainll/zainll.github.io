@@ -2,19 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://liuz0123.gitee.io/zain/posts/tech/</loc>
+    <lastmod>2022-09-05T00:17:58+08:00</lastmod>
+  </url><url>
     <loc>https://liuz0123.gitee.io/zain/posts/</loc>
-    <lastmod>2022-05-05T00:18:23+08:00</lastmod>
+    <lastmod>2022-09-05T00:17:58+08:00</lastmod>
+  </url><url>
+    <loc>https://liuz0123.gitee.io/zain/posts/tech/logging/</loc>
+    <lastmod>2022-09-05T00:17:58+08:00</lastmod>
+  </url><url>
+    <loc>https://liuz0123.gitee.io/zain/tags/</loc>
+    <lastmod>2022-09-05T00:17:58+08:00</lastmod>
+  </url><url>
+    <loc>https://liuz0123.gitee.io/zain/tags/tech/</loc>
+    <lastmod>2022-09-05T00:17:58+08:00</lastmod>
+  </url><url>
+    <loc>https://liuz0123.gitee.io/zain/</loc>
+    <lastmod>2022-09-05T00:17:58+08:00</lastmod>
   </url><url>
     <loc>https://liuz0123.gitee.io/zain/tags/blog/</loc>
     <lastmod>2022-05-05T00:18:23+08:00</lastmod>
   </url><url>
     <loc>https://liuz0123.gitee.io/zain/posts/blog/blog/</loc>
-    <lastmod>2022-05-05T00:18:23+08:00</lastmod>
-  </url><url>
-    <loc>https://liuz0123.gitee.io/zain/tags/</loc>
-    <lastmod>2022-05-05T00:18:23+08:00</lastmod>
-  </url><url>
-    <loc>https://liuz0123.gitee.io/zain/</loc>
     <lastmod>2022-05-05T00:18:23+08:00</lastmod>
   </url><url>
     <loc>https://liuz0123.gitee.io/zain/posts/blog/</loc>
@@ -37,12 +46,6 @@
   </url><url>
     <loc>https://liuz0123.gitee.io/zain/posts/read/read/</loc>
     <lastmod>2022-05-05T00:18:06+08:00</lastmod>
-  </url><url>
-    <loc>https://liuz0123.gitee.io/zain/posts/tech/</loc>
-    <lastmod>2022-05-05T00:17:58+08:00</lastmod>
-  </url><url>
-    <loc>https://liuz0123.gitee.io/zain/tags/tech/</loc>
-    <lastmod>2022-05-05T00:17:58+08:00</lastmod>
   </url><url>
     <loc>https://liuz0123.gitee.io/zain/posts/tech/tech/</loc>
     <lastmod>2022-05-05T00:17:58+08:00</lastmod>

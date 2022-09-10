@@ -6,7 +6,16 @@
     <description>Recent content on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 05 May 2022 00:18:23 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 05 Sep 2022 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>logging</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/logging/</link>
+      <pubDate>Mon, 05 Sep 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/logging/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>hexo-&gt;hugo迁移</title>
       <link>https://liuz0123.gitee.io/zain/posts/blog/blog/</link>
@@ -49,7 +58,7 @@
       <pubDate>Sat, 06 Nov 2021 15:15:53 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/links/</guid>
-      <description>Sulv&amp;#39;s Blog 一个记录技术、阅读、生活的博客 👉友链格式 名称： Zain&amp;rsquo;s Blog 网址： https://liuz0123.gitee.io/zain 图标： https://liuz0123.gitee.io/zain/img/Q.gif 描述： 一个记录技术、阅读、生活的博客 👉Hugo博客交流群 787018782</description>
+      <description>Zain&amp;#39;s Blog 一个记录技术、阅读、生活的博客 👉友链格式 名称： Zain&amp;rsquo;s Blog 网址： https://liuz0123.gitee.io/zain 图标： https://liuz0123.gitee.io/zain/img/Q.gif 描述： 一个记录技术、阅读、生活的博客 👉Hugo博客交流群 787018782</description>
     </item>
     
     <item>
