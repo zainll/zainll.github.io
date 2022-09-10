@@ -7,7 +7,7 @@
 <meta name="robots" content="index, follow">
 <title>title  | zain&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="adda">
+<meta name="description" content="git git设置默认编辑为vim git config --global core.editor &#34;vim&#34;">
 <meta name="author" content="
 作者:&nbsp;Zain">
 <link rel="canonical" href="https://liuz0123.gitee.io/zain/posts/blog/dd/">
@@ -68,7 +68,7 @@ var _hmt = _hmt || [];
 })();
 </script>
 <meta property="og:title" content="title " />
-<meta property="og:description" content="adda" />
+<meta property="og:description" content="git git设置默认编辑为vim git config --global core.editor &#34;vim&#34;" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://liuz0123.gitee.io/zain/posts/blog/dd/" /><meta property="article:section" content="posts" />
 
@@ -76,7 +76,7 @@ var _hmt = _hmt || [];
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="title "/>
-<meta name="twitter:description" content="adda"/>
+<meta name="twitter:description" content="git git设置默认编辑为vim git config --global core.editor &#34;vim&#34;"/>
 
 
 <script type="application/ld+json">
@@ -111,12 +111,12 @@ var _hmt = _hmt || [];
   "@type": "BlogPosting",
   "headline": "title ",
   "name": "title ",
-  "description": "adda",
+  "description": "git git设置默认编辑为vim git config --global core.editor \u0026#34;vim\u0026#34;",
   "keywords": [
     
   ],
-  "articleBody": "adda\n",
-  "wordCount" : "1",
+  "articleBody": "git git设置默认编辑为vim git config --global core.editor \"vim\" ",
+  "wordCount" : "19",
   "inLanguage": "en",
   "datePublished": "0001-01-01T00:00:00Z",
   "dateModified": "0001-01-01T00:00:00Z",
@@ -230,7 +230,7 @@ var _hmt = _hmt || [];
             <h1 class="post-title">
                 title 
             </h1>
-            <div class="post-meta">更新:&nbsp;0001-01-01&nbsp;|&nbsp;字数:&nbsp;1字&nbsp;|&nbsp;时长:&nbsp;1分钟&nbsp;|&nbsp;
+            <div class="post-meta">更新:&nbsp;0001-01-01&nbsp;|&nbsp;字数:&nbsp;19字&nbsp;|&nbsp;时长:&nbsp;1分钟&nbsp;|&nbsp;
 作者:&nbsp;Zain
 
 
@@ -244,10 +244,91 @@ var _hmt = _hmt || [];
 
 </div>
         </header> 
-        
-        
-        <div class="post-content"><p>adda</p>
+        <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">文章目录</span>
+        </summary>
 
+        <div class="inner"><ul>
+                <li>
+                    <a href="#git" aria-label="git">git</a><ul>
+                        
+                <li>
+                    <a href="#git%e8%ae%be%e7%bd%ae%e9%bb%98%e8%ae%a4%e7%bc%96%e8%be%91%e4%b8%bavim" aria-label="git设置默认编辑为vim">git设置默认编辑为vim</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        
+        <div class="post-content"><h1 id="git">git<a hidden class="anchor" aria-hidden="true" href="#git">#</a></h1>
+<h2 id="git设置默认编辑为vim">git设置默认编辑为vim<a hidden class="anchor" aria-hidden="true" href="#git设置默认编辑为vim">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>git config --global core.editor <span style="color:#e6db74">&#34;vim&#34;</span>
+</span></span></code></pre></div>
 
         </div>
         <div class="post-reward">

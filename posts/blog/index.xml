@@ -22,7 +22,7 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/blog/dd/</guid>
-      <description>adda</description>
+      <description>git git设置默认编辑为vim git config --global core.editor &amp;#34;vim&amp;#34;</description>
     </item>
     
   </channel>
