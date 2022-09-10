@@ -1,14 +1,14 @@
 ---
-title: "Life"
-date: 2022-05-05T00:18:15+08:00
-lastmod: 2022-05-05T00:18:15+08:00
+title: "logging"
+date: 2022-09-05T00:17:58+08:00
+lastmod: 2022-09-05T00:17:58+08:00
 author: ["Zain"]
 keywords: 
 - 
 categories: 
 - 
 tags: 
-- life
+- tech
 description: ""
 weight:
 slug: ""
