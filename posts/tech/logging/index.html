@@ -7,7 +7,7 @@
 <meta name="robots" content="index, follow">
 <title>logging | zain&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="logging - zain&#39;s Blog">
+<meta name="description" content="# logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: &#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34; error: format: &#34;%(levelname)s &lt;PID %(process)d:%(processName)s&gt; %(name)s.%(funcName)s(): %(message)s&#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: standard stream: ext://sys.stdout info_file_handler: class: logging.handlers.RotatingFileHandler level: INFO formatter: standard filename: /tmp/info.log maxBytes: 10485760 # 10MB backupCount: 20 encoding: utf8 error_file_handler: class: logging.handlers.RotatingFileHandler level: ERROR formatter: error filename:">
 <meta name="author" content="
 作者:&nbsp;Zain">
 <link rel="canonical" href="https://liuz0123.gitee.io/zain/posts/tech/logging/">
@@ -68,7 +68,7 @@ var _hmt = _hmt || [];
 })();
 </script>
 <meta property="og:title" content="logging" />
-<meta property="og:description" content="" />
+<meta property="og:description" content="# logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: &#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34; error: format: &#34;%(levelname)s &lt;PID %(process)d:%(processName)s&gt; %(name)s.%(funcName)s(): %(message)s&#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: standard stream: ext://sys.stdout info_file_handler: class: logging.handlers.RotatingFileHandler level: INFO formatter: standard filename: /tmp/info.log maxBytes: 10485760 # 10MB backupCount: 20 encoding: utf8 error_file_handler: class: logging.handlers.RotatingFileHandler level: ERROR formatter: error filename:" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://liuz0123.gitee.io/zain/posts/tech/logging/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-09-05T00:17:58&#43;08:00" />
@@ -76,7 +76,7 @@ var _hmt = _hmt || [];
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="logging"/>
-<meta name="twitter:description" content=""/>
+<meta name="twitter:description" content="# logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: &#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34; error: format: &#34;%(levelname)s &lt;PID %(process)d:%(processName)s&gt; %(name)s.%(funcName)s(): %(message)s&#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: standard stream: ext://sys.stdout info_file_handler: class: logging.handlers.RotatingFileHandler level: INFO formatter: standard filename: /tmp/info.log maxBytes: 10485760 # 10MB backupCount: 20 encoding: utf8 error_file_handler: class: logging.handlers.RotatingFileHandler level: ERROR formatter: error filename:"/>
 
 
 <script type="application/ld+json">
@@ -111,12 +111,12 @@ var _hmt = _hmt || [];
   "@type": "BlogPosting",
   "headline": "logging",
   "name": "logging",
-  "description": "",
+  "description": "# logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: \u0026#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s\u0026#34; error: format: \u0026#34;%(levelname)s \u0026lt;PID %(process)d:%(processName)s\u0026gt; %(name)s.%(funcName)s(): %(message)s\u0026#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: standard stream: ext://sys.stdout info_file_handler: class: logging.handlers.RotatingFileHandler level: INFO formatter: standard filename: /tmp/info.log maxBytes: 10485760 # 10MB backupCount: 20 encoding: utf8 error_file_handler: class: logging.handlers.RotatingFileHandler level: ERROR formatter: error filename:",
   "keywords": [
     ""
   ],
-  "articleBody": "",
-  "wordCount" : "0",
+  "articleBody": "# logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: \"%(asctime)s - %(name)s - %(levelname)s - %(message)s\" error: format: \"%(levelname)s %(name)s.%(funcName)s(): %(message)s\" handlers: console: class: logging.StreamHandler level: DEBUG formatter: standard stream: ext://sys.stdout info_file_handler: class: logging.handlers.RotatingFileHandler level: INFO formatter: standard filename: /tmp/info.log maxBytes: 10485760 # 10MB backupCount: 20 encoding: utf8 error_file_handler: class: logging.handlers.RotatingFileHandler level: ERROR formatter: error filename: /tmp/errors.log maxBytes: 10485760 # 10MB backupCount: 20 encoding: utf8 debug_file_handler: class: logging.handlers.RotatingFileHandler level: DEBUG formatter: standard filename: /tmp/debug.log maxBytes: 10485760 # 10MB backupCount: 20 encoding: utf8 critical_file_handler: class: logging.handlers.RotatingFileHandler level: CRITICAL formatter: standard filename: /tmp/critical.log maxBytes: 10485760 # 10MB backupCount: 20 encoding: utf8 warn_file_handler: class: logging.handlers.RotatingFileHandler level: WARN formatter: standard filename: /tmp/warn.log maxBytes: 10485760 # 10MB backupCount: 20 encoding: utf8 root: level: NOTSET handlers: [console] propogate: yes loggers: : level: INFO handlers: [console, info_file_handler, error_file_handler, critical_file_handler, debug_file_handler, warn_file_handler] propogate: no : level: DEBUG handlers: [info_file_handler, error_file_handler, critical_file_handler, debug_file_handler, warn_file_handler] propogate: yes # logging.py import os import yaml import logging.config import logging import coloredlogs def setup_logging(default_path='logging.yaml', default_level=logging.INFO, env_key='LOG_CFG'): \"\"\" | **@author:** Prathyush SP | Logging Setup \"\"\" path = default_path value = os.getenv(env_key, None) if value: path = value if os.path.exists(path): with open(path, 'rt') as f: try: config = yaml.safe_load(f.read()) logging.config.dictConfig(config) coloredlogs.install() except Exception as e: print(e) print('Error in Logging Configuration. Using default configs') logging.basicConfig(level=default_level) coloredlogs.install(level=default_level) else: logging.basicConfig(level=default_level) coloredlogs.install(level=default_level) print('Failed to load configuration file. Using default configs') 参考链接：\nhttps://blog.csdn.net/weixin_43988680/article/details/123528294 https://zhuanlan.zhihu.com/p/425678081 ",
+  "wordCount" : "243",
   "inLanguage": "en",
   "datePublished": "2022-09-05T00:17:58+08:00",
   "dateModified": "2022-09-05T00:17:58+08:00",
@@ -233,7 +233,7 @@ var _hmt = _hmt || [];
             <h1 class="post-title">
                 logging
             </h1>
-            <div class="post-meta">创建:&nbsp;<span title='2022-09-05 00:17:58 +0800 CST'>2022-09-05</span>&nbsp;|&nbsp;更新:&nbsp;2022-09-05&nbsp;|&nbsp;字数:&nbsp;0字&nbsp;|&nbsp;时长:&nbsp;0分钟&nbsp;|&nbsp;
+            <div class="post-meta">创建:&nbsp;<span title='2022-09-05 00:17:58 +0800 CST'>2022-09-05</span>&nbsp;|&nbsp;更新:&nbsp;2022-09-05&nbsp;|&nbsp;字数:&nbsp;243字&nbsp;|&nbsp;时长:&nbsp;1分钟&nbsp;|&nbsp;
 作者:&nbsp;Zain
 
 
@@ -252,6 +252,122 @@ var _hmt = _hmt || [];
         </header> 
         
         
+        <div class="post-content"><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e">#  logging.yaml：</span>
+</span></span><span style="display:flex;"><span>version: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>disable_existing_loggers: true
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>formatters:
+</span></span><span style="display:flex;"><span>    standard:
+</span></span><span style="display:flex;"><span>        format: <span style="color:#e6db74">&#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34;</span>
+</span></span><span style="display:flex;"><span>    error:
+</span></span><span style="display:flex;"><span>        format: <span style="color:#e6db74">&#34;%(levelname)s &lt;PID %(process)d:%(processName)s&gt; %(name)s.%(funcName)s(): %(message)s&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>handlers:
+</span></span><span style="display:flex;"><span>    console:
+</span></span><span style="display:flex;"><span>        class: logging.StreamHandler
+</span></span><span style="display:flex;"><span>        level: DEBUG
+</span></span><span style="display:flex;"><span>        formatter: standard
+</span></span><span style="display:flex;"><span>        stream: ext://sys.stdout
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    info_file_handler:
+</span></span><span style="display:flex;"><span>        class: logging.handlers.RotatingFileHandler
+</span></span><span style="display:flex;"><span>        level: INFO
+</span></span><span style="display:flex;"><span>        formatter: standard
+</span></span><span style="display:flex;"><span>        filename: /tmp/info.log
+</span></span><span style="display:flex;"><span>        maxBytes: <span style="color:#ae81ff">10485760</span> <span style="color:#75715e"># 10MB</span>
+</span></span><span style="display:flex;"><span>        backupCount: <span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>        encoding: utf8
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    error_file_handler:
+</span></span><span style="display:flex;"><span>        class: logging.handlers.RotatingFileHandler
+</span></span><span style="display:flex;"><span>        level: ERROR
+</span></span><span style="display:flex;"><span>        formatter: error
+</span></span><span style="display:flex;"><span>        filename: /tmp/errors.log
+</span></span><span style="display:flex;"><span>        maxBytes: <span style="color:#ae81ff">10485760</span> <span style="color:#75715e"># 10MB</span>
+</span></span><span style="display:flex;"><span>        backupCount: <span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>        encoding: utf8
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    debug_file_handler:
+</span></span><span style="display:flex;"><span>        class: logging.handlers.RotatingFileHandler
+</span></span><span style="display:flex;"><span>        level: DEBUG
+</span></span><span style="display:flex;"><span>        formatter: standard
+</span></span><span style="display:flex;"><span>        filename: /tmp/debug.log
+</span></span><span style="display:flex;"><span>        maxBytes: <span style="color:#ae81ff">10485760</span> <span style="color:#75715e"># 10MB</span>
+</span></span><span style="display:flex;"><span>        backupCount: <span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>        encoding: utf8
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    critical_file_handler:
+</span></span><span style="display:flex;"><span>        class: logging.handlers.RotatingFileHandler
+</span></span><span style="display:flex;"><span>        level: CRITICAL
+</span></span><span style="display:flex;"><span>        formatter: standard
+</span></span><span style="display:flex;"><span>        filename: /tmp/critical.log
+</span></span><span style="display:flex;"><span>        maxBytes: <span style="color:#ae81ff">10485760</span> <span style="color:#75715e"># 10MB</span>
+</span></span><span style="display:flex;"><span>        backupCount: <span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>        encoding: utf8
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    warn_file_handler:
+</span></span><span style="display:flex;"><span>        class: logging.handlers.RotatingFileHandler
+</span></span><span style="display:flex;"><span>        level: WARN
+</span></span><span style="display:flex;"><span>        formatter: standard
+</span></span><span style="display:flex;"><span>        filename: /tmp/warn.log
+</span></span><span style="display:flex;"><span>        maxBytes: <span style="color:#ae81ff">10485760</span> <span style="color:#75715e"># 10MB</span>
+</span></span><span style="display:flex;"><span>        backupCount: <span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>        encoding: utf8
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>root:
+</span></span><span style="display:flex;"><span>    level: NOTSET
+</span></span><span style="display:flex;"><span>    handlers: <span style="color:#f92672">[</span>console<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    propogate: yes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>loggers:
+</span></span><span style="display:flex;"><span>    &lt;module&gt;:
+</span></span><span style="display:flex;"><span>        level: INFO
+</span></span><span style="display:flex;"><span>        handlers: <span style="color:#f92672">[</span>console, info_file_handler, error_file_handler, critical_file_handler, debug_file_handler, warn_file_handler<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        propogate: no
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    &lt;module.x&gt;:
+</span></span><span style="display:flex;"><span>        level: DEBUG
+</span></span><span style="display:flex;"><span>        handlers: <span style="color:#f92672">[</span>info_file_handler, error_file_handler, critical_file_handler, debug_file_handler, warn_file_handler<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        propogate: yes
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># logging.py</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> yaml
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> logging.config
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> logging
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> coloredlogs
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">setup_logging</span>(default_path<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;logging.yaml&#39;</span>, default_level<span style="color:#f92672">=</span>logging<span style="color:#f92672">.</span>INFO, env_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;LOG_CFG&#39;</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    | **@author:** Prathyush SP
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    | Logging Setup
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    path <span style="color:#f92672">=</span> default_path
+</span></span><span style="display:flex;"><span>    value <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>getenv(env_key, <span style="color:#66d9ef">None</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> value:
+</span></span><span style="display:flex;"><span>        path <span style="color:#f92672">=</span> value
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>exists(path):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">with</span> open(path, <span style="color:#e6db74">&#39;rt&#39;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>                config <span style="color:#f92672">=</span> yaml<span style="color:#f92672">.</span>safe_load(f<span style="color:#f92672">.</span>read())
+</span></span><span style="display:flex;"><span>                logging<span style="color:#f92672">.</span>config<span style="color:#f92672">.</span>dictConfig(config)
+</span></span><span style="display:flex;"><span>                coloredlogs<span style="color:#f92672">.</span>install()
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>                print(e)
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">&#39;Error in Logging Configuration. Using default configs&#39;</span>)
+</span></span><span style="display:flex;"><span>                logging<span style="color:#f92672">.</span>basicConfig(level<span style="color:#f92672">=</span>default_level)
+</span></span><span style="display:flex;"><span>                coloredlogs<span style="color:#f92672">.</span>install(level<span style="color:#f92672">=</span>default_level)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        logging<span style="color:#f92672">.</span>basicConfig(level<span style="color:#f92672">=</span>default_level)
+</span></span><span style="display:flex;"><span>        coloredlogs<span style="color:#f92672">.</span>install(level<span style="color:#f92672">=</span>default_level)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;Failed to load configuration file. Using default configs&#39;</span>)
+</span></span></code></pre></div><p>参考链接：</p>
+<ul>
+<li><a href="https://blog.csdn.net/weixin_43988680/article/details/123528294">https://blog.csdn.net/weixin_43988680/article/details/123528294</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/425678081">https://zhuanlan.zhihu.com/p/425678081</a></li>
+</ul>
+
+
+        </div>
         <div class="post-reward">
             <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
                 <div id="QR" style="opacity: 0;">
