@@ -13,7 +13,7 @@
       <pubDate>Mon, 05 Sep 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/logging/</guid>
-      <description># logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: &amp;#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&amp;#34; error: format: &amp;#34;%(levelname)s &amp;lt;PID %(process)d:%(processName)s&amp;gt; %(name)s.%(funcName)s(): %(message)s&amp;#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: standard stream: ext://sys.stdout info_file_handler: class: logging.handlers.RotatingFileHandler level: INFO formatter: standard filename: /tmp/info.log maxBytes: 10485760 # 10MB backupCount: 20 encoding: utf8 error_file_handler: class: logging.handlers.RotatingFileHandler level: ERROR formatter: error filename:</description>
+      <description>python logging # logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: &amp;#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&amp;#34; error: format: &amp;#34;%(levelname)s &amp;lt;PID %(process)d:%(processName)s&amp;gt; %(name)s.%(funcName)s(): %(message)s&amp;#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: standard stream: ext://sys.stdout info_file_handler: class: logging.handlers.RotatingFileHandler level: INFO formatter: standard filename: /tmp/info.log maxBytes: 10485760 # 10MB backupCount: 20 encoding: utf8 error_file_handler: class: logging.handlers.RotatingFileHandler level: ERROR formatter:</description>
     </item>
     
     <item>
@@ -44,12 +44,12 @@
     </item>
     
     <item>
-      <title>Read</title>
+      <title>电子书网站</title>
       <link>https://liuz0123.gitee.io/zain/posts/read/read/</link>
       <pubDate>Thu, 05 May 2022 00:18:06 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/read/read/</guid>
-      <description></description>
+      <description>kindle资源 幸福的味道 https://ebook2.lorefree.com/ https://lorefree.com/ http://www.ireadweek.com/ 公众号Sobook https://sobooks.cc/ 小书屋 www.mebook.cc 子午书简 https://5kindle.com/ 已废弃 http://shuxiangjia.cn/?cate=2 目录 SooHub 2022.09.13已打不开 https://www.soohub.com/ finelybook http://finelybook.com/ 好读 http://haodoo.net/ 墙外 Library Genesis mobi&amp;amp;PDF http://gen.lib.rus.ec/ https://libgen.li/ https://libgen.gs/</description>
     </item>
     
     <item>
