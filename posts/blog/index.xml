@@ -6,7 +6,16 @@
     <description>Recent content in 🧱 工具 on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 05 May 2022 00:18:23 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/posts/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 05 Sep 2022 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/posts/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>git</title>
+      <link>https://liuz0123.gitee.io/zain/posts/blog/git/</link>
+      <pubDate>Mon, 05 Sep 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/blog/git/</guid>
+      <description>git操作 # 下载代码，ssh或https 一种方式出错换用另一种 git clone # 提交 git status git add . git commit # 合并到前一个commit git commit --amend # 拉取更新代码 git pull # 推</description>
+    </item>
+    
     <item>
       <title>bug</title>
       <link>https://liuz0123.gitee.io/zain/posts/blog/bug/</link>

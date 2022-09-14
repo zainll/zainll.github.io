@@ -9,10 +9,10 @@
     <lastBuildDate>Mon, 05 Sep 2022 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>git</title>
-      <link>https://liuz0123.gitee.io/zain/posts/tech/git/</link>
+      <link>https://liuz0123.gitee.io/zain/posts/blog/git/</link>
       <pubDate>Mon, 05 Sep 2022 00:17:58 +0800</pubDate>
       
-      <guid>https://liuz0123.gitee.io/zain/posts/tech/git/</guid>
+      <guid>https://liuz0123.gitee.io/zain/posts/blog/git/</guid>
       <description>git操作 # 下载代码，ssh或https 一种方式出错换用另一种 git clone # 提交 git status git add . git commit # 合并到前一个commit git commit --amend # 拉取更新代码 git pull # 推</description>
     </item>
     
