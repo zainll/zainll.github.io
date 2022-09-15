@@ -39,5 +39,52 @@ hugo -F --cleanDestinationDir
 - https://lishensuo.github.io/
 - https://freeze.org.cn/page/7/#main
 https://blog.csdn.net/qq_45975757/article/details/108923612
+- https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38
 
 
+
+# hexo
+
+
+```sh
+# 清理缓存
+hexo clean
+# 生成网页
+hexo g
+# 启动本地服务端口
+hexo s
+# 发布到github
+hexo d
+
+
+# 强制推送备份源码分支
+git push -f origin backup
+```
+## GitHub Pages + Hexo使用及配置
+
+github上创建一个  username.github.io 的工程，username 必须为github的用户名
+
+## 参考链接
+
+https://www.jianshu.com/p/f82c76b90336
+
+https://www.jianshu.com/p/5d0b31032d55
+
+https://blog.csdn.net/weixin_41922289/article/details/95639870
+
+https://theme-next.org/
+
+https://hexo.io/zh-cn/docs/
+
+https://www.jianshu.com/p/3a05351a37dc
+
+https://www.zhyong.cn/posts/ca02/
+
+http://theme-next.iissnan.com/
+
+https://liam.page/
+
+https://liam.page/en/
+
+- Hexo博客添加helper-live2d动态模型插件
+https://blog.csdn.net/qq_30930805/article/details/
