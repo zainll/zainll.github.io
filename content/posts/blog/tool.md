@@ -136,8 +136,18 @@ https://cget.readthedocs.io/en/latest/#
 ## 快捷方式
 
 ```sh
-# 退出ESC
-ｗｑ
+# 退出ESC 返回命令模式
+# 保存退出
+wq
+# 放弃退出
+!q
+# 回到文件首部
+gg
+# 到文件尾部
+GG
+# i 进入编辑模式
+
+
 
 ```
 
@@ -150,7 +160,7 @@ https://cget.readthedocs.io/en/latest/#
 
 # vscode
 
-## vscode 上传图片
+## vscode 上传图片```````````````````````````````````````````
 
 ```sh
 # 上传剪贴板中的图片到服务器。
