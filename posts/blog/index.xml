@@ -31,7 +31,7 @@
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/blog/blog/</guid>
-      <description>hugo运行 hugo -F --cleanDestinationDir 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38</description>
+      <description>hugo运行 hugo -F --cleanDestinationDir 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 hexo # 清理缓存 hexo clean # 生成网页 hexo g # 启动本地服务端口 hexo s # 发布到github hexo d # 强制推送备份源码分支 git</description>
     </item>
     
     <item>

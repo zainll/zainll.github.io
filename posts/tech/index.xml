@@ -17,6 +17,15 @@
     </item>
     
     <item>
+      <title>Linux</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/linux/</link>
+      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/linux/</guid>
+      <description>gdb 《100个gdb小技巧》 kbuild Kbuild: the Linux Kernel Build System Kernel Build System¶</description>
+    </item>
+    
+    <item>
       <title>Tech</title>
       <link>https://liuz0123.gitee.io/zain/posts/tech/tech/</link>
       <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
