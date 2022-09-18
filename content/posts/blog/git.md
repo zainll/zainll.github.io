@@ -68,7 +68,11 @@ git rebase master
 ## git配置
 
 ```sh
-
+git config --global user.name "xxx"
+git config --global user.email "xxx@163.com"
+git config --list
+user.name=xxx
+user.email=xxx@163.coms
 
 # 设置默认编辑为vim
 git config --global core.editor "vim"
