@@ -32,8 +32,12 @@ cover:
 
 《Lesson from the Edge》  来自边缘的教训--约瓦诺维奇 前USA驻乌克兰大使
 
-《局外人》 &ensp; 加缪  &emsp;  个人主义，无知是最大的邪恶
+<br>
+
+《局外人》 &ensp; 加缪  &emsp;  个人主义，无知是最大的邪恶  <br>
+
 《culture evolution》 文化的演进 &ensp; ronald inglehart教授 &emsp; 什么原因猝发个人主义
 
+<br>
 
-
+《结构性思维》

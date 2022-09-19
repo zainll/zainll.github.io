@@ -1,5 +1,5 @@
 ---
-title: "电子书网站"
+title: "读书"
 date: 2022-05-05T00:18:06+08:00
 lastmod: 2022-05-05T00:18:06+08:00
 author: ["Zain"]
@@ -28,105 +28,38 @@ cover:
     relative: false
 ---
 
-## kindle资源
 
-- 幸福的味道                     \
-https://ebook2.lorefree.com/    \
-https://lorefree.com/           \
-http://www.ireadweek.com/       
 
+# 豆豆三部曲
+《背叛》 《遥远的救世主》 《天幕红尘》
+<br>
+## 背叛
+故事性很强，逻辑性在今天的我来讲很多突兀，商海那个年代是商业吗？还是仅仅是谋划
 <br>
 
-
-- 公众号Sobook                   \
-https://sobooks.cc/             
-
-<br>
-
-- 小书屋                         \
-www.mebook.cc                   \
-
-<br>
-
-- 子午书简   \
-https://5kindle.com/   已废弃  \
-http://shuxiangjia.cn/?cate=2   目录
-
-<br>
-
-- SooHub   2022.09.13已打不开  \
-https://www.soohub.com/ 
-
-<br>
-
-- finelybook  \
-http://finelybook.com/
-
-<br>
-
-- 好读   \
-http://haodoo.net/
-
-<br>
-
-## 长城之外
-- Library Genesis    mobi&PDF                      \
-http://gen.lib.rus.ec/                             \
-https://libgen.li/                                 \
-https://libgen.gs/                                 \
-https://sci-hub.41610.org/library-genesis          \
-https://libgen.rs/search.php?&req=KVM&phrase=1&view=simple&column=def&sort=year&sortmode=DESC     \
-https://libgen.rs/  
-
-<br>
-
-- zlibrary  PDF         \
-https://zh.u1lib.org/   \
-https://en.ru1lib.org/
-
-<br>
- 
-- FreeTechBooks     计算机科学类  \
-http://www.freetechbooks.com/    \
-https://www.freetechbooks.com/    
-
-
-<br>
-
-- 古登宝计划                 \
-http://www.gutenberg.org/
-
-<br>
- 
-- Planet eBook   国内可访问   \
-https://www.planetebook.com/
-
-<br>
-
-- 布克书屋                             \
-https://iao.su/3064/comment-page-1    \
-https://www.bukebook.cn
-
-
-<br>
-
-- yudu      \
-https://express.yudu.com/
-
-
-<br>
+## 遥远的救世主
+1. 人从根本上是面对两个问题：        \ 
+1.生存                           \
+2.回答生命的价值，让心有个安处
+2. 若果我的能力只能让我穷困潦倒，那穷困潦倒就是我的价值
+3. 干好事：别把自己太当人，别把别人太不当人。
+4. 天是什么？天是神是上帝，是创造万物者，是全能全知者，是便在不可见者，一句话，天是道，是事物规律和自然法则
+5. 生存法则，忍是一条线，能是一条线，两者之间就是生存，忍人所不忍，能人所不能。
+6. 透视社会的三个因素：技术、制度、文化。 递进？
+强势文化造就强者，若是文化造就弱智。规律，可理解为天道，不以人的意志为转移
+7. 只要不是自己觉到悟道的，给不了，给了也拿不住，只有自己觉到悟道，才有可能做到，能做到的才是我的
+8. 传统观念的死结在靠字，在家靠父母，出门靠朋友，靠上帝靠菩萨，靠皇恩，总之靠什么都行，就是别靠自己。
+9. 神即道，道即规律，规律如来不得你思议，按规律办事的人就是神
+10. 杀富富不去，救贫贫不离，救主的文化为救主可说，救主不是人，是道，得救不是破了戒的狼吞虎咽，是觉悟。有道无术，术尚可求矣，有术无道，止于术
+11. 心理学角度，越是头脑简单的人越需要点缀和填充，而头脑复杂的人则对简洁有着特殊的心里需求。
+12. 觉悟天道，是明开天眼，你缺的是这双眼睛，你需要的也是这双天眼，是一双剥离了政治、文化、传统、道德、宗教之分别的眼睛，然后在如实观照政治、文化、传统，把文化、道德颠倒里的真理真相再颠倒回来。这是心意深度
 
 
 
-## kindle 社区
+## 天幕红尘
 
-- 书伴   \
-https://bookfere.com/post/4.html  
-
-
-<br>
+叶子农
 
 
-## 参考链接：
-http://www.360doc.com/content/20/0219/14/5008209_893150066.shtml                     \
-http://www.sohu.com/a/215001801_490529
+
+
