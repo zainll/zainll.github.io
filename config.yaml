@@ -53,7 +53,7 @@ languages:
             url: posts/blog
           - name: 👨🏻‍💻 技术
             url: posts/tech
-          - name: 📕 阅读
+          - name: 📕 阅文
             url: posts/read
           - name: 🏖 生活
             url: posts/life

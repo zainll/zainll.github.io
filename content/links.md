@@ -14,7 +14,7 @@ showbreadcrumbs: false
 
 <div class="friend">
 
-{{< friend name="Zain's Blog" url="https://liuz0123.gitee.io/zain" logo="https://liuz0123.gitee.io/zain/img/Q.gif" word="一个记录技术、阅读、生活的博客" >}}
+{{< friend name="Zain's Blog" url="https://liuz0123.gitee.io/zain" logo="https://liuz0123.gitee.io/zain/img/Q.gif" word="一个记录技术、阅文、生活的博客" >}}
 
 
 </div>

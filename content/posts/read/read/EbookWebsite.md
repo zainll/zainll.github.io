@@ -10,7 +10,7 @@ categories:
 tags: 
 - read
 description: ""
-weight:
+weight: 1
 slug: ""
 draft: false # 是否为草稿
 comments: true
