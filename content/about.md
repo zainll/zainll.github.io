@@ -30,3 +30,33 @@ cover:
 | 英文名:   | zain Lz             |
 | 职业:     | 程序员              |
 | 运动:     | 跑步、篮球、爬山     |
+
+
+
+
+
+<div style="font-size: 16px;">
+
+
+|        |                                   |
+| ------ | --------------------------------- |
+| 名称： | Zain's Blog                       |
+| 网址： | https://liuz0123.gitee.io/zain           |
+| 图标： | https://liuz0123.gitee.io/zain/img/Q.gif |
+| 描述： | 一个记录技术、阅读、生活的博客    |
+
+</div>
+
+<br/>
+
+<!--<div style="font-size: 20px;">👉闲言俗语申请要求</div>
+
+ 秉承互换闲言俗语原则、文章定期更新 、网站在工信部备案、不能有太多广告、个人描述字数控制在15字内
+
+<br/>
+-->
+
+<div style="font-size: 20px;">👉Hugo博客交流群</div>
+
+> 787018782
+

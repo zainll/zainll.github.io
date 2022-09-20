@@ -36,6 +36,9 @@ cover:
 # 下载代码，ssh或https 一种方式出错换用另一种
 git clone
 
+# 创建分支
+git checkout -b br_master
+
 # 提交
 git status
 git add .
@@ -72,7 +75,7 @@ git config --global user.name "xxx"
 git config --global user.email "xxx@163.com"
 git config --list
 user.name=xxx
-user.email=xxx@163.coms
+user.email=xxx@163.com
 
 # 设置默认编辑为vim
 git config --global core.editor "vim"

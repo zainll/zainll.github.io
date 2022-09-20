@@ -80,7 +80,7 @@ languages:
             url: about
             weight: 50
           - identifier: links
-            name: 🤝 友链
+            name: 🤝 闲言俗语
             url: links
             weight: 60
           - identifier: search
