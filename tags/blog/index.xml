@@ -31,7 +31,7 @@
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/blog/linuxtool/</guid>
-      <description># 查看当前目录大小 du -h --max-depth=1</description>
+      <description>ubuntu 换源 # 备份 cp /etc/apt/sources.list /etc/apt/sources.list.20211013 lsb_release -c lsb_release -a # sudo apt-get update sudo apt-get upgrade 参考链接：ubuntu20.04更改国内镜像源 ubuntu 显示 https://ubuntuqa.com/article/8837.html https://www.csdn.net/tags/MtTaAgzsNjg5MTk4LWJsb2cO0O0O.html # 查看当前目录大小 du -h --max-depth=1</description>
     </item>
     
     <item>
