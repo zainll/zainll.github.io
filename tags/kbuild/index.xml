@@ -13,7 +13,7 @@
       <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/linux/</guid>
-      <description>gdb 《100个gdb小技巧》 kbuild Kbuild: the Linux Kernel Build System Kernel Build System¶ https://www.zhihu.com/question/47039391/answer/2287806626 ELF 开源库 lief 参考链接： https://blog.csdn.net/GrayOnDream/article/details/124564129</description>
+      <description>Linux内核代码下载 Linux kernel官网 https://www.kernel.org/ 解压 linux-5.19.10.tar.xz tar -xvf linux-5.19.10.tar.xz https://blog.csdn.net/m0_49328056/article/details/121669035 gdb 《100个gdb小技巧》 kbuild Kbuild: the Linux Kernel Build System Kernel Build System¶ https://www.zhihu.com/question/47039391/answer/2287806626 ELF 开源库 lief 参考链接： https://blog.csdn.net/GrayOnDream/article/details/124564129</description>
     </item>
     
   </channel>

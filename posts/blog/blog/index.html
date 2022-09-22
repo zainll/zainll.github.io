@@ -7,7 +7,7 @@
 <meta name="robots" content="index, follow">
 <title>hexo-&gt;hugo迁移 | zain&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="hugo运行 hugo -F --cleanDestinationDir 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 hexo # 清理缓存 hexo clean # 生成网页 hexo g # 启动本地服务端口 hexo s # 发布到github hexo d # 强制推送备份源码分支 git">
+<meta name="description" content="hugo运行 hugo -F --cleanDestinationDir 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 https://blog.csdn.net/qq_45975757/article/details/108923612 mongodb&#43;srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true&amp;w=majority {&#34;code&#34;:100,&#34;message&#34;:&#34;Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置&#34;,&#34;version&#34;:&#34">
 <meta name="author" content="
 &nbsp;Zain">
 <link rel="canonical" href="https://liuz0123.gitee.io/zain/posts/blog/blog/">
@@ -68,7 +68,7 @@ var _hmt = _hmt || [];
 })();
 </script>
 <meta property="og:title" content="hexo-&gt;hugo迁移" />
-<meta property="og:description" content="hugo运行 hugo -F --cleanDestinationDir 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 hexo # 清理缓存 hexo clean # 生成网页 hexo g # 启动本地服务端口 hexo s # 发布到github hexo d # 强制推送备份源码分支 git" />
+<meta property="og:description" content="hugo运行 hugo -F --cleanDestinationDir 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 https://blog.csdn.net/qq_45975757/article/details/108923612 mongodb&#43;srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true&amp;w=majority {&#34;code&#34;:100,&#34;message&#34;:&#34;Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置&#34;,&#34;version&#34;:&#34" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://liuz0123.gitee.io/zain/posts/blog/blog/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-05-05T00:18:23&#43;08:00" />
@@ -76,7 +76,7 @@ var _hmt = _hmt || [];
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="hexo-&gt;hugo迁移"/>
-<meta name="twitter:description" content="hugo运行 hugo -F --cleanDestinationDir 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 hexo # 清理缓存 hexo clean # 生成网页 hexo g # 启动本地服务端口 hexo s # 发布到github hexo d # 强制推送备份源码分支 git"/>
+<meta name="twitter:description" content="hugo运行 hugo -F --cleanDestinationDir 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 https://blog.csdn.net/qq_45975757/article/details/108923612 mongodb&#43;srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true&amp;w=majority {&#34;code&#34;:100,&#34;message&#34;:&#34;Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置&#34;,&#34;version&#34;:&#34"/>
 
 
 <script type="application/ld+json">
@@ -111,12 +111,12 @@ var _hmt = _hmt || [];
   "@type": "BlogPosting",
   "headline": "hexo-\u003ehugo迁移",
   "name": "hexo-\u003ehugo迁移",
-  "description": "hugo运行 hugo -F --cleanDestinationDir 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 hexo # 清理缓存 hexo clean # 生成网页 hexo g # 启动本地服务端口 hexo s # 发布到github hexo d # 强制推送备份源码分支 git",
+  "description": "hugo运行 hugo -F --cleanDestinationDir 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 https://blog.csdn.net/qq_45975757/article/details/108923612 mongodb+srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true\u0026amp;w=majority {\u0026#34;code\u0026#34;:100,\u0026#34;message\u0026#34;:\u0026#34;Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置\u0026#34;,\u0026#34;version\u0026#34;:\u0026#34",
   "keywords": [
     ""
   ],
-  "articleBody": "hugo运行 hugo -F --cleanDestinationDir 参考链接：\nhttps://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 hexo # 清理缓存 hexo clean # 生成网页 hexo g # 启动本地服务端口 hexo s # 发布到github hexo d # 强制推送备份源码分支 git push -f origin backup GitHub Pages + Hexo使用及配置 github上创建一个 username.github.io 的工程，username 必须为github的用户名\n参考链接 https://www.jianshu.com/p/f82c76b90336\nhttps://www.jianshu.com/p/5d0b31032d55\nhttps://blog.csdn.net/weixin_41922289/article/details/95639870\nhttps://theme-next.org/\nhttps://hexo.io/zh-cn/docs/\nhttps://www.jianshu.com/p/3a05351a37dc\nhttps://www.zhyong.cn/posts/ca02/\nhttp://theme-next.iissnan.com/\nhttps://liam.page/\nhttps://liam.page/en/\nHexo博客添加helper-live2d动态模型插件 https://blog.csdn.net/qq_30930805/article/details/ ",
-  "wordCount" : "165",
+  "articleBody": "hugo运行 hugo -F --cleanDestinationDir 参考链接：\nhttps://www.sulvblog.cn/\nhttps://www.jianshu.com/p/fa95c0c1fdab\nhttps://lishensuo.github.io/\nhttps://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612\nhttps://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38\nhttps://blog.csdn.net/qq_45975757/article/details/108923612\nmongodb+srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true\u0026w=majority {\"code\":100,\"message\":\"Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置\",\"version\":\"1.6.7\"} hexo # 清理缓存 hexo clean # 生成网页 hexo g # 启动本地服务端口 hexo s # 发布到github hexo d # 强制推送备份源码分支 git push -f origin backup GitHub Pages + Hexo使用及配置 github上创建一个 username.github.io 的工程，username 必须为github的用户名\n参考链接 https://www.jianshu.com/p/f82c76b90336\nhttps://www.jianshu.com/p/5d0b31032d55\nhttps://blog.csdn.net/weixin_41922289/article/details/95639870\nhttps://theme-next.org/\nhttps://hexo.io/zh-cn/docs/\nhttps://www.jianshu.com/p/3a05351a37dc\nhttps://www.zhyong.cn/posts/ca02/\nhttp://theme-next.iissnan.com/\nhttps://liam.page/\nhttps://liam.page/en/\nHexo博客添加helper-live2d动态模型插件 https://blog.csdn.net/qq_30930805/article/details/ ",
+  "wordCount" : "227",
   "inLanguage": "en",
   "datePublished": "2022-05-05T00:18:23+08:00",
   "dateModified": "2022-05-05T00:18:23+08:00",
@@ -233,7 +233,7 @@ var _hmt = _hmt || [];
             <h1 class="post-title">
                 hexo-&gt;hugo迁移
             </h1>
-            <div class="post-meta">Create:&nbsp;<span title='2022-05-05 00:18:23 +0800 CST'>2022-05-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-05-05&nbsp;|&nbsp;Words:&nbsp;165&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
+            <div class="post-meta">Create:&nbsp;<span title='2022-05-05 00:18:23 +0800 CST'>2022-05-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-05-05&nbsp;|&nbsp;Words:&nbsp;227&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
 &nbsp;Zain
 
 
@@ -339,14 +339,30 @@ var _hmt = _hmt || [];
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>hugo -F --cleanDestinationDir
 </span></span></code></pre></div><p>参考链接：</p>
 <ul>
-<li><a href="https://www.sulvblog.cn/">https://www.sulvblog.cn/</a></li>
-<li><a href="https://www.jianshu.com/p/fa95c0c1fdab">https://www.jianshu.com/p/fa95c0c1fdab</a></li>
-<li><a href="https://lishensuo.github.io/">https://lishensuo.github.io/</a></li>
-<li><a href="https://freeze.org.cn/page/7/#main">https://freeze.org.cn/page/7/#main</a>
-<a href="https://blog.csdn.net/qq_45975757/article/details/108923612">https://blog.csdn.net/qq_45975757/article/details/108923612</a></li>
-<li><a href="https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38">https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38</a></li>
+<li>
+<p><a href="https://www.sulvblog.cn/">https://www.sulvblog.cn/</a></p>
+</li>
+<li>
+<p><a href="https://www.jianshu.com/p/fa95c0c1fdab">https://www.jianshu.com/p/fa95c0c1fdab</a></p>
+</li>
+<li>
+<p><a href="https://lishensuo.github.io/">https://lishensuo.github.io/</a></p>
+</li>
+<li>
+<p><a href="https://freeze.org.cn/page/7/#main">https://freeze.org.cn/page/7/#main</a>
+<a href="https://blog.csdn.net/qq_45975757/article/details/108923612">https://blog.csdn.net/qq_45975757/article/details/108923612</a></p>
+</li>
+<li>
+<p><a href="https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38">https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38</a></p>
+</li>
+<li>
+<p><a href="https://blog.csdn.net/qq_45975757/article/details/108923612">https://blog.csdn.net/qq_45975757/article/details/108923612</a></p>
+</li>
 </ul>
-<h1 id="hexo">hexo<a hidden class="anchor" aria-hidden="true" href="#hexo">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>mongodb+srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites<span style="color:#f92672">=</span>true&amp;w<span style="color:#f92672">=</span>majority
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;code&#34;</span>:100,<span style="color:#e6db74">&#34;message&#34;</span>:<span style="color:#e6db74">&#34;Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置&#34;</span>,<span style="color:#e6db74">&#34;version&#34;</span>:<span style="color:#e6db74">&#34;1.6.7&#34;</span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="hexo">hexo<a hidden class="anchor" aria-hidden="true" href="#hexo">#</a></h1>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 清理缓存</span>
 </span></span><span style="display:flex;"><span>hexo clean
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># 生成网页</span>

@@ -115,8 +115,8 @@ var _hmt = _hmt || [];
   "keywords": [
     ""
   ],
-  "articleBody": "git操作 # 下载代码，ssh或https 一种方式出错换用另一种 git clone # 创建分支 git checkout -b br_master # 提交 git status git add . git commit # 合并到前一个commit git commit --amend # 拉取更新代码 git pull # 推送 git push # 合并已push的commit git rebase -i HEAD~n # 强制更新覆盖本次 git fetch --all git reset --hard HEAD git pull # 强制推送 git push -u origin br_master --force # 回合代码 git rebase master git配置 git config --global user.name \"xxx\" git config --global user.email \"xxx@163.com\" git config --list user.name=xxx user.email=xxx@163.com # 设置默认编辑为vim git config --global core.editor \"vim\" 玩转WSL(6)之Git配置\n",
-  "wordCount" : "188",
+  "articleBody": "git操作 # 下载代码，ssh或https 一种方式出错换用另一种 git clone # 创建分支 git checkout -b br_master # 提交 git status git add . git commit # 合并到前一个commit git commit --amend # 拉取更新代码 git pull # 推送 git push # 合并已push的commit git rebase -i HEAD~n # 强制更新覆盖本次 git fetch --all git reset --hard HEAD git pull # 强制推送 git push -u origin br_master --force # 回合代码 git rebase master git配置 git config --global user.name \"xxx\" git config --global user.email \"xxx@163.com\" git config --list user.name=xxx user.email=xxx@163.com # 生成秘钥 ssh-keygen -t -C 'xxx@163.com' # cd ~/.ssh 将 id_rsa.pub 添加道GitHub # 测试链接 ssh -T git@github.com # 设置默认编辑为vim git config --global core.editor \"vim\" 玩转WSL(6)之Git配置\n",
+  "wordCount" : "219",
   "inLanguage": "en",
   "datePublished": "2022-09-05T00:17:58+08:00",
   "dateModified": "2022-09-05T00:17:58+08:00",
@@ -233,7 +233,7 @@ var _hmt = _hmt || [];
             <h1 class="post-title">
                 git
             </h1>
-            <div class="post-meta">Create:&nbsp;<span title='2022-09-05 00:17:58 +0800 CST'>2022-09-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-09-05&nbsp;|&nbsp;Words:&nbsp;188&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
+            <div class="post-meta">Create:&nbsp;<span title='2022-09-05 00:17:58 +0800 CST'>2022-09-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-09-05&nbsp;|&nbsp;Words:&nbsp;219&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
 &nbsp;Zain
 
 
@@ -368,6 +368,13 @@ var _hmt = _hmt || [];
 </span></span><span style="display:flex;"><span>git config --list
 </span></span><span style="display:flex;"><span>user.name<span style="color:#f92672">=</span>xxx
 </span></span><span style="display:flex;"><span>user.email<span style="color:#f92672">=</span>xxx@163.com
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 生成秘钥</span>
+</span></span><span style="display:flex;"><span>ssh-keygen -t -C <span style="color:#e6db74">&#39;xxx@163.com&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># cd ~/.ssh 将 id_rsa.pub 添加道GitHub</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 测试链接</span>
+</span></span><span style="display:flex;"><span>ssh -T git@github.com
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># 设置默认编辑为vim</span>
 </span></span><span style="display:flex;"><span>git config --global core.editor <span style="color:#e6db74">&#34;vim&#34;</span>
