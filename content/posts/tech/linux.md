@@ -31,6 +31,18 @@ cover:
 ---
 
 
+## Linux内核代码下载
+
+Linux kernel官网
+https://www.kernel.org/
+
+解压 linux-5.19.10.tar.xz
+```sh
+tar -xvf linux-5.19.10.tar.xz
+```
+
+
+https://blog.csdn.net/m0_49328056/article/details/121669035
 
 
 

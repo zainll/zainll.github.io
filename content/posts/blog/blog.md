@@ -41,7 +41,15 @@ hugo -F --cleanDestinationDir
 https://blog.csdn.net/qq_45975757/article/details/108923612
 - https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38
 
+- https://blog.csdn.net/qq_45975757/article/details/108923612
 
+
+
+```sh
+mongodb+srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true&w=majority
+
+{"code":100,"message":"Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置","version":"1.6.7"}
+```
 
 # hexo
 

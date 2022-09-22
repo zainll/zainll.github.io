@@ -77,6 +77,13 @@ git config --list
 user.name=xxx
 user.email=xxx@163.com
 
+# 生成秘钥
+ssh-keygen -t -C 'xxx@163.com'
+# cd ~/.ssh 将 id_rsa.pub 添加道GitHub
+# 测试链接
+ssh -T git@github.com
+
+
 # 设置默认编辑为vim
 git config --global core.editor "vim"
 ```
