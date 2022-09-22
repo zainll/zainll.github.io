@@ -1,5 +1,5 @@
 ---
-title: "Linux"
+title: "DynamoRIO"
 date: 2022-05-05T00:17:58+08:00
 lastmod: 2022-05-05T00:17:58+08:00
 author: ["Zain"]
@@ -10,7 +10,6 @@ categories:
 tags: 
 - tech
 - linux
-- kbuild
 description: ""
 weight:
 slug: ""
@@ -33,42 +32,39 @@ cover:
 
 
 
+## 编译
+- 注意wsl中需要root用户编译
+https://dynamorio.org/page_building.html
+```sh
+cmake \
+-DCMAKE_TOOLCHAIN_FILE=/mnt/e/code/dynamorio/make/toolchain-android=arm64.cmake \
+-DANDROID_TOOLCHAIN=/android_toolchain_using \
+-DDR_COPY_TO_DEVICE=OFF \
+-DCMAKE_BUILD_TYPE=Debug \
+-DBUILD_TESTS=OFF \
+-DBUILD_SAMPLES=ON \
+-DBUILD_CLIENTS=ON \
+../dynamorio
 
 
 
-
-- gdb
-[《100个gdb小技巧》](https://wizardforcel.gitbooks.io/100-gdb-tips/content/)
-
-
-- kbuild
-[Kbuild: the Linux Kernel Build System](https://www.linuxjournal.com/content/kbuild-linux-kernel-build-system)
-[Kernel Build System¶](https://www.kernel.org/doc/html/latest/kbuild/index.html)
-
-
+cmake \
+-DDR_COPY_TO_DEVICE=OFF \
+-DCMAKE_BUILD_TYPE=Debug \
+-DBUILD_TESTS=OFF \
+-DBUILD_SAMPLES=ON \
+-DBUILD_CLIENTS=ON \
+../dynamorio
+```
 
 
+<!--more-->
 
 
+- 学习链接
+DynamoRIO进阶指南
+https://blog.csdn.net/oShuangYue12/article/details/109780166
 
-
-https://www.zhihu.com/question/47039391/answer/2287806626
-
-
-
-
-
-
-
-
-
-## ELF
-
-开源库
-lief
-
-参考链接：
-https://blog.csdn.net/GrayOnDream/article/details/124564129
 
 
 
