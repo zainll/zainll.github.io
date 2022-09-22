@@ -26,6 +26,15 @@
     </item>
     
     <item>
+      <title>linuxTool</title>
+      <link>https://liuz0123.gitee.io/zain/posts/blog/linuxtool/</link>
+      <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/blog/linuxtool/</guid>
+      <description># 查看当前目录大小 du -h --max-depth=1</description>
+    </item>
+    
+    <item>
       <title>tool</title>
       <link>https://liuz0123.gitee.io/zain/posts/blog/tool/</link>
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
