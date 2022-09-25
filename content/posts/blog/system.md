@@ -48,6 +48,10 @@ Ventoy支持多个ISO镜像，开源，支持Linux和Windows
 将ISO复制到U盘
 
 
+
+### WinPE 支持多镜像
+
+
 ## 安装系统
 ### 小米
 &ensp;F2设置boot密码，重启F12安装Ubuntu
@@ -57,8 +61,6 @@ Ventoy支持多个ISO镜像，开源，支持Linux和Windows
 
 
 
-
-### WinPE 支持多镜像
 
 
 

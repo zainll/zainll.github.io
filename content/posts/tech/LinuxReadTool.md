@@ -1,5 +1,5 @@
 ---
-title: "Linux"
+title: "Linux Read Tool"
 date: 2022-05-05T00:17:58+08:00
 lastmod: 2022-05-05T00:17:58+08:00
 author: ["Zain"]
@@ -29,6 +29,15 @@ cover:
     alt: ""
     relative: false
 ---
+
+
+## Linux Kernel阅读工具
+
+
+
+[需要多久才能看完linux内核源码？](https://mp.weixin.qq.com/s/K_Ix6C9d_03cb1Hfpz461g)
+
+
 
 
 ## Linux内核代码下载
