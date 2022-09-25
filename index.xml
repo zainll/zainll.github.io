@@ -58,7 +58,7 @@
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/blog/linuxtool/</guid>
-      <description>ubuntu 换源 # 备份 cp /etc/apt/sources.list /etc/apt/sources.list.20211013 lsb_release -c lsb_release -a # sudo apt-get update sudo apt-get upgrade 参考链接：ubuntu20.04更改国内镜像源 ubuntu 显示 https://ubuntuqa.com/article/8837.html https://www.csdn.net/tags/MtTaAgzsNjg5MTk4LWJsb2cO0O0O.html # 查看当前目录大小 du -h --max-depth=1</description>
+      <description>ubuntu 换源 # 备份 cp /etc/apt/sources.list /etc/apt/sources.list.20211013 lsb_release -c lsb_release -a # sudo apt-get update sudo apt-get upgrade 参考链接：ubuntu20.04更改国内镜像源 https://blog.csdn.net/qq_48490728/article/details/124944114 ubuntu 显示 https://ubuntuqa.com/article/8837.html https://www.csdn.net/tags/MtTaAgzsNjg5MTk4LWJsb2cO0O0O.html # 查看当前目录大小 du -h --max-depth=1 flameshot</description>
     </item>
     
     <item>
@@ -213,11 +213,11 @@ BASIC&lt;/p&gt;</description>
     
     <item>
       <title>Linux Read Tool</title>
-      <link>https://liuz0123.gitee.io/zain/posts/tech/linux/</link>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/linuxreadtool/</link>
       <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
       
-      <guid>https://liuz0123.gitee.io/zain/posts/tech/linux/</guid>
-      <description>Linux内核代码下载 Linux kernel官网 https://www.kernel.org/ 解压 linux-5.19.10.tar.xz tar -xvf linux-5.19.10.tar.xz https://blog.csdn.net/m0_49328056/article/details/121669035 gdb 《100个gdb小技巧》 kbuild Kbuild: the Linux Kernel Build System Kernel Build System¶ https://www.zhihu.com/question/47039391/answer/2287806626 ELF 开源库 lief 参考链接： https://blog.csdn.net/GrayOnDream/article/details/124564129</description>
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/linuxreadtool/</guid>
+      <description>Linux Kernel阅读工具 需要多久才能看完linux内核源码？ Linux内核代码下载 Linux kernel官网 https://www.kernel.org/ 解压 linux-5.19.10.tar.xz tar -xvf linux-5.19.10.tar.xz https://blog.csdn.net/m0_49328056/article/details/121669035 gdb 《100个gdb小技巧》</description>
     </item>
     
     <item>
