@@ -58,7 +58,7 @@ Ventoy支持多个ISO镜像，开源，支持Linux和Windows
 
 
 
-
+## Q&A 什么功能Windows上有，在Linux没有又没有替代方法
 
 
 
