@@ -212,6 +212,15 @@ BASIC&lt;/p&gt;</description>
     </item>
     
     <item>
+      <title>leetcode基础题目</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/leetcode%E5%9F%BA%E7%A1%80%E9%A2%98%E7%9B%AE/</link>
+      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/leetcode%E5%9F%BA%E7%A1%80%E9%A2%98%E7%9B%AE/</guid>
+      <description>参考博客： https://programmercarl.com/ https://mp.weixin.qq.com/s/AWsL7G89RtaHyHjRPNJENA 总结 leetcode基础题目 1.两数之和 思路：两层循环 int* twoSum(int* nums, int numsSize, int target, int* returnSize){ *returnSize = 0; int* res = (int *)malloc(sizeof(int) * 2); for (int i = 0; i &amp;lt; numsSize; i++) { int tmp = target - nums[i]; for</description>
+    </item>
+    
+    <item>
       <title>Linux Read Tool</title>
       <link>https://liuz0123.gitee.io/zain/posts/tech/linuxreadtool/</link>
       <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
