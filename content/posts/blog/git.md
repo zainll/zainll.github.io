@@ -78,7 +78,7 @@ user.name=xxx
 user.email=xxx@163.com
 
 # 生成秘钥
-ssh-keygen -t -C 'xxx@163.com'
+ssh-keygen -t rsa -C 'xxx@163.com'
 # cd ~/.ssh 将 id_rsa.pub 添加道GitHub
 # 测试链接
 ssh -T git@github.com

@@ -47,7 +47,11 @@ sudo apt-get upgrade
 ```
 参考链接：[ubuntu20.04更改国内镜像源](https://blog.csdn.net/qq_33706673/article/details/106869016)
 https://blog.csdn.net/qq_48490728/article/details/124944114
+https://blog.csdn.net/weixin_44916154/article/details/124581334
 
+
+## 安装搜狗输入法
+https://blog.csdn.net/Mr_Sudo/article/details/124874239
 
 ## ubuntu 显示
 
