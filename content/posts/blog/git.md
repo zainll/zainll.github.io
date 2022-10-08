@@ -92,3 +92,4 @@ git config --global core.editor "vim"
 
 
 
+[git同时配置Gitee和Github](https://www.cnblogs.com/tcdhl/p/14646365.html)

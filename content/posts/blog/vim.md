@@ -91,6 +91,7 @@ gcc            # 快速当前行
 [【VIM】PowerVim安装及使用](https://blog.csdn.net/weixin_44583590/article/details/120896928)
 
 [PowerVim - 使Vim更加强大易用](https://www.jianshu.com/p/c2641958b30f?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation)
+[安装PowerVim 问题解决过程记录](https://blog.csdn.net/u010707098/article/details/125117224)
 
 ## ctags
 
