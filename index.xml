@@ -101,7 +101,7 @@
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/blog/vim/</guid>
-      <description>Vim vim快捷方式 # 退出ESC 返回命令模式 # 保存退出 wq # 放弃退出 !q # 回到文件首部 gg # 到文件尾部 GG # i 进入编辑模式 ;n # 打开文件目录树显示在屏幕左</description>
+      <description>Vim vim快捷方式 # 退出ESC 返回命令模式 # 保存退出 wq # 放弃退出 !q # 回到文件首部 gg # 到文件尾部 GG # i 进入编辑模式 PowerVim PowerVim快捷键 ;n # 打</description>
     </item>
     
     <item>
