@@ -69,15 +69,6 @@
     </item>
     
     <item>
-      <title>bug</title>
-      <link>https://liuz0123.gitee.io/zain/posts/blog/bug/</link>
-      <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/blog/bug/</guid>
-      <description>windows输入英文中间有间隙 进入了全角模式，选择半角即可</description>
-    </item>
-    
-    <item>
       <title>hexo-&gt;hugo迁移</title>
       <link>https://liuz0123.gitee.io/zain/posts/blog/blog/</link>
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
