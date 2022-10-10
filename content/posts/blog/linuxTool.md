@@ -59,13 +59,34 @@ https://ubuntuqa.com/article/8837.html
 
 https://www.csdn.net/tags/MtTaAgzsNjg5MTk4LWJsb2cO0O0O.html
 
+## Ubunut 22.04 LTS 版本
+
+**GNU/Linux核心**
+
+* GCC 11.2.0
+* binutils 2.38
+* glibc 2.35
+
+**编译工具链**
+
+* Python 3.10.4
+* Perl 5.34.0
+* LLVM 14
+* golang 1.18
+* rustc 1.58
+* OpenJDK
+* Ruby 3.0
+* systemd 249.11
+* OpenSSL 3.0
+
+**虚拟化**
+
+* qemu 6.2.0
+* libvirt 8.0.0
+* virt-manager 4.0.0
 
 
 
-```sh
-# 查看当前目录大小
-du -h --max-depth=1
-```
 
 
 

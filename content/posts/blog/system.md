@@ -40,21 +40,32 @@ cover:
 ## 镜像烧录工具
 
 ### 软碟通UltraISO
+写入镜像，树莓派刷镜像
+
+<br>
 
 ### Ventoy
+
 [官方网站](https://www.ventoy.net/cn/index.html)
 Ventoy支持多个ISO镜像，开源，支持Linux和Windows
 [ventoy详细使用教程](https://m.somode.com/softjc/18183.html)
-将ISO复制到U盘
+制作完启动盘，将ISO复制到U盘即可
 
 
 
 ### WinPE 支持多镜像
+> 支持多镜像
+
+
+<br>
 
 
 ## 安装系统
+
 ### 小米
 &ensp;F2设置boot密码，重启F12安装Ubuntu
+
+### Thinkpad
 
 
 
