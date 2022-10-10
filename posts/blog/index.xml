@@ -17,6 +17,21 @@
     </item>
     
     <item>
+      <title>英语语法指一</title>
+      <link>https://liuz0123.gitee.io/zain/posts/blog/%E8%8B%B1%E8%AF%AD%E8%AF%AD%E6%B3%95%E4%B8%80/</link>
+      <pubDate>Sun, 15 May 2022 00:12:00 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/blog/%E8%8B%B1%E8%AF%AD%E8%AF%AD%E6%B3%95%E4%B8%80/</guid>
+      <description>&lt;h2 id=&#34;一简单句子分析&#34;&gt;一.简单句子分析&lt;/h2&gt;
+&lt;p&gt; &lt;strong&gt;英语句子= 主干+修饰成分&lt;/strong&gt;
+ 分析句子结构:
+  一个中心 + 两个要点
+  一个中心: 动词. 句子必须右动词
+  两个要点: 主语 + 谓语. 谓语是动词,主语为动作的执行者或接受者.
+  &lt;strong&gt;句子的核心是主谓结构&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>bug</title>
       <link>https://liuz0123.gitee.io/zain/posts/blog/bug/</link>
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
@@ -40,7 +55,7 @@
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/blog/linuxtool/</guid>
-      <description>ubuntu 换源 # 备份 cp /etc/apt/sources.list /etc/apt/sources.list.20211013 lsb_release -c lsb_release -a # sudo apt-get update sudo apt-get upgrade 参考链接：ubuntu20.04更改国内镜像源 https://blog.csdn.net/qq_48490728/article/details/124944114 ubuntu 显示 https://ubuntuqa.com/article/8837.html https://www.csdn.net/tags/MtTaAgzsNjg5MTk4LWJsb2cO0O0O.html # 查看当前目录大小 du -h --max-depth=1 flameshot</description>
+      <description>ubuntu 换源 # 备份 cp /etc/apt/sources.list /etc/apt/sources.list.20211013 lsb_release -c lsb_release -a # sudo apt-get update sudo apt-get upgrade 参考链接：ubuntu20.04更改国内镜像源 https://blog.csdn.net/qq_48490728/article/details/124944114 https://blog.csdn.net/weixin_44916154/article/details/124581334 安装搜狗输入法 https://blog.csdn.net/Mr_Sudo/article/details/124874239 ubuntu 显示 https://ubuntuqa.com/article/8837.html https://www.csdn.net/tags/MtTaAgzsNjg5MTk4LWJsb2cO0O0O.html # 查看当前目录大小 du -h --max-depth=1</description>
     </item>
     
     <item>
