@@ -93,3 +93,6 @@ git config --global core.editor "vim"
 
 
 [git同时配置Gitee和Github](https://www.cnblogs.com/tcdhl/p/14646365.html)
+
+
+[Git设置换行符为LF](https://blog.csdn.net/sunday2018/article/details/116402894)

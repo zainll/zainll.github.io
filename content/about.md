@@ -43,7 +43,7 @@ cover:
 | 名称： | Zain's Blog                       |
 | 网址： | https://liuz0123.gitee.io/zain           |
 | 图标： | https://liuz0123.gitee.io/zain/img/Q.gif |
-| 描述： | 一个记录技术、阅读、生活的博客    |
+| 描述： | 一个记录技术、阅读、生活自用博客, hexo To hugo 迁移中    |
 
 </div>
 

@@ -34,16 +34,61 @@ cover:
 
 
 
-## windows 开源软件
-
- potplayer 
-https://iptv-org.github.io/iptv/index.m3u
+## windows 工具软件
 
 
 
-everyting
+* Snipaste   截图软件  Sysinternals \
+支持自定义设置快捷键       \
+[Download](https://www.snipaste.com/download.html)
 
-7zip
+<br>
+
+* ZoomIt 屏幕缩放、标记、录制 Sysinternals \
+[Download](https://learn.microsoft.com/en-us/sysinternals/downloads/zoomit)
+
+<br>
+
+* Sysinternals 工具集   \
+[Download](https://learn.microsoft.com/en-us/sysinternals/)
+
+<br>
+
+- everyting 快速查找文件  \
+[Download](https://www.voidtools.com/downloads/)
+
+<br>
+
+- 7zip 开源压缩软件   \
+[Download](https://www.7-zip.org/)
+
+<br>
+
+- Wiztree  磁盘文件占用     \
+[Download](https://www.diskanalyzer.com/)
+
+<br>
+
+- Windows Terminal        \ 
+取代传统cmd显示，可集成PowerShell， 登录wsl，  未来Windows将设置为默认终端   \
+[微软商店](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701?hl=en-us&gl=us)
+
+<br>
+
+- PowerShell  \
+一款shell，支持Windows、linux、mac，推荐Windows结合 Windows Terminal使用, 使Windows像Linux终端一样爽 \
+[Download](https://github.com/PowerShell/PowerShell)
+
+<br>
+
+- Q-Dir  多窗口资源管理器                   \
+[Download](http://www.q-dir.com/)
+
+
+<br>
+
+
+---------------------未整理部分------------------------------
 
 rustdesk  远程开源软件
 
@@ -61,6 +106,11 @@ qbittorrent
 
 grammarly
 
+potplayer 
+https://iptv-org.github.io/iptv/index.m3u
+
+
+
 剪切板win10自带的有很多剪切记录的快捷键Windows键➕V键
 
 线上思维导图
@@ -70,7 +120,7 @@ https://www.aconvert.com/cn/
 开源软件下载网站
 https://www.fosshub.com/#
 
-### windows ternial 
+### windows ternial
 - 添加 git base 到ternial
 
 
@@ -78,7 +128,8 @@ https://www.fosshub.com/#
 
 油猴
 
-
+## windows输入英文中间有间隙
+进入了全角模式，选择半角即可
 
 ## React Router
 

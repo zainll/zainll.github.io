@@ -32,6 +32,9 @@ cover:
 # hugo运行
 ```sh
 hugo -F --cleanDestinationDir
+
+# 
+hugo server
 ```
 参考链接：
 - https://www.sulvblog.cn/
@@ -100,3 +103,5 @@ https://liam.page/en/
 
 - Hexo博客添加helper-live2d动态模型插件
 https://blog.csdn.net/qq_30930805/article/details/
+
+
