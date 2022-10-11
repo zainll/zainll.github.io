@@ -51,6 +51,10 @@ mongodb+srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true
 {"code":100,"message":"Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置","version":"1.6.7"}
 ```
 
+## 托管
+&ensp; 为了提高访问速度托管在gitee上，迁移完成后将会同时托管到github中。
+&ensp; 通过不同分支保存源码和静态网页内容，用br_hugo管理源码，master分支管理public
+
 # hexo
 
 
