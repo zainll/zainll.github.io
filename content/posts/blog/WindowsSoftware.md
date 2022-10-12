@@ -45,7 +45,8 @@ cover:
 <br>
 
 ### ZoomIt 
-> 屏幕缩放、标记、录制 展示小工具 \
+> 屏幕缩放、标记、录制 展示小工具   \
+whois  居然可以在Windows使用
 [Download](https://learn.microsoft.com/en-us/sysinternals/downloads/zoomit)
 
 <br>

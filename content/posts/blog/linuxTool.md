@@ -88,6 +88,9 @@ https://www.csdn.net/tags/MtTaAgzsNjg5MTk4LWJsb2cO0O0O.html
 
 
 
+## Linux包管理
+
+### snap
 
 
 
