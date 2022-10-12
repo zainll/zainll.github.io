@@ -114,15 +114,6 @@
     </item>
     
     <item>
-      <title>tool</title>
-      <link>https://liuz0123.gitee.io/zain/posts/blog/tool/</link>
-      <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/blog/tool/</guid>
-      <description>WSL 安装ubuntu20.04 安装到非系统盘目录，下载离线安装包，复制到想要安装的目录下，解压，以管理员身份运行ubuntu2004.exe 卸</description>
-    </item>
-    
-    <item>
       <title>vim</title>
       <link>https://liuz0123.gitee.io/zain/posts/blog/vim/</link>
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
