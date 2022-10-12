@@ -33,7 +33,7 @@ cover:
 ```sh
 hugo -F --cleanDestinationDir
 
-# 
+# 本地预览
 hugo server
 ```
 参考链接：

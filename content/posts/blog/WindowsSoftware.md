@@ -87,6 +87,45 @@ cover:
 
 <br>
 
+- FileZilla 多协议文件传送，支持FTP、SFTP，包含Client和Server，支持Windows、Linux、mac             \
+[Download](https://filezilla-project.org/)
+
+
+<br>
+
+- 终端连接程序
+secureCRT 需要破解
+https://blog.csdn.net/qq_39052513/article/details/104692026
+
+
+
+<br>
+
+
+## Windows包管理
+
+
+### Scoop
+
+> Scoop 是 Windows 的命令行安装程序，是一个强大的包管理工具
+
+[项目地址](https://github.com/ScoopInstaller/Scoop)
+
+[使用教程](https://www.mobaijun.com/posts/908521329.html)
+
+
+### winget 官方推出
+
+```sh
+# 使用 WinGet 安装一遍
+winget install postman
+winget search postman
+
+# 卸载，再用 Scoop 安装一遍
+scoop install postman
+```
+
+
 
 ---------------------未整理部分------------------------------
 
