@@ -22,7 +22,7 @@
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/blog/blog/</guid>
-      <description>hugo运行 hugo -F --cleanDestinationDir # hugo server 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 https://blog.csdn.net/qq_45975757/article/details/108923612 mongodb+srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true&amp;amp;w=majority {&amp;#34;code&amp;#34;:100,&amp;#34;message&amp;#34;:&amp;#34;Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置&amp;#34;,&amp;#34;version&amp;#34;:&amp;</description>
+      <description>hugo运行 hugo -F --cleanDestinationDir # 本地预览 hugo server 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 https://blog.csdn.net/qq_45975757/article/details/108923612 mongodb+srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true&amp;amp;w=majority {&amp;#34;code&amp;#34;:100,&amp;#34;message&amp;#34;:&amp;#34;Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置&amp;#34;,&amp;#34;version&amp;#3</description>
     </item>
     
     <item>
@@ -35,21 +35,12 @@
     </item>
     
     <item>
-      <title>tool</title>
-      <link>https://liuz0123.gitee.io/zain/posts/blog/tool/</link>
-      <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/blog/tool/</guid>
-      <description>WSL 安装ubuntu20.04 安装到非系统盘目录，下载离线安装包，复制到想要安装的目录下，解压，以管理员身份运行ubuntu2004.exe 卸</description>
-    </item>
-    
-    <item>
       <title>WindowsSoftware</title>
       <link>https://liuz0123.gitee.io/zain/posts/blog/windowssoftware/</link>
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/blog/windowssoftware/</guid>
-      <description>windows 工具软件 Snipaste 截图软件 Sysinternals 支持自定义设置快捷键 Download ZoomIt 屏幕缩放、标记、录制 Sysinternals Download Sysinternals 工具集 Download everyting 快速查找文件 Download 7zip 开源压缩软件 Download Wiztree 磁盘文件占用 Download Windows Terminal \ 取代传</description>
+      <description>windows 工具软件 Snipaste 截图软件 支持自定义设置快捷键 Download ZoomIt 屏幕缩放、标记、录制 展示小工具 whois 居然可以在Windows使用 Download Sysinternals 工具集 Download everyting 快速查找文件 Download 7zip 开源压</description>
     </item>
     
     <item>
