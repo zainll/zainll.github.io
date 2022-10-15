@@ -42,73 +42,45 @@ formatters:
     error:
         format: "%(levelname)s <PID %(process)d:%(processName)s> %(name)s.%(funcName)s(): %(message)s"
 
+version: 1
+disable_existing_loggers: False
+formatters:
+    standard:
+        format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    simple:
+        #format: "%(levelname)s <PID %(process)d:%(processName)s> %(name)s.%(funcName)s(): %(message)s"
+        format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 handlers:
     console:
         class: logging.StreamHandler
         level: DEBUG
-        formatter: standard
+        formatter: simple
         stream: ext://sys.stdout
-
     info_file_handler:
         class: logging.handlers.RotatingFileHandler
-        level: INFO
-        formatter: standard
-        filename: /tmp/info.log
-        maxBytes: 10485760 # 10MB
+        level: DEBUG
+        formatter: simple
+        filename: ./logs/log.log
+        maxBytes: 10485760
         backupCount: 20
         encoding: utf8
-
     error_file_handler:
         class: logging.handlers.RotatingFileHandler
         level: ERROR
-        formatter: error
-        filename: /tmp/errors.log
-        maxBytes: 10485760 # 10MB
+        formatter: simple
+        filename: errors.log
+        maxBytes: 10485760
         backupCount: 20
         encoding: utf8
-
-    debug_file_handler:
-        class: logging.handlers.RotatingFileHandler
-        level: DEBUG
-        formatter: standard
-        filename: /tmp/debug.log
-        maxBytes: 10485760 # 10MB
-        backupCount: 20
-        encoding: utf8
-
-    critical_file_handler:
-        class: logging.handlers.RotatingFileHandler
-        level: CRITICAL
-        formatter: standard
-        filename: /tmp/critical.log
-        maxBytes: 10485760 # 10MB
-        backupCount: 20
-        encoding: utf8
-
-    warn_file_handler:
-        class: logging.handlers.RotatingFileHandler
-        level: WARN
-        formatter: standard
-        filename: /tmp/warn.log
-        maxBytes: 10485760 # 10MB
-        backupCount: 20
-        encoding: utf8
-
-root:
-    level: NOTSET
-    handlers: [console]
-    propogate: yes
-
 loggers:
-    <module>:
-        level: INFO
-        handlers: [console, info_file_handler, error_file_handler, critical_file_handler, debug_file_handler, warn_file_handler]
-        propogate: no
-
-    <module.x>:
-        level: DEBUG
-        handlers: [info_file_handler, error_file_handler, critical_file_handler, debug_file_handler, warn_file_handler]
-        propogate: yes
+    my_module:
+            level: ERROR
+            handlers: [info_file_handler]
+            # 打开日志记录器
+            propagate: False
+root:
+    level: DEBUG
+    handlers: [console,info_file_handler,error_file_handler]
 
 ```
 
@@ -119,6 +91,23 @@ import yaml
 import logging.config
 import logging
 import coloredlogs
+
+
+class Logger():
+    def __init__(self, default_path = "logging.yaml", default_level = logging.INFO,env_key = "LOG_CFG"):
+
+def setup_logging(default_path = "logging.yaml",default_level = logging.INFO,env_key = "LOG_CFG"):
+    path = default_path
+    value = os.getenv(env_key,None)
+    if value:
+        path = value
+    if os.path.exists(path):
+        with open(path,"r") as f:
+            config = yaml.load(f)
+            logging.config.dictConfig(config)
+    else:
+        logging.basicConfig(level = default_level)
+
 
 def setup_logging(default_path='logging.yaml', default_level=logging.INFO, env_key='LOG_CFG'):
     """
@@ -152,6 +141,7 @@ def setup_logging(default_path='logging.yaml', default_level=logging.INFO, env_k
 参考链接：
 - https://blog.csdn.net/weixin_43988680/article/details/123528294
 - https://zhuanlan.zhihu.com/p/425678081
+- https://blog.csdn.net/qq_35812205/article/details/126480417
 
 
 # c log
