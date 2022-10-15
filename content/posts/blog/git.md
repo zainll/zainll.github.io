@@ -66,6 +66,20 @@ git push -u origin br_master --force
 # 回合代码
 git rebase master
 
+# 回退已提交commit
+git reset --soft  <commit-ID>
+
+# 忽略部分文件提交
+git add filename
+# 放入本地栈
+git stash -u -k     
+git commit
+git push
+# 弹出本地栈
+git stash pop 
+
+
+
 ```
 
 ## git配置

@@ -1,5 +1,5 @@
 ---
 title: "🧱 工具"
-# description: "本博客的搭建经验都在这里"
+description: "软件、工具、教程"
 hidemeta: true # 是否隐藏文章的元信息，如发布日期、作者等
 ---
