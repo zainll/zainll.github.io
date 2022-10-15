@@ -6,7 +6,7 @@
     <description>Recent content on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 12 Oct 2022 00:23:30 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 16 Oct 2022 00:00:30 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>电子书网站</title>
       <link>https://liuz0123.gitee.io/zain/posts/read/read/ebookwebsite/</link>
@@ -14,6 +14,15 @@
       
       <guid>https://liuz0123.gitee.io/zain/posts/read/read/ebookwebsite/</guid>
       <description>kindle资源 幸福的味道 https://ebook2.lorefree.com/ https://lorefree.com/ http://www.ireadweek.com/ 公众号Sobook https://sobooks.cc/ 小书屋 www.mebook.cc \ 子午书简 https://5kindle.com/ 已废弃 http://shuxiangjia.cn/?cate=2 目录 SooHub 2022.09.13已打不开 https://www.soohub.com/ finelybook http://finelybook.com/ 好读 http://haodoo.net/ 长城之外 Library Genesis mobi&amp;amp;PDF</description>
+    </item>
+    
+    <item>
+      <title>独白</title>
+      <link>https://liuz0123.gitee.io/zain/posts/na/%E7%8B%AC%E7%99%BD/</link>
+      <pubDate>Sun, 16 Oct 2022 00:00:30 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/na/%E7%8B%AC%E7%99%BD/</guid>
+      <description>真的为那天晚上所说的话无比后悔，&amp;ldquo;理性上追求克制与平静，感性上被感情所淹没&amp;quot;形成了情感的对立面。你可能把我归类为你同学</description>
     </item>
     
     <item>
@@ -49,7 +58,7 @@
       <pubDate>Mon, 05 Sep 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/logging/</guid>
-      <description>python logging # logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: &amp;#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&amp;#34; error: format: &amp;#34;%(levelname)s &amp;lt;PID %(process)d:%(processName)s&amp;gt; %(name)s.%(funcName)s(): %(message)s&amp;#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: standard stream: ext://sys.stdout info_file_handler: class: logging.handlers.RotatingFileHandler level: INFO formatter: standard filename: /tmp/info.log maxBytes: 10485760 # 10MB backupCount: 20 encoding: utf8 error_file_handler: class: logging.handlers.RotatingFileHandler level: ERROR formatter:</description>
+      <description>python logging # logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: &amp;#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&amp;#34; error: format: &amp;#34;%(levelname)s &amp;lt;PID %(process)d:%(processName)s&amp;gt; %(name)s.%(funcName)s(): %(message)s&amp;#34; version: 1 disable_existing_loggers: False formatters: standard: format: &amp;#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&amp;#34; simple: #format: &amp;#34;%(levelname)s &amp;lt;PID %(process)d:%(processName)s&amp;gt; %(name)s.%(funcName)s(): %(message)s&amp;#34; format: &amp;#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&amp;#34; handlers: console: class: logging.StreamHandler</description>
     </item>
     
     <item>
@@ -58,7 +67,7 @@
       <pubDate>Thu, 11 Aug 2022 00:22:23 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/blog/markown/</guid>
-      <description></description>
+      <description>多年经验总结，写出最惊艳的 Markdown 高级用法</description>
     </item>
     
     <item>
@@ -68,6 +77,15 @@
       
       <guid>https://liuz0123.gitee.io/zain/posts/blog/linuxcommand/</guid>
       <description>查看大小 # 查看系统目录大小 df -lh # 查看当前目录下文件大小 du -h --max-depth=1 权限 chmod chown</description>
+    </item>
+    
+    <item>
+      <title>benchmark</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</link>
+      <pubDate>Mon, 27 Jun 2022 00:21:08 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</guid>
+      <description>openbenchmark</description>
     </item>
     
     <item>
