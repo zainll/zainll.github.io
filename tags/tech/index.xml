@@ -13,7 +13,7 @@
       <pubDate>Sun, 23 Oct 2022 00:00:08 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/vscode_c_project_config/</guid>
-      <description>说明：插件基于C/C++ Project Generator，原始项目未更新，联系到作者沟通是否合入 本项目地址: https://github.com/zhuangll/vscode_c_project_config wingows环境需要安装mingw，并添</description>
+      <description>说明：插件基于C/C++ Project Generator，原始项目未更新，联系到作者沟通是否合入 本项目地址: https://github.com/zhuangll/vscode_c_project_config 安装 在vscode中安装C/C++ Project Gen</description>
     </item>
     
     <item>
