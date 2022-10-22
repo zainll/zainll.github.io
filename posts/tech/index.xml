@@ -74,7 +74,7 @@
       <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/leetcode%E5%9F%BA%E7%A1%80%E9%A2%98%E7%9B%AE/</guid>
-      <description>参考博客： https://programmercarl.com/ https://mp.weixin.qq.com/s/AWsL7G89RtaHyHjRPNJENA 总结 leetcode基础题目 1.两数之和 思路：两层循环 int* twoSum(int* nums, int numsSize, int target, int* returnSize){ *returnSize = 0; int* res = (int *)malloc(sizeof(int) * 2); for (int i = 0; i &amp;lt; numsSize; i++) { int tmp = target - nums[i]; for</description>
+      <description>总结 leetcode基础题目 经典题目： 3.无重复字符的最长子串 4. 6. 7. 8. 9. 11. 12. 13. 21. 24. 28. 38. 53. 66. 82. 94. 104. 108. 109. 110. 112. 121. 136. 142. 160. 169. 173. 189. 201. 203. 206. 217. 226. 231. 234. 367. 389. 442. 476.</description>
     </item>
     
     <item>
