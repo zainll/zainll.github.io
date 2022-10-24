@@ -7,7 +7,7 @@
 <meta name="robots" content="index, follow">
 <title>logging | zain&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="python logging # logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: &#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34; error: format: &#34;%(levelname)s &lt;PID %(process)d:%(processName)s&gt; %(name)s.%(funcName)s(): %(message)s&#34; version: 1 disable_existing_loggers: False formatters: standard: format: &#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34; simple: #format: &#34;%(levelname)s &lt;PID %(process)d:%(processName)s&gt; %(name)s.%(funcName)s(): %(message)s&#34; format: &#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34; handlers: console: class: logging.StreamHandler">
+<meta name="description" content="python logging # logging.yaml： version: 1 disable_existing_loggers: False formatters: simple: format: &#39;%(asctime)s %(levelname)s %(message)s&#39; upgrade: format: &#34;%(asctime)s -Loc %(filename)s -Pid %(process)d -%(name)s -%(levelname)s - %(message)s&#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: simple stream: ext://sys.stdout all_file_handler: class: logging.handlers.RotatingFileHandler level: DEBUG formatter: upgrade filename: ./logs/all_log.log maxBytes: 10485760 # 10MB backupCount: 50 #保留50个lo">
 <meta name="author" content="
 &nbsp;Zain">
 <link rel="canonical" href="https://liuz0123.gitee.io/zain/posts/tech/logging/">
@@ -68,7 +68,7 @@ var _hmt = _hmt || [];
 })();
 </script>
 <meta property="og:title" content="logging" />
-<meta property="og:description" content="python logging # logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: &#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34; error: format: &#34;%(levelname)s &lt;PID %(process)d:%(processName)s&gt; %(name)s.%(funcName)s(): %(message)s&#34; version: 1 disable_existing_loggers: False formatters: standard: format: &#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34; simple: #format: &#34;%(levelname)s &lt;PID %(process)d:%(processName)s&gt; %(name)s.%(funcName)s(): %(message)s&#34; format: &#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34; handlers: console: class: logging.StreamHandler" />
+<meta property="og:description" content="python logging # logging.yaml： version: 1 disable_existing_loggers: False formatters: simple: format: &#39;%(asctime)s %(levelname)s %(message)s&#39; upgrade: format: &#34;%(asctime)s -Loc %(filename)s -Pid %(process)d -%(name)s -%(levelname)s - %(message)s&#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: simple stream: ext://sys.stdout all_file_handler: class: logging.handlers.RotatingFileHandler level: DEBUG formatter: upgrade filename: ./logs/all_log.log maxBytes: 10485760 # 10MB backupCount: 50 #保留50个lo" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://liuz0123.gitee.io/zain/posts/tech/logging/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-09-05T00:17:58&#43;08:00" />
@@ -76,7 +76,7 @@ var _hmt = _hmt || [];
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="logging"/>
-<meta name="twitter:description" content="python logging # logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: &#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34; error: format: &#34;%(levelname)s &lt;PID %(process)d:%(processName)s&gt; %(name)s.%(funcName)s(): %(message)s&#34; version: 1 disable_existing_loggers: False formatters: standard: format: &#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34; simple: #format: &#34;%(levelname)s &lt;PID %(process)d:%(processName)s&gt; %(name)s.%(funcName)s(): %(message)s&#34; format: &#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34; handlers: console: class: logging.StreamHandler"/>
+<meta name="twitter:description" content="python logging # logging.yaml： version: 1 disable_existing_loggers: False formatters: simple: format: &#39;%(asctime)s %(levelname)s %(message)s&#39; upgrade: format: &#34;%(asctime)s -Loc %(filename)s -Pid %(process)d -%(name)s -%(levelname)s - %(message)s&#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: simple stream: ext://sys.stdout all_file_handler: class: logging.handlers.RotatingFileHandler level: DEBUG formatter: upgrade filename: ./logs/all_log.log maxBytes: 10485760 # 10MB backupCount: 50 #保留50个lo"/>
 
 
 <script type="application/ld+json">
@@ -111,12 +111,12 @@ var _hmt = _hmt || [];
   "@type": "BlogPosting",
   "headline": "logging",
   "name": "logging",
-  "description": "python logging # logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: \u0026#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s\u0026#34; error: format: \u0026#34;%(levelname)s \u0026lt;PID %(process)d:%(processName)s\u0026gt; %(name)s.%(funcName)s(): %(message)s\u0026#34; version: 1 disable_existing_loggers: False formatters: standard: format: \u0026#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s\u0026#34; simple: #format: \u0026#34;%(levelname)s \u0026lt;PID %(process)d:%(processName)s\u0026gt; %(name)s.%(funcName)s(): %(message)s\u0026#34; format: \u0026#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s\u0026#34; handlers: console: class: logging.StreamHandler",
+  "description": "python logging # logging.yaml： version: 1 disable_existing_loggers: False formatters: simple: format: \u0026#39;%(asctime)s %(levelname)s %(message)s\u0026#39; upgrade: format: \u0026#34;%(asctime)s -Loc %(filename)s -Pid %(process)d -%(name)s -%(levelname)s - %(message)s\u0026#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: simple stream: ext://sys.stdout all_file_handler: class: logging.handlers.RotatingFileHandler level: DEBUG formatter: upgrade filename: ./logs/all_log.log maxBytes: 10485760 # 10MB backupCount: 50 #保留50个lo",
   "keywords": [
     ""
   ],
-  "articleBody": "python logging # logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: \"%(asctime)s - %(name)s - %(levelname)s - %(message)s\" error: format: \"%(levelname)s %(name)s.%(funcName)s(): %(message)s\" version: 1 disable_existing_loggers: False formatters: standard: format: \"%(asctime)s - %(name)s - %(levelname)s - %(message)s\" simple: #format: \"%(levelname)s %(name)s.%(funcName)s(): %(message)s\" format: \"%(asctime)s - %(name)s - %(levelname)s - %(message)s\" handlers: console: class: logging.StreamHandler level: DEBUG formatter: simple stream: ext://sys.stdout info_file_handler: class: logging.handlers.RotatingFileHandler level: DEBUG formatter: simple filename: ./logs/log.log maxBytes: 10485760 backupCount: 20 encoding: utf8 error_file_handler: class: logging.handlers.RotatingFileHandler level: ERROR formatter: simple filename: errors.log maxBytes: 10485760 backupCount: 20 encoding: utf8 loggers: my_module: level: ERROR handlers: [info_file_handler] # 打开日志记录器 propagate: False root: level: DEBUG handlers: [console,info_file_handler,error_file_handler] # logging.py import os import yaml import logging.config import logging import coloredlogs class Logger(): def __init__(self, default_path = \"logging.yaml\", default_level = logging.INFO,env_key = \"LOG_CFG\"): def setup_logging(default_path = \"logging.yaml\",default_level = logging.INFO,env_key = \"LOG_CFG\"): path = default_path value = os.getenv(env_key,None) if value: path = value if os.path.exists(path): with open(path,\"r\") as f: config = yaml.load(f) logging.config.dictConfig(config) else: logging.basicConfig(level = default_level) def setup_logging(default_path='logging.yaml', default_level=logging.INFO, env_key='LOG_CFG'): \"\"\" | **@author:** Prathyush SP | Logging Setup \"\"\" path = default_path value = os.getenv(env_key, None) if value: path = value if os.path.exists(path): with open(path, 'rt') as f: try: config = yaml.safe_load(f.read()) logging.config.dictConfig(config) coloredlogs.install() except Exception as e: print(e) print('Error in Logging Configuration. Using default configs') logging.basicConfig(level=default_level) coloredlogs.install(level=default_level) else: logging.basicConfig(level=default_level) coloredlogs.install(level=default_level) print('Failed to load configuration file. Using default configs') 参考链接：\nhttps://blog.csdn.net/weixin_43988680/article/details/123528294 https://zhuanlan.zhihu.com/p/425678081 https://blog.csdn.net/qq_35812205/article/details/126480417 c log zlog https://blog.csdn.net/twd_1991/article/details/80481920\nhttp://hardysimpson.github.io/zlog/UsersGuide-CN.html\n",
-  "wordCount" : "260",
+  "articleBody": "python logging # logging.yaml： version: 1 disable_existing_loggers: False formatters: simple: format: '%(asctime)s %(levelname)s %(message)s' upgrade: format: \"%(asctime)s -Loc %(filename)s -Pid %(process)d -%(name)s -%(levelname)s - %(message)s\" handlers: console: class: logging.StreamHandler level: DEBUG formatter: simple stream: ext://sys.stdout all_file_handler: class: logging.handlers.RotatingFileHandler level: DEBUG formatter: upgrade filename: ./logs/all_log.log maxBytes: 10485760 # 10MB backupCount: 50 #保留50个log文件 encoding: utf8 server_file_handler: class: logging.handlers.RotatingFileHandler level: INFO # 只在文件中记录INFO级别及以上的log formatter: upgrade filename: ./logs/server.log maxBytes: 10485760 # 10MB backupCount: 20 encoding: utf8 loggers: server: level: DEBUG #允许打印DEBUG及以上log handlers: [server_file_handler] propagate: true #设为false则禁止将日志消息传递给父级记录器的处理程序中 root: level: DEBUG handlers: [console, all_file_handler] # logger.py # logging.py from fileinput import filename import os import time import yaml import logging.config import logging import datetime #import coloredlogs class Logger(): def __init__(self, log_name=\"log.log\", log_path = \"./logs\", default_path = \"logging.yaml\", default_level = logging.INFO,env_key = \"LOG_CFG\"): self.log_name = log_name self.log_path = log_path #time_stamp = time. now = time.strftime('%Y-%m-%d %H_%M_%S_') # 文件的命令以及打开路径 log_filename = self.log_path + \"/\" + now + self.log_name with open(file=default_path, mode='r', encoding=\"utf-8\")as file: logging_yaml = yaml.load(stream=file, Loader=yaml.FullLoader) logging_yaml['handlers']['all_file_handler']['filename'] = log_filename print(\"logging_yaml \",logging_yaml) handlers = logging_yaml['handlers'] for key, value in handlers.items(): if 'filename' in value: log_path = (os.path.split(value['filename'])[0]) print(\"log_path\") if not os.path.exists(log_path): os.makedirs(log_path) # 配置logging日志：主要从文件中读取handler的配置、formatter（格式化日志样式）、logger记录器的配置 logging.config.dictConfig(config=logging_yaml) ###设置完毕### # 获取根记录器：配置信息从yaml文件中获取 root = logging.getLogger() # 子记录器的名字与配置文件中loggers字段内的保持一致 server = logging.getLogger(\"server\") print(\"rootlogger:\", root.handlers) print(\"serverlogger:\", server.handlers) print(\"子记录器与根记录器的handler是否相同：\", root.handlers[0] == server.handlers[0]) if __name__ =='__main__': Logger() logging.info(\"first log\") 参考链接：\nhttps://blog.csdn.net/weixin_43988680/article/details/123528294 https://zhuanlan.zhihu.com/p/425678081 https://blog.csdn.net/qq_35812205/article/details/126480417 https://blog.csdn.net/TracelessLe/article/details/108887001 c log zlog https://blog.csdn.net/twd_1991/article/details/80481920\nhttp://hardysimpson.github.io/zlog/UsersGuide-CN.html\n",
+  "wordCount" : "476",
   "inLanguage": "en",
   "datePublished": "2022-09-05T00:17:58+08:00",
   "dateModified": "2022-09-05T00:17:58+08:00",
@@ -233,7 +233,7 @@ var _hmt = _hmt || [];
             <h1 class="post-title">
                 logging
             </h1>
-            <div class="post-meta">Create:&nbsp;<span title='2022-09-05 00:17:58 +0800 CST'>2022-09-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-09-05&nbsp;|&nbsp;Words:&nbsp;260&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
+            <div class="post-meta">Create:&nbsp;<span title='2022-09-05 00:17:58 +0800 CST'>2022-09-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-09-05&nbsp;|&nbsp;Words:&nbsp;476&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
 &nbsp;Zain
 
 
@@ -336,106 +336,101 @@ var _hmt = _hmt || [];
         <div class="post-content"><h1 id="python-logging">python logging<a hidden class="anchor" aria-hidden="true" href="#python-logging">#</a></h1>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e">#  logging.yaml：</span>
 </span></span><span style="display:flex;"><span>version: <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span>disable_existing_loggers: true
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>formatters:
-</span></span><span style="display:flex;"><span>    standard:
-</span></span><span style="display:flex;"><span>        format: <span style="color:#e6db74">&#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34;</span>
-</span></span><span style="display:flex;"><span>    error:
-</span></span><span style="display:flex;"><span>        format: <span style="color:#e6db74">&#34;%(levelname)s &lt;PID %(process)d:%(processName)s&gt; %(name)s.%(funcName)s(): %(message)s&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>version: <span style="color:#ae81ff">1</span>
 </span></span><span style="display:flex;"><span>disable_existing_loggers: False
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>formatters:
-</span></span><span style="display:flex;"><span>    standard:
-</span></span><span style="display:flex;"><span>        format: <span style="color:#e6db74">&#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34;</span>
 </span></span><span style="display:flex;"><span>    simple:
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#format: &#34;%(levelname)s &lt;PID %(process)d:%(processName)s&gt; %(name)s.%(funcName)s(): %(message)s&#34;</span>
-</span></span><span style="display:flex;"><span>        format: <span style="color:#e6db74">&#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#34;</span>
+</span></span><span style="display:flex;"><span>        format: <span style="color:#e6db74">&#39;%(asctime)s %(levelname)s %(message)s&#39;</span>
+</span></span><span style="display:flex;"><span>    upgrade:
+</span></span><span style="display:flex;"><span>        format: <span style="color:#e6db74">&#34;%(asctime)s -Loc %(filename)s -Pid %(process)d -%(name)s -%(levelname)s - %(message)s&#34;</span>
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>handlers:
 </span></span><span style="display:flex;"><span>    console:
 </span></span><span style="display:flex;"><span>        class: logging.StreamHandler
 </span></span><span style="display:flex;"><span>        level: DEBUG
 </span></span><span style="display:flex;"><span>        formatter: simple
 </span></span><span style="display:flex;"><span>        stream: ext://sys.stdout
-</span></span><span style="display:flex;"><span>    info_file_handler:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    all_file_handler:
 </span></span><span style="display:flex;"><span>        class: logging.handlers.RotatingFileHandler
 </span></span><span style="display:flex;"><span>        level: DEBUG
-</span></span><span style="display:flex;"><span>        formatter: simple
-</span></span><span style="display:flex;"><span>        filename: ./logs/log.log
-</span></span><span style="display:flex;"><span>        maxBytes: <span style="color:#ae81ff">10485760</span>
-</span></span><span style="display:flex;"><span>        backupCount: <span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>        formatter: upgrade
+</span></span><span style="display:flex;"><span>        filename: ./logs/all_log.log
+</span></span><span style="display:flex;"><span>        maxBytes: <span style="color:#ae81ff">10485760</span> <span style="color:#75715e"># 10MB</span>
+</span></span><span style="display:flex;"><span>        backupCount: <span style="color:#ae81ff">50</span> <span style="color:#75715e">#保留50个log文件</span>
 </span></span><span style="display:flex;"><span>        encoding: utf8
-</span></span><span style="display:flex;"><span>    error_file_handler:
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    server_file_handler:
 </span></span><span style="display:flex;"><span>        class: logging.handlers.RotatingFileHandler
-</span></span><span style="display:flex;"><span>        level: ERROR
-</span></span><span style="display:flex;"><span>        formatter: simple
-</span></span><span style="display:flex;"><span>        filename: errors.log
-</span></span><span style="display:flex;"><span>        maxBytes: <span style="color:#ae81ff">10485760</span>
+</span></span><span style="display:flex;"><span>        level: INFO <span style="color:#75715e"># 只在文件中记录INFO级别及以上的log</span>
+</span></span><span style="display:flex;"><span>        formatter: upgrade
+</span></span><span style="display:flex;"><span>        filename: ./logs/server.log
+</span></span><span style="display:flex;"><span>        maxBytes: <span style="color:#ae81ff">10485760</span> <span style="color:#75715e"># 10MB</span>
 </span></span><span style="display:flex;"><span>        backupCount: <span style="color:#ae81ff">20</span>
 </span></span><span style="display:flex;"><span>        encoding: utf8
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>loggers:
-</span></span><span style="display:flex;"><span>    my_module:
-</span></span><span style="display:flex;"><span>            level: ERROR
-</span></span><span style="display:flex;"><span>            handlers: <span style="color:#f92672">[</span>info_file_handler<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 打开日志记录器</span>
-</span></span><span style="display:flex;"><span>            propagate: False
+</span></span><span style="display:flex;"><span>    server:
+</span></span><span style="display:flex;"><span>        level: DEBUG <span style="color:#75715e">#允许打印DEBUG及以上log</span>
+</span></span><span style="display:flex;"><span>        handlers: <span style="color:#f92672">[</span>server_file_handler<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>        propagate: true <span style="color:#75715e">#设为false则禁止将日志消息传递给父级记录器的处理程序中</span>
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>root:
 </span></span><span style="display:flex;"><span>    level: DEBUG
-</span></span><span style="display:flex;"><span>    handlers: <span style="color:#f92672">[</span>console,info_file_handler,error_file_handler<span style="color:#f92672">]</span>
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># logging.py</span>
+</span></span><span style="display:flex;"><span>    handlers: <span style="color:#f92672">[</span>console, all_file_handler<span style="color:#f92672">]</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># logger.py</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># logging.py</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> fileinput <span style="color:#f92672">import</span> filename
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> yaml
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> logging.config
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> logging
-</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> coloredlogs
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> datetime
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#import coloredlogs</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Logger</span>():
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, default_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;logging.yaml&#34;</span>, default_level <span style="color:#f92672">=</span> logging<span style="color:#f92672">.</span>INFO,env_key <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;LOG_CFG&#34;</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self,  log_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;log.log&#34;</span>, log_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;./logs&#34;</span>, default_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;logging.yaml&#34;</span>, default_level <span style="color:#f92672">=</span> logging<span style="color:#f92672">.</span>INFO,env_key <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;LOG_CFG&#34;</span>):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>log_name <span style="color:#f92672">=</span> log_name
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>log_path <span style="color:#f92672">=</span> log_path
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#time_stamp = time.</span>
+</span></span><span style="display:flex;"><span>        now <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>strftime(<span style="color:#e6db74">&#39;%Y-%m-</span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> %H_%M_%S_&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 文件的命令以及打开路径</span>
+</span></span><span style="display:flex;"><span>        log_filename <span style="color:#f92672">=</span>  self<span style="color:#f92672">.</span>log_path <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;/&#34;</span> <span style="color:#f92672">+</span> now <span style="color:#f92672">+</span> self<span style="color:#f92672">.</span>log_name 
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">with</span> open(file<span style="color:#f92672">=</span>default_path, mode<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;r&#39;</span>, encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;utf-8&#34;</span>)<span style="color:#66d9ef">as</span> file:
+</span></span><span style="display:flex;"><span>            logging_yaml <span style="color:#f92672">=</span> yaml<span style="color:#f92672">.</span>load(stream<span style="color:#f92672">=</span>file, Loader<span style="color:#f92672">=</span>yaml<span style="color:#f92672">.</span>FullLoader)
+</span></span><span style="display:flex;"><span>            logging_yaml[<span style="color:#e6db74">&#39;handlers&#39;</span>][<span style="color:#e6db74">&#39;all_file_handler&#39;</span>][<span style="color:#e6db74">&#39;filename&#39;</span>] <span style="color:#f92672">=</span> log_filename
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;logging_yaml &#34;</span>,logging_yaml)
+</span></span><span style="display:flex;"><span>        handlers <span style="color:#f92672">=</span> logging_yaml[<span style="color:#e6db74">&#39;handlers&#39;</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> key, value <span style="color:#f92672">in</span> handlers<span style="color:#f92672">.</span>items():
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#39;filename&#39;</span> <span style="color:#f92672">in</span> value:
+</span></span><span style="display:flex;"><span>                log_path <span style="color:#f92672">=</span> (os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>split(value[<span style="color:#e6db74">&#39;filename&#39;</span>])[<span style="color:#ae81ff">0</span>])
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">&#34;log_path&#34;</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>exists(log_path):
+</span></span><span style="display:flex;"><span>                    os<span style="color:#f92672">.</span>makedirs(log_path)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 配置logging日志：主要从文件中读取handler的配置、formatter（格式化日志样式）、logger记录器的配置</span>
+</span></span><span style="display:flex;"><span>        logging<span style="color:#f92672">.</span>config<span style="color:#f92672">.</span>dictConfig(config<span style="color:#f92672">=</span>logging_yaml)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">###设置完毕###</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 获取根记录器：配置信息从yaml文件中获取</span>
+</span></span><span style="display:flex;"><span>        root <span style="color:#f92672">=</span> logging<span style="color:#f92672">.</span>getLogger()
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 子记录器的名字与配置文件中loggers字段内的保持一致</span>
+</span></span><span style="display:flex;"><span>        server <span style="color:#f92672">=</span> logging<span style="color:#f92672">.</span>getLogger(<span style="color:#e6db74">&#34;server&#34;</span>)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;rootlogger:&#34;</span>, root<span style="color:#f92672">.</span>handlers)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;serverlogger:&#34;</span>, server<span style="color:#f92672">.</span>handlers)
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;子记录器与根记录器的handler是否相同：&#34;</span>, root<span style="color:#f92672">.</span>handlers[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">==</span> server<span style="color:#f92672">.</span>handlers[<span style="color:#ae81ff">0</span>])
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">setup_logging</span>(default_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;logging.yaml&#34;</span>,default_level <span style="color:#f92672">=</span> logging<span style="color:#f92672">.</span>INFO,env_key <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;LOG_CFG&#34;</span>):
-</span></span><span style="display:flex;"><span>    path <span style="color:#f92672">=</span> default_path
-</span></span><span style="display:flex;"><span>    value <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>getenv(env_key,<span style="color:#66d9ef">None</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> value:
-</span></span><span style="display:flex;"><span>        path <span style="color:#f92672">=</span> value
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>exists(path):
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">with</span> open(path,<span style="color:#e6db74">&#34;r&#34;</span>) <span style="color:#66d9ef">as</span> f:
-</span></span><span style="display:flex;"><span>            config <span style="color:#f92672">=</span> yaml<span style="color:#f92672">.</span>load(f)
-</span></span><span style="display:flex;"><span>            logging<span style="color:#f92672">.</span>config<span style="color:#f92672">.</span>dictConfig(config)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>        logging<span style="color:#f92672">.</span>basicConfig(level <span style="color:#f92672">=</span> default_level)
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">setup_logging</span>(default_path<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;logging.yaml&#39;</span>, default_level<span style="color:#f92672">=</span>logging<span style="color:#f92672">.</span>INFO, env_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;LOG_CFG&#39;</span>):
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    | **@author:** Prathyush SP
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    | Logging Setup
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    path <span style="color:#f92672">=</span> default_path
-</span></span><span style="display:flex;"><span>    value <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>getenv(env_key, <span style="color:#66d9ef">None</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> value:
-</span></span><span style="display:flex;"><span>        path <span style="color:#f92672">=</span> value
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>exists(path):
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">with</span> open(path, <span style="color:#e6db74">&#39;rt&#39;</span>) <span style="color:#66d9ef">as</span> f:
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span>:
-</span></span><span style="display:flex;"><span>                config <span style="color:#f92672">=</span> yaml<span style="color:#f92672">.</span>safe_load(f<span style="color:#f92672">.</span>read())
-</span></span><span style="display:flex;"><span>                logging<span style="color:#f92672">.</span>config<span style="color:#f92672">.</span>dictConfig(config)
-</span></span><span style="display:flex;"><span>                coloredlogs<span style="color:#f92672">.</span>install()
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
-</span></span><span style="display:flex;"><span>                print(e)
-</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">&#39;Error in Logging Configuration. Using default configs&#39;</span>)
-</span></span><span style="display:flex;"><span>                logging<span style="color:#f92672">.</span>basicConfig(level<span style="color:#f92672">=</span>default_level)
-</span></span><span style="display:flex;"><span>                coloredlogs<span style="color:#f92672">.</span>install(level<span style="color:#f92672">=</span>default_level)
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
-</span></span><span style="display:flex;"><span>        logging<span style="color:#f92672">.</span>basicConfig(level<span style="color:#f92672">=</span>default_level)
-</span></span><span style="display:flex;"><span>        coloredlogs<span style="color:#f92672">.</span>install(level<span style="color:#f92672">=</span>default_level)
-</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;Failed to load configuration file. Using default configs&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span><span style="color:#e6db74">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    Logger()
+</span></span><span style="display:flex;"><span>    logging<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;first log&#34;</span>)
 </span></span></code></pre></div><p>参考链接：</p>
 <ul>
 <li><a href="https://blog.csdn.net/weixin_43988680/article/details/123528294">https://blog.csdn.net/weixin_43988680/article/details/123528294</a></li>
 <li><a href="https://zhuanlan.zhihu.com/p/425678081">https://zhuanlan.zhihu.com/p/425678081</a></li>
 <li><a href="https://blog.csdn.net/qq_35812205/article/details/126480417">https://blog.csdn.net/qq_35812205/article/details/126480417</a></li>
+<li><a href="https://blog.csdn.net/TracelessLe/article/details/108887001">https://blog.csdn.net/TracelessLe/article/details/108887001</a></li>
 </ul>
 <h1 id="c-log">c log<a hidden class="anchor" aria-hidden="true" href="#c-log">#</a></h1>
 <h2 id="zlog">zlog<a hidden class="anchor" aria-hidden="true" href="#zlog">#</a></h2>

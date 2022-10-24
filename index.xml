@@ -76,7 +76,7 @@
       <pubDate>Mon, 05 Sep 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/logging/</guid>
-      <description>python logging # logging.yaml： version: 1 disable_existing_loggers: true formatters: standard: format: &amp;#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&amp;#34; error: format: &amp;#34;%(levelname)s &amp;lt;PID %(process)d:%(processName)s&amp;gt; %(name)s.%(funcName)s(): %(message)s&amp;#34; version: 1 disable_existing_loggers: False formatters: standard: format: &amp;#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&amp;#34; simple: #format: &amp;#34;%(levelname)s &amp;lt;PID %(process)d:%(processName)s&amp;gt; %(name)s.%(funcName)s(): %(message)s&amp;#34; format: &amp;#34;%(asctime)s - %(name)s - %(levelname)s - %(message)s&amp;#34; handlers: console: class: logging.StreamHandler</description>
+      <description>python logging # logging.yaml： version: 1 disable_existing_loggers: False formatters: simple: format: &amp;#39;%(asctime)s %(levelname)s %(message)s&amp;#39; upgrade: format: &amp;#34;%(asctime)s -Loc %(filename)s -Pid %(process)d -%(name)s -%(levelname)s - %(message)s&amp;#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: simple stream: ext://sys.stdout all_file_handler: class: logging.handlers.RotatingFileHandler level: DEBUG formatter: upgrade filename: ./logs/all_log.log maxBytes: 10485760 # 10MB backupCount: 50 #保留50个lo</description>
     </item>
     
     <item>
