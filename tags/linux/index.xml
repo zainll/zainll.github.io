@@ -6,39 +6,11 @@
     <description>Recent content in linux on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 05 Jul 2022 00:18:23 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 05 Oct 2022 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>LinuxCommand</title>
-      <link>https://liuz0123.gitee.io/zain/posts/blog/linuxcommand/</link>
-      <pubDate>Tue, 05 Jul 2022 00:18:23 +0800</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/blog/linuxcommand/</guid>
-      <description>查看大小 # 查看系统目录大小 df -lh # 查看当前目录下文件大小 du -h --max-depth=1 权限 chmod chown</description>
-    </item>
-    
-    <item>
-      <title>benchmark</title>
-      <link>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</link>
-      <pubDate>Mon, 27 Jun 2022 00:21:08 +0800</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</guid>
-      <description>openbenchmark</description>
-    </item>
-    
-    <item>
-      <title>cmake</title>
-      <link>https://liuz0123.gitee.io/zain/posts/tech/cmake/</link>
-      <pubDate>Tue, 17 May 2022 00:17:58 +0800</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/tech/cmake/</guid>
-      <description>&lt;h2 id=&#34;1cmake简述&#34;&gt;1.cmake简述&lt;/h2&gt;
-&lt;p&gt; CMake是跨平台编译管理工具,为第三方依赖和引入,创建编译系统,程序测试及安装.Cmake工具使用CMakeLists.txt文件,跨平台执行相同编译命令,生成对应平台的可执行程序或者链接库.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>DynamoRIO</title>
+      <title>Linux内核深度解析</title>
       <link>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</link>
-      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
+      <pubDate>Wed, 05 Oct 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</guid>
       <description>&lt;h2 id=&#34;编译&#34;&gt;编译&lt;/h2&gt;
@@ -66,6 +38,43 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_CLIENTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;../dynamorio
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux内核深度解析</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Wed, 05 Oct 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>LinuxCommand</title>
+      <link>https://liuz0123.gitee.io/zain/posts/blog/linuxcommand/</link>
+      <pubDate>Tue, 05 Jul 2022 00:18:23 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/blog/linuxcommand/</guid>
+      <description>查看大小 # 查看系统目录大小 df -lh # 查看当前目录下文件大小 du -h --max-depth=1 权限 chmod chown</description>
+    </item>
+    
+    <item>
+      <title>benchmark</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</link>
+      <pubDate>Mon, 27 Jun 2022 00:21:08 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</guid>
+      <description>openbenchmark</description>
+    </item>
+    
+    <item>
+      <title>cmake</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/cmake/</link>
+      <pubDate>Tue, 17 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/cmake/</guid>
+      <description>&lt;h2 id=&#34;1cmake简述&#34;&gt;1.cmake简述&lt;/h2&gt;
+&lt;p&gt; CMake是跨平台编译管理工具,为第三方依赖和引入,创建编译系统,程序测试及安装.Cmake工具使用CMakeLists.txt文件,跨平台执行相同编译命令,生成对应平台的可执行程序或者链接库.&lt;/p&gt;</description>
     </item>
     
     <item>

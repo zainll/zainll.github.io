@@ -62,6 +62,48 @@
     </item>
     
     <item>
+      <title>Linux内核深度解析</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</link>
+      <pubDate>Wed, 05 Oct 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</guid>
+      <description>&lt;h2 id=&#34;编译&#34;&gt;编译&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;注意wsl中需要root用户编译
+&lt;a href=&#34;https://dynamorio.org/page_building.html&#34;&gt;https://dynamorio.org/page_building.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_TOOLCHAIN_FILE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/mnt/e/code/dynamorio/make/toolchain-android&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;arm64.cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DANDROID_TOOLCHAIN&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/android_toolchain_using &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DDR_COPY_TO_DEVICE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_BUILD_TYPE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Debug &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_TESTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_SAMPLES&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_CLIENTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;../dynamorio
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DDR_COPY_TO_DEVICE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_BUILD_TYPE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Debug &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_TESTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_SAMPLES&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_CLIENTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;../dynamorio
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux内核深度解析</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Wed, 05 Oct 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>git</title>
       <link>https://liuz0123.gitee.io/zain/posts/blog/git/</link>
       <pubDate>Mon, 05 Sep 2022 00:17:58 +0800</pubDate>
@@ -146,7 +188,7 @@
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/blog/linuxtool/</guid>
-      <description>ubuntu 换源 # 备份 cp /etc/apt/sources.list /etc/apt/sources.list.20211013 lsb_release -c lsb_release -a # sudo apt-get update sudo apt-get upgrade 参考链接：ubuntu20.04更改国内镜像源 https://blog.csdn.net/qq_48490728/article/details/124944114 https://blog.csdn.net/weixin_44916154/article/details/124581334 安装搜狗输入法 https://blog.csdn.net/Mr_Sudo/article/details/124874239 ubuntu 显示 https://ubuntuqa.com/article/8837.html https://www.csdn.net/tags/MtTaAgzsNjg5MTk4LWJsb2cO0O0O.html Ubunut 22.04 LTS 版本 GNU/Lin</description>
+      <description>ubuntu 换源 # 备份 cp /etc/apt/sources.list /etc/apt/sources.list.20211013 lsb_release -c lsb_release -a # sudo apt-get update sudo apt-get upgrade 参考链接： ubuntu20.04更改国内镜像源 https://blog.csdn.net/qq_48490728/article/details/124944114 https://blog.csdn.net/weixin_44916154/article/details/124581334 安装搜狗输入法 https://blog.csdn.net/Mr_Sudo/article/details/124874239 ubuntu 显示 https://ubuntuqa.com/article/8837.html https://www.csdn.net/tags/MtTaAgzsNjg5MTk4LWJsb2cO0O0O.html Ubunut 22.04 LTS 版本 GNU/Lin</description>
     </item>
     
     <item>
@@ -169,10 +211,10 @@
     
     <item>
       <title>系统安装</title>
-      <link>https://liuz0123.gitee.io/zain/posts/blog/system/</link>
+      <link>https://liuz0123.gitee.io/zain/posts/blog/%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/</link>
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
       
-      <guid>https://liuz0123.gitee.io/zain/posts/blog/system/</guid>
+      <guid>https://liuz0123.gitee.io/zain/posts/blog/%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/</guid>
       <description>启动U盘制作 下载镜像 Ubuntu 镜像 Ubuntu 20.04&amp;amp;22.04 Windows 镜像烧录工具 软碟通UltraISO 写入镜像，树莓派刷镜像 Ventoy 官方网站 Ventoy支持多个ISO镜像，开源，支持</description>
     </item>
     
@@ -245,39 +287,6 @@ BASIC&lt;/p&gt;</description>
       
       <guid>https://liuz0123.gitee.io/zain/posts/read/%E9%97%B2%E8%A8%80%E7%A2%8E%E8%AF%AD/</guid>
       <description></description>
-    </item>
-    
-    <item>
-      <title>DynamoRIO</title>
-      <link>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</link>
-      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</guid>
-      <description>&lt;h2 id=&#34;编译&#34;&gt;编译&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;注意wsl中需要root用户编译
-&lt;a href=&#34;https://dynamorio.org/page_building.html&#34;&gt;https://dynamorio.org/page_building.html&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_TOOLCHAIN_FILE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/mnt/e/code/dynamorio/make/toolchain-android&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;arm64.cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DANDROID_TOOLCHAIN&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/android_toolchain_using &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DDR_COPY_TO_DEVICE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_BUILD_TYPE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Debug &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_TESTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_SAMPLES&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_CLIENTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;../dynamorio
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DDR_COPY_TO_DEVICE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_BUILD_TYPE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Debug &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_TESTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_SAMPLES&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_CLIENTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;../dynamorio
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
     </item>
     
     <item>

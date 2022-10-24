@@ -17,37 +17,9 @@
     </item>
     
     <item>
-      <title>logging</title>
-      <link>https://liuz0123.gitee.io/zain/posts/tech/logging/</link>
-      <pubDate>Mon, 05 Sep 2022 00:17:58 +0800</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/tech/logging/</guid>
-      <description>python logging # logging.yaml： version: 1 disable_existing_loggers: False formatters: simple: format: &amp;#39;%(asctime)s %(levelname)s %(message)s&amp;#39; upgrade: format: &amp;#34;%(asctime)s -Loc %(filename)s -Pid %(process)d -%(name)s -%(levelname)s - %(message)s&amp;#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: simple stream: ext://sys.stdout all_file_handler: class: logging.handlers.RotatingFileHandler level: DEBUG formatter: upgrade filename: ./logs/all_log.log maxBytes: 10485760 # 10MB backupCount: 50 #保留50个lo</description>
-    </item>
-    
-    <item>
-      <title>benchmark</title>
-      <link>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</link>
-      <pubDate>Mon, 27 Jun 2022 00:21:08 +0800</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</guid>
-      <description>openbenchmark</description>
-    </item>
-    
-    <item>
-      <title>cmake</title>
-      <link>https://liuz0123.gitee.io/zain/posts/tech/cmake/</link>
-      <pubDate>Tue, 17 May 2022 00:17:58 +0800</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/tech/cmake/</guid>
-      <description>&lt;h2 id=&#34;1cmake简述&#34;&gt;1.cmake简述&lt;/h2&gt;
-&lt;p&gt; CMake是跨平台编译管理工具,为第三方依赖和引入,创建编译系统,程序测试及安装.Cmake工具使用CMakeLists.txt文件,跨平台执行相同编译命令,生成对应平台的可执行程序或者链接库.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>DynamoRIO</title>
+      <title>Linux内核深度解析</title>
       <link>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</link>
-      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
+      <pubDate>Wed, 05 Oct 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</guid>
       <description>&lt;h2 id=&#34;编译&#34;&gt;编译&lt;/h2&gt;
@@ -75,6 +47,43 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_CLIENTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;../dynamorio
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux内核深度解析</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Wed, 05 Oct 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>logging</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/logging/</link>
+      <pubDate>Mon, 05 Sep 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/logging/</guid>
+      <description>python logging # logging.yaml： version: 1 disable_existing_loggers: False formatters: simple: format: &amp;#39;%(asctime)s %(levelname)s %(message)s&amp;#39; upgrade: format: &amp;#34;%(asctime)s -Loc %(filename)s -Pid %(process)d -%(name)s -%(levelname)s - %(message)s&amp;#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: simple stream: ext://sys.stdout all_file_handler: class: logging.handlers.RotatingFileHandler level: DEBUG formatter: upgrade filename: ./logs/all_log.log maxBytes: 10485760 # 10MB backupCount: 50 #保留50个lo</description>
+    </item>
+    
+    <item>
+      <title>benchmark</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</link>
+      <pubDate>Mon, 27 Jun 2022 00:21:08 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</guid>
+      <description>openbenchmark</description>
+    </item>
+    
+    <item>
+      <title>cmake</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/cmake/</link>
+      <pubDate>Tue, 17 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/cmake/</guid>
+      <description>&lt;h2 id=&#34;1cmake简述&#34;&gt;1.cmake简述&lt;/h2&gt;
+&lt;p&gt; CMake是跨平台编译管理工具,为第三方依赖和引入,创建编译系统,程序测试及安装.Cmake工具使用CMakeLists.txt文件,跨平台执行相同编译命令,生成对应平台的可执行程序或者链接库.&lt;/p&gt;</description>
     </item>
     
     <item>
