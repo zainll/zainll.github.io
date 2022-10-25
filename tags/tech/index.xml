@@ -18,44 +18,11 @@
     
     <item>
       <title>Linux内核深度解析</title>
-      <link>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</link>
-      <pubDate>Wed, 05 Oct 2022 00:17:58 +0800</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</guid>
-      <description>&lt;h2 id=&#34;编译&#34;&gt;编译&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;注意wsl中需要root用户编译
-&lt;a href=&#34;https://dynamorio.org/page_building.html&#34;&gt;https://dynamorio.org/page_building.html&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_TOOLCHAIN_FILE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/mnt/e/code/dynamorio/make/toolchain-android&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;arm64.cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DANDROID_TOOLCHAIN&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/android_toolchain_using &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DDR_COPY_TO_DEVICE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_BUILD_TYPE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Debug &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_TESTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_SAMPLES&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_CLIENTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;../dynamorio
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DDR_COPY_TO_DEVICE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_BUILD_TYPE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Debug &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_TESTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_SAMPLES&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_CLIENTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;../dynamorio
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
-    </item>
-    
-    <item>
-      <title>Linux内核深度解析</title>
       <link>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</link>
       <pubDate>Wed, 05 Oct 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</guid>
-      <description></description>
+      <description>内容提纲 内核的引导过程U-Boot 内核管理和调度进程 内核管理虚拟内存和物理内存 内核处理异常和中断的技术原理，以及系统调用的实现方式 保护临界区</description>
     </item>
     
     <item>
@@ -96,12 +63,45 @@
     </item>
     
     <item>
+      <title>DynamoRIO</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</link>
+      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</guid>
+      <description>&lt;h2 id=&#34;编译&#34;&gt;编译&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;注意wsl中需要root用户编译
+&lt;a href=&#34;https://dynamorio.org/page_building.html&#34;&gt;https://dynamorio.org/page_building.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_TOOLCHAIN_FILE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/mnt/e/code/dynamorio/make/toolchain-android&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;arm64.cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DANDROID_TOOLCHAIN&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/android_toolchain_using &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DDR_COPY_TO_DEVICE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_BUILD_TYPE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Debug &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_TESTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_SAMPLES&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_CLIENTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;../dynamorio
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DDR_COPY_TO_DEVICE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_BUILD_TYPE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Debug &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_TESTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_SAMPLES&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_CLIENTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;../dynamorio
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    
+    <item>
       <title>Linux Read Tool</title>
       <link>https://liuz0123.gitee.io/zain/posts/tech/linuxreadtool/</link>
       <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/linuxreadtool/</guid>
-      <description>Linux Kernel阅读工具 需要多久才能看完linux内核源码？ Linux内核代码下载 Linux kernel官网 https://www.kernel.org/ 解压 linux-5.19.10.tar.xz tar -xvf linux-5.19.10.tar.xz https://blog.csdn.net/m0_49328056/article/details/121669035 gdb 《100个gdb小技巧》</description>
+      <description>Linux Kernel阅读工具 需要多久才能看完linux内核源码？ Linux内核代码下载 Linux kernel官网 https://www.kernel.org/ 解压 linux-5.19.10.tar.xz tar -xvf linux-5.19.10.tar.xz https://blog.csdn.net/m0_49328056/article/details/121669035 linux内核线上阅读 li</description>
     </item>
     
     <item>

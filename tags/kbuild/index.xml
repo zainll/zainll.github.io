@@ -13,7 +13,7 @@
       <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/linuxreadtool/</guid>
-      <description>Linux Kernel阅读工具 需要多久才能看完linux内核源码？ Linux内核代码下载 Linux kernel官网 https://www.kernel.org/ 解压 linux-5.19.10.tar.xz tar -xvf linux-5.19.10.tar.xz https://blog.csdn.net/m0_49328056/article/details/121669035 gdb 《100个gdb小技巧》</description>
+      <description>Linux Kernel阅读工具 需要多久才能看完linux内核源码？ Linux内核代码下载 Linux kernel官网 https://www.kernel.org/ 解压 linux-5.19.10.tar.xz tar -xvf linux-5.19.10.tar.xz https://blog.csdn.net/m0_49328056/article/details/121669035 linux内核线上阅读 li</description>
     </item>
     
   </channel>
