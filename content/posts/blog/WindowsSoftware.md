@@ -58,7 +58,7 @@ whois  居然可以在Windows使用
 <br>
 
 ### everyting 
->快速查找文件  \
+>快速查找文件    \
 [Download](https://www.voidtools.com/downloads/)
 
 <br>
@@ -82,7 +82,7 @@ whois  居然可以在Windows使用
 <br>
 
 ### PowerShell  
->一款shell，支持Windows、linux、mac，推荐Windows结合 Windows Terminal使用, 使Windows像Linux终端一样爽 \
+>一款shell，支持Windows、linux、mac，推荐Windows结合 Windows Terminal使用, 使Windows像Linux终端一样爽   \
 [Download](https://github.com/PowerShell/PowerShell)
 
 ```sh
@@ -120,6 +120,13 @@ https://blog.csdn.net/qq_39052513/article/details/104692026
 
 
 <br>
+
+### geek 
+> windows卸载工具，清理注册表，删除缓存文件，开箱即用    \
+[Download](https://geekuninstaller.com/)
+
+<br>
+
 
 
 ### vscode
