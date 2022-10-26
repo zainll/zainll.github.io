@@ -55,8 +55,31 @@ https://blog.csdn.net/m0_49328056/article/details/121669035
 
 
 
+## linux内核线上阅读
+
+- linux、u-boot、qemu、glibc、llvm、grub
+https://elixir.bootlin.com/
+
+<br>
+
+## U-boot
+
+```sh
+# 下载源代码
+git clone https://source.denx.de/u-boot/u-boot.git
+# 或
+git clone https://github.com/u-boot/u-boot
+# 切换分支
+git checkout v2020.10
+```
+
+- 官网 https://www.denx.de/wiki/U-Boot/  
+- 代码网站 https://source.denx.de/u-boot
+- 什么是U-Boot以及如何下载U-Boot源码
+https://blog.csdn.net/zhuguanlin121/article/details/119008893
 
 
+<br>
 
 - gdb
 [《100个gdb小技巧》](https://wizardforcel.gitbooks.io/100-gdb-tips/content/)

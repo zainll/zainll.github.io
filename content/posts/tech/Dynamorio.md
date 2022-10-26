@@ -1,7 +1,7 @@
 ---
-title: "Linux内核深度解析"
-date: 2022-10-05T00:17:58+08:00
-lastmod: 2022-10-05T00:17:58+08:00
+title: "DynamoRIO"
+date: 2022-05-05T00:17:58+08:00
+lastmod: 2022-05-05T00:17:58+08:00
 author: ["Zain"]
 keywords: 
 - 
