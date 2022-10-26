@@ -6,7 +6,16 @@
     <description>Recent content in 🧱 工具 on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 05 Sep 2022 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/posts/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 23 Oct 2022 00:00:08 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/posts/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>vscode c/c&#43;&#43;一键创建工程插件</title>
+      <link>https://liuz0123.gitee.io/zain/posts/blog/vscode_c_project_config/</link>
+      <pubDate>Sun, 23 Oct 2022 00:00:08 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/blog/vscode_c_project_config/</guid>
+      <description>说明：插件基于C/C++ Project Generator，原始项目未更新，联系到作者沟通是否合入 本项目地址: https://github.com/zhuangll/vscode_c_project_config 安装 在vscode中安装C/C++ Project Gen</description>
+    </item>
+    
     <item>
       <title>git</title>
       <link>https://liuz0123.gitee.io/zain/posts/blog/git/</link>

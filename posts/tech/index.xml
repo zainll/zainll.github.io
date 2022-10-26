@@ -6,16 +6,7 @@
     <description>Recent content in 👨🏻‍💻 技术 on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 23 Oct 2022 00:00:08 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/posts/tech/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>vscode c/c&#43;&#43;一键创建工程插件</title>
-      <link>https://liuz0123.gitee.io/zain/posts/tech/vscode_c_project_config/</link>
-      <pubDate>Sun, 23 Oct 2022 00:00:08 +0800</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/tech/vscode_c_project_config/</guid>
-      <description>说明：插件基于C/C++ Project Generator，原始项目未更新，联系到作者沟通是否合入 本项目地址: https://github.com/zhuangll/vscode_c_project_config 安装 在vscode中安装C/C++ Project Gen</description>
-    </item>
-    
+    <lastBuildDate>Wed, 05 Oct 2022 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/posts/tech/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux内核深度解析</title>
       <link>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</link>
