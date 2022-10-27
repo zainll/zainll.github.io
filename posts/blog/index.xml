@@ -82,7 +82,7 @@
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/blog/vim/</guid>
-      <description>Vim vim快捷方式 # 编辑模式 i a o # i 进入编辑模式 # 退出ESC 返回命令模式 # 保存退出 wq # 放弃退出 !q # 回到文件首部 gg # 到文件尾部 GG # 查找 / # 粘贴</description>
+      <description>Vim vim快捷方式 # 编辑模式 i a o # i 进入编辑模式 # 退出ESC 返回命令模式 # shift + : 低行模式 wq # 保存退出 w! # 保存 !q # 放弃退出 gg # 回到文件首部 GG #</description>
     </item>
     
     <item>
@@ -91,7 +91,7 @@
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/blog/windowssoftware/</guid>
-      <description>windows 工具软件 Snipaste 截图软件 支持自定义设置快捷键 Download ZoomIt 屏幕缩放、标记、录制 展示小工具 whois 居然可以在Windows使用 Download Sysinternals 工具集 Download everyting 快速查找文件 Download 7zip 开源压</description>
+      <description>CMD命令 # 查询本机IP ipconfig # 向对方电脑发送消息 msg /server 192.168.1.100 * 消息 # 查看本机用户信息 net user # 查看共享资源 net share # 查看网站IP nsloopup www.baidu.com # 查看WiFi配置文件 netsh</description>
     </item>
     
     <item>
