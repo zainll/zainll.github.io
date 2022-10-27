@@ -395,3 +395,24 @@ init线程继续初始化，执行的主要操作如下。    \
 &emsp;init进程是用户空间第一个进程，负责启动用户程序。Linux系统init程序有`sysvinit`、busybox init、upstart、`systemd`和procd。sysvinit是Unix系统5(System V)init程序，启动配置文件`/etc/initab`
 
 
+<br>
+
+# 第2章 进程管理
+
+&emsp;Linux内核把进程称为task，进程虚拟地址空间分为用户虚拟地址空间和内核地址空间，所有进程共享内核虚拟地址空间，每个进程有独立用户虚拟地址空间
+&emsp;进程有两种特殊形式：没有用户虚拟地址空间的进程称为内核线程，共享用户虚拟地址空间的进程称为用户线程。
+&emsp;task_struct结构体是进程描述符，主要成员
+```c
+volatile long state;    // 进程状态
+pid_t pid;              // 全局进程号
+struct pid_link pid[PIDTYPE_MAX];   // 进程号，进程组标识符和会话标识符
+struct task_struct *group_leader;   // 指向进村组的组长
+char comm[TASK_COMM_LEN];           // 进程名
+cpumask_t cpus_allowed;             // 允许进程在哪些处理器上运行
+struct fs_struct *fs;               // 文件系统信息，主要是进程的根目录和当前工作目录
+struct nsproxy *nsproxy;            // 命名空间
+struct sysv_sem sysvsem;            // UNIx系统5信号量和共享内存
+struct sysv_shm sysvshm;
+```
+
+
