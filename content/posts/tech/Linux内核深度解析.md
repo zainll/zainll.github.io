@@ -290,9 +290,9 @@ ENDPROC(stext)
 
 ```
 
-* 函数el2_setup
-> 1.如果异常级别是1，那么在异常级别1执行内核。
-2.如果异常级别是2，那么根据处理器是否支持虚拟化宿主扩展（Virtualization Host Extensions，VHE），决定是否需要降级到异常级别1。
+1. 函数el2_setup
+> a.如果异常级别是1，那么在异常级别1执行内核。
+b.如果异常级别是2，那么根据处理器是否支持虚拟化宿主扩展（Virtualization Host Extensions，VHE），决定是否需要降级到异常级别1。
    1）如果处理器支持虚拟化宿主扩展，那么在异常级别2执行内核。  
    2）如果处理器不支持虚拟化宿主扩展，那么降级到异常级别1，在异常级别1执行内核
 
@@ -315,69 +315,50 @@ vcpu_fd = ioctl(vmfd, KVM_CREATE_VCPU, 0);
 
 <br>
 
-* 函数__create_page_tables
+2. 函数__create_page_tables
+> 1）创建恒等映射，虚拟地址=物理地址`__enable_mmu`开启内存管理单元
+> 2）为内核镜像创建映射
 
+&emsp;映射代码节`.idmap.text`,恒等映射代码节的起始地址存放在全局变量__idmap_text_start中，结束地址存放在全局变量__idmap_text_end中。恒等映射是为恒等映射代码节创建的映射，idmap_pg_dir是恒等映射的页全局目录（即第一级页表）的起始地址。内核的页表中为内核镜像创建映射，内核镜像的起始地址是_text，结束地址是_end，swapper_pg_dir是内核的页全局目录的起始地址
 
 <br>
 
-* 函数__primary_switch
+3. 函数__primary_switch
+> 1）__enable_mmu开启内存管理单元
+> 2）__primary_switched
+&ensp;__enable_mmu执行流程
+&emsp;1）把转换表基准寄存器0(TTBR0_EL1)设置为恒等映射的页全局目录的起始物理地址
+&emsp;2）把转换表基准寄存器1(TTBR1_EL1)设置为内核的页全局目录的起始物理地址
+&emsp;3）设置系统控制寄存器(SCTLR_EL1)，开启内存管理单元，后MMU把虚拟地址转换成物理地址
+&ensp;__primary_switch执行流程
+&emsp;1）把当前异常级别的栈指针寄存器设置为0号线程内核栈的顶部(init_thread_union + THREAD_SIZE)
+&emsp;2）把异常级别0的栈指针寄存器(SP_EL0)设置为0号线程的结构体`thread_info`的地址(init_task.thread_info)
+&emsp;3）把向量基准地址寄存器(VBAR_EL1)设置为异常向量表的起始地址(vectors)
+&emsp;4）计算内核镜像的起始虚拟地址(kimage_vaddr)和物理地址的差值，保存在全局变量kimage_voffset中
+&emsp;5）用0初始化内核的未初始化数据段
+&emsp;6）调用C语言函数`start_kernel`
 
 <br>
 
 
 ### 1.2.2 C语言部分
 
-&emsp;内核初始化的C语言部分入口是函数start_kernel，函数start_kernel首先初始化基础设施，即初始化内核的各个子系统，然后调用函数rest_init。函数rest_init的执行流程如下。
+&emsp;内核初始化的C语言部分入口是函数`start_kernel`，函数start_kernel首先初始化基础设施，即初始化内核的各个子系统，然后调用函数`rest_init`。函数rest_init的执行流程如下。   \
+&ensp;（1）创建1号线程，即init线程，线程函数是kernel_init。     \
+&ensp;（2）创建2号线程，即kthreadd线程，负责创建内核线程。     \
+&ensp;（3）0号线程最终变成空闲线程。    \
 
-（1）创建1号线程，即init线程，线程函数是kernel_init。
+init线程继续初始化，执行的主要操作如下。    \
+&ensp;（1）smp_prepare_cpus()：在启动从处理器以前执行准备工作。   \
+&ensp;（2）do_pre_smp_initcalls()：执行必须在初始化SMP系统以前执行的早期初始化，即使用宏early_initcall注册的初始化函数。   \
+&ensp;（3）smp_init()：初始化SMP系统，启动所有从处理器。   \
+&ensp;（4）do_initcalls()：执行级别0～7的初始化。 \
+&ensp;（5）打开控制台的字符设备文件“/dev/console”，文件描述符0、1和2分别是标准输入、标准输出和标准错误，都是控制台的字符设备文件。   \
+&emsp;（6）prepare_namespace()：挂载根文件系统，后面装载init程序时需要从存储设备上的文件系统中读文件。   \
+&emsp;（7）free_initmem()：释放初始化代码和数据占用的内存。   \
+&emsp;（8）装载init程序（U-Boot程序可以传递内核参数“init=”以指定init程序），从内核线程转换成用户空间的init进程。  \
 
-（2）创建2号线程，即kthreadd线程，负责创建内核线程。
-
-（3）0号线程最终变成空闲线程。
-
-init线程继续初始化，执行的主要操作如下。
-
-（1）smp_prepare_cpus()：在启动从处理器以前执行准备工作。
-
-（2）do_pre_smp_initcalls()：执行必须在初始化SMP系统以前执行的早期初始化，即使用宏early_initcall注册的初始化函数。
-
-（3）smp_init()：初始化SMP系统，启动所有从处理器。
-
-（4）do_initcalls()：执行级别0～7的初始化。
-保存在全局变量kimage_voffset中。
-
-（5）用0初始化内核的未初始化数据段。
-
-（6）调用C语言函数start_kernel。
-
-1.3.2　C语言部分
-内核初始化的C语言部分入口是函数start_kernel，函数start_kernel首先初始化基础设施，即初始化内核的各个子系统，然后调用函数rest_init。函数rest_init的执行流程如下。
-
-（1）创建1号线程，即init线程，线程函数是kernel_init。
-
-（2）创建2号线程，即kthreadd线程，负责创建内核线程。
-
-（3）0号线程最终变成空闲线程。
-
-init线程继续初始化，执行的主要操作如下。
-
-（1）smp_prepare_cpus()：在启动从处理器以前执行准备工作。
-
-（2）do_pre_smp_initcalls()：执行必须在初始化SMP系统以前执行的早期初始化，即使用宏early_initcall注册的初始化函数。
-
-（3）smp_init()：初始化SMP系统，启动所有从处理器。
-
-（4）do_initcalls()：执行级别0～7的初始化。
-
-（5）打开控制台的字符设备文件“/dev/console”，文件描述符0、1和2分别是标准输入、标准输出和标准错误，都是控制台的字符设备文件。
-
-（6）prepare_namespace()：挂载根文件系统，后面装载init程序时需要从存储设备上的文件系统中读文件。
-
-（7）free_initmem()：释放初始化代码和数据占用的内存。
-
-（8）装载init程序（U-Boot程序可以传递内核参数“init=”以指定init程序），从内核线程转换成用户空间的init进程。
-
-级别0～7的初始化，是指使用以下宏注册的初始化函数：
+&ensp;级别0～7的初始化，是指使用以下宏注册的初始化函数：
 ```c
 // include/linux/init.h
 #define pure_initcall(fn)           __define_initcall(fn, 0)
@@ -401,8 +382,16 @@ init线程继续初始化，执行的主要操作如下。
 
 
 ### 1.2.3 SMP系统的引导
+&ensp;对称多处理器(Symmetirc Multi-Processor SMP)
+&emsp;3种引导从处理器方法
+- 自旋表
+- 电源状态协调接口
+- ACPI停车协议
+
+![ARM64架构下SMP系统的自旋表引导过程](https://liuz0123.gitee.io/zain/img/ARM64_SMP_spin_table.png)
 
 
-
+## 1.3 init进程
+&emsp;init进程是用户空间第一个进程，负责启动用户程序。Linux系统init程序有`sysvinit`、busybox init、upstart、`systemd`和procd。sysvinit是Unix系统5(System V)init程序，启动配置文件`/etc/initab`
 
 
