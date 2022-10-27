@@ -31,7 +31,28 @@ cover:
 
 
 
+## CMD命令
 
+```sh
+# 查询本机IP
+ipconfig
+# 向对方电脑发送消息
+msg /server 192.168.1.100 * 消息
+# 查看本机用户信息
+net user
+# 查看共享资源
+net share
+# 查看网站IP
+nsloopup www.baidu.com
+# 查看WiFi配置文件
+netsh wlan show
+# 管道符，输出到文件
+| 1.txt
+# 
+
+
+
+```
 
 
 ## windows 工具软件
