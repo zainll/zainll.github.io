@@ -455,6 +455,71 @@ struct sysv_shm sysvshm;
 
 ![进程的命名空间](https://liuz0123.gitee.io/zain/img/process_namespace.png)
 
+&emsp;进程号命名空间用来隔离进程号，对应的结构体是pid_namespace,进程号命名空间用来隔离进程号，对应的结构体是pid_namespace。
+
+
+## 2.3 进程标识符
+
+|标识符||
+-|-|-
+|进程标识符|命名空间给进程分配标识符|
+|线程组标识符|线程组中的主进程称为组长，线程组标识符就是组长的进程标识符<br>系统调用clone传入标志CLONE_THREAD以创建新进程时，新进程和当前进程属于一个线程组|
+|进程组标识符|进程组标识符是组长的进程标识符。<br>进程可以使用系统调用setpgid创建或者加入一个进程组|
+|会话标识符|进程调用系统调用setsid的时候，创建一个新的会话|
+
+
+![进程的命名空间](https://liuz0123.gitee.io/zain/img/pid_mark.png)
+
+&emsp;pid存储全局进程号，pids[PIDTYPE_PID].pid指向结构体pid，pids[PIDTYPE_PGID].pid指向进程组组长的结构体pid，pids[PIDTYPE_SIG].pid指向会话进程的结构体pid    \
+
+&emsp;进程标识符结构体pid的成员，count是引用计数，level进程号命名空间的层次，numbers元素个数是level的值加1，
+
+
+
+## 2.4 进程关系
+
+&emsp;如果子进程被某个进程（通常是调试器）使用系统调用ptrace跟踪，那么成员parent指向跟踪者的进程描述符，否则成员parent也指向父进程的进程描述符。
+
+![进程的命名空间](https://liuz0123.gitee.io/zain/img/process_relative.png)
+
+![进程和线程链表](https://liuz0123.gitee.io/zain/img/tasks_table.png)
+
+
+
+## 2.4 启动程序
+
+&emsp;内核使用静态数据构造出0号内核线程，0号内核线程分叉生成1号内核线程和2号内核线程（kthreadd线程）。1号内核线程完成初始化以后装载用户程序，变成1号进程，其他进程都是1号进程或者它的子孙进程分叉生成的；其他内核线程是kthreadd线程分叉生成的
+&emsp;两个个系统调用创建进程：    \
+- fork：子进程是父进程的副本，用写时复制
+- clone：可控制子进程和父进程共享哪些资源
+- vfork：创建子进程，子进程用execve装载程序(已废弃)
+
+```c
+// 数字表示参数个数
+SYSCALL_DEFINE0(fork)
+// 宏展开 asmlinkage表示C语言函数看被汇编代码调用
+asmlinkage long sys_fork(void)
+```
+
+&emsp;创建进程的进程p和被创建进程c三种关系
+- 新进程是进程p的子进程
+- clone传入CLONE_PARENT，兄弟关系
+- clone传入CLONE_THREAD，同属一个线程组
+
+1. _do_fork函数
+
+```c
+// kernel/fork.c
+long _do_fork(unsigned long clone_flags,
+           unsigned long stack_start,
+           unsigned long stack_size,
+           int __user *parent_tidptr,
+           int __user *child_tidptr,
+           unsigned long tls);
+
+```
+
+![函数_do_fork的执行流程](https://liuz0123.gitee.io/zain/img/_do_fork.png)
 
 
 
