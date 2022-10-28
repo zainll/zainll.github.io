@@ -407,13 +407,27 @@ init线程继续初始化，执行的主要操作如下。    \
 
 ```c
 volatile long state;    // 进程状态
+void *stack;            // 指向内核栈
 pid_t pid;              // 全局进程号
+pid_t tgid              // 全局的线程组标识符
 struct pid_link pid[PIDTYPE_MAX];   // 进程号，进程组标识符和会话标识符
+struct task_struct _rcu *real_parent;   // real_parent指向真实的父进程
+struct task_struct _rcu *parent;        // parent指向父进程
 struct task_struct *group_leader;   // 指向进村组的组长
+const struct cred _rcu *real_cred;  // real_cred指向主题和真实客体证书
+const struct cred _rcu *cred;       // cred指向客体证书
 char comm[TASK_COMM_LEN];           // 进程名
+int prio, static_prio, nornal_prio; // 调度策略
+unsigned int rt_priority,prolicy；  // 优先级
 cpumask_t cpus_allowed;             // 允许进程在哪些处理器上运行
-struct fs_struct *fs;               // 文件系统信息，主要是进程的根目录和当前工作目录
+struct mm_struct *mm, *active_mm;   // 指向内存描述符，进程mm，和active_mm指向同一个内存描述符，内核线程mm是指针，当内核线程运行时active_mm指向从进程借用的内存描述符
+struct file_struct *files;          // 打开文件表
 struct nsproxy *nsproxy;            // 命名空间
+struct signal_struct *signal;       // 信号处理
+struct sigband_struct *sighand;
+sigset_t blocked, real_blocked;
+sigset_t saved_sigmask;
+struct sigpending pending;
 struct sysv_sem sysvsem;            // UNIx系统5信号量和共享内存
 struct sysv_shm sysvshm;
 ```
@@ -421,6 +435,27 @@ struct sysv_shm sysvshm;
 
 
 ## 2.2 命名空间
+&emsp;和虚拟机相比，容器是一种轻量级的虚拟化技术，直接使用宿主机的内核，使用命名空间隔离资源,虚拟机仅仅是通过命名空间隔离？  \
+
+
+|命名空间|隔离资源|
+-|-|-
+|控制组cgroup|控制组根目录|
+|进程间通信IPC|UNIX系统5进程间通信和POSIx消息队列|
+|network|网络协议|
+|挂载mount|挂载点|
+|PID|进程号|
+|user|用户标识符和组标识符|
+|UNIX分时系统(UTS)|主机名和网络信息服务NIS域名|
+
+&ensp;创建新的命名空间方法：   \
+&emsp;调用clone创建子进程时，使用标志位控制子进程是共享父进程的命名空间还是创建新命名空间   \
+&emsp;调用unshare创建新的命名空间    \
+&ensp;进程使用系统调用setns，绑定一个已经存在的命名空间
+
+![进程的命名空间](https://liuz0123.gitee.io/zain/img/process_namespace.png)
+
+
 
 
 
