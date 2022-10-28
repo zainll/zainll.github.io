@@ -291,13 +291,13 @@ ENDPROC(stext)
 ```
 
 1. 函数el2_setup
-> a.如果异常级别是1，那么在异常级别1执行内核。
-b.如果异常级别是2，那么根据处理器是否支持虚拟化宿主扩展（Virtualization Host Extensions，VHE），决定是否需要降级到异常级别1。
-   1）如果处理器支持虚拟化宿主扩展，那么在异常级别2执行内核。  
-   2）如果处理器不支持虚拟化宿主扩展，那么降级到异常级别1，在异常级别1执行内核
+> a.如果异常级别是1，那么在异常级别1执行内核。   \
+b.如果异常级别是2，那么根据处理器是否支持虚拟化宿主扩展（Virtualization Host Extensions，VHE），决定是否需要降级到异常级别1。    \
+   1）如果处理器支持虚拟化宿主扩展，那么在异常级别2执行内核。    \  
+   2）如果处理器不支持虚拟化宿主扩展，那么降级到异常级别1，在异常级别1执行内核      \
 
-&emsp;基于内核的虚拟机（Kernel-based Virtual Machine，KVM），KVM的主要特点是直接在处理器上执行客户操作系统，因此虚拟机的执行速度很快。KVM是内核的一个模块，把内核变成虚拟机监控程序。
-&emsp;开源虚拟机管理软件是QEMU，QEMU支持KVM虚拟机。QEMU创建一个KVM虚拟机，和KVM的交互过程
+&emsp;基于内核的虚拟机（Kernel-based Virtual Machine，KVM），KVM的主要特点是直接在处理器上执行客户操作系统，因此虚拟机的执行速度很快。KVM是内核的一个模块，把内核变成虚拟机监控程序。       \
+&emsp;开源虚拟机管理软件是QEMU，QEMU支持KVM虚拟机。QEMU创建一个KVM虚拟机，和KVM的交互过程           \
 ```c
 // 打开KVM字符设备文件。
 fd = open("/dev/kvm", O_RDWR);
@@ -307,36 +307,36 @@ vmfd = ioctl(fd, KVM_CREATE_VM, 0);
 vcpu_fd = ioctl(vmfd, KVM_CREATE_VCPU, 0);
 ```
 
-&emsp;从QEMU切换到客户操作系统的过程如下。
-&emsp;（1）QEMU进程调用“ioctl(vcpu_fd, KVM_RUN, 0)”，陷入到内核。
-&emsp;（2）KVM执行命令KVM_RUN，从异常级别1切换到异常级别2。
-&emsp;（3）KVM首先把调用进程的所有寄存器保存在kvm_vcpu结构体中，然后把所有寄存器设置为客户操作系统的寄存器值，最后从异常级别2返回到异常级别1，执行客户操作系统。
-&emsp;为了提高切换速度，ARM64架构引入了虚拟化宿主扩展，在异常级别2执行宿主操作系统的内核，从QEMU切换到客户操作系统的时候，KVM不再需要先从异常级别1切换到异常级别2
+&emsp;从QEMU切换到客户操作系统的过程如下。      \
+&emsp;（1）QEMU进程调用“ioctl(vcpu_fd, KVM_RUN, 0)”，陷入到内核。     \
+&emsp;（2）KVM执行命令KVM_RUN，从异常级别1切换到异常级别2。           \
+&emsp;（3）KVM首先把调用进程的所有寄存器保存在kvm_vcpu结构体中，然后把所有寄存器设置为客户操作系统的寄存器值，最后从异常级别2返回到异常级别1，执行客户操作系统。           \
+&emsp;为了提高切换速度，ARM64架构引入了虚拟化宿主扩展，在异常级别2执行宿主操作系统的内核，从QEMU切换到客户操作系统的时候，KVM不再需要先从异常级别1切换到异常级别2      \
 
 <br>
 
 2. 函数__create_page_tables
-> 1）创建恒等映射，虚拟地址=物理地址`__enable_mmu`开启内存管理单元
-> 2）为内核镜像创建映射
+> 1）创建恒等映射，虚拟地址=物理地址`__enable_mmu`开启内存管理单元        \
+> 2）为内核镜像创建映射             \
 
 &emsp;映射代码节`.idmap.text`,恒等映射代码节的起始地址存放在全局变量__idmap_text_start中，结束地址存放在全局变量__idmap_text_end中。恒等映射是为恒等映射代码节创建的映射，idmap_pg_dir是恒等映射的页全局目录（即第一级页表）的起始地址。内核的页表中为内核镜像创建映射，内核镜像的起始地址是_text，结束地址是_end，swapper_pg_dir是内核的页全局目录的起始地址
 
 <br>
 
 3. 函数__primary_switch
-> 1）__enable_mmu开启内存管理单元
-> 2）__primary_switched
-&ensp;__enable_mmu执行流程
-&emsp;1）把转换表基准寄存器0(TTBR0_EL1)设置为恒等映射的页全局目录的起始物理地址
-&emsp;2）把转换表基准寄存器1(TTBR1_EL1)设置为内核的页全局目录的起始物理地址
-&emsp;3）设置系统控制寄存器(SCTLR_EL1)，开启内存管理单元，后MMU把虚拟地址转换成物理地址
-&ensp;__primary_switch执行流程
-&emsp;1）把当前异常级别的栈指针寄存器设置为0号线程内核栈的顶部(init_thread_union + THREAD_SIZE)
-&emsp;2）把异常级别0的栈指针寄存器(SP_EL0)设置为0号线程的结构体`thread_info`的地址(init_task.thread_info)
-&emsp;3）把向量基准地址寄存器(VBAR_EL1)设置为异常向量表的起始地址(vectors)
-&emsp;4）计算内核镜像的起始虚拟地址(kimage_vaddr)和物理地址的差值，保存在全局变量kimage_voffset中
-&emsp;5）用0初始化内核的未初始化数据段
-&emsp;6）调用C语言函数`start_kernel`
+> 1）__enable_mmu开启内存管理单元            \
+> 2）__primary_switched   \
+&ensp;__enable_mmu执行流程  \
+&emsp;1）把转换表基准寄存器0(TTBR0_EL1)设置为恒等映射的页全局目录的起始物理地址     \
+&emsp;2）把转换表基准寄存器1(TTBR1_EL1)设置为内核的页全局目录的起始物理地址        \
+&emsp;3）设置系统控制寄存器(SCTLR_EL1)，开启内存管理单元，后MMU把虚拟地址转换成物理地址    \
+&ensp;__primary_switch执行流程      \
+&emsp;1）把当前异常级别的栈指针寄存器设置为0号线程内核栈的顶部(init_thread_union + THREAD_SIZE)           \
+&emsp;2）把异常级别0的栈指针寄存器(SP_EL0)设置为0号线程的结构体`thread_info`的地址(init_task.thread_info)        \
+&emsp;3）把向量基准地址寄存器(VBAR_EL1)设置为异常向量表的起始地址(vectors)     \
+&emsp;4）计算内核镜像的起始虚拟地址(kimage_vaddr)和物理地址的差值，保存在全局变量kimage_voffset中     \
+&emsp;5）用0初始化内核的未初始化数据段      \
+&emsp;6）调用C语言函数`start_kernel`      \
 
 <br>
 
@@ -382,8 +382,8 @@ init线程继续初始化，执行的主要操作如下。    \
 
 
 ### 1.2.3 SMP系统的引导
-&ensp;对称多处理器(Symmetirc Multi-Processor SMP)
-&emsp;3种引导从处理器方法
+&ensp;对称多处理器(Symmetirc Multi-Processor SMP)       \
+&emsp;3种引导从处理器方法      \
 - 自旋表
 - 电源状态协调接口
 - ACPI停车协议
@@ -401,9 +401,10 @@ init线程继续初始化，执行的主要操作如下。    \
 
 ## 2.1 进程
 
-&emsp;Linux内核把进程称为task，进程虚拟地址空间分为用户虚拟地址空间和内核地址空间，所有进程共享内核虚拟地址空间，每个进程有独立用户虚拟地址空间
-&emsp;进程有两种特殊形式：没有用户虚拟地址空间的进程称为内核线程，共享用户虚拟地址空间的进程称为用户线程。
+&emsp;Linux内核把进程称为task，进程虚拟地址空间分为用户虚拟地址空间和内核地址空间，所有进程共享内核虚拟地址空间，每个进程有独立用户虚拟地址空间       \
+&emsp;进程有两种特殊形式：没有用户虚拟地址空间的进程称为内核线程，共享用户虚拟地址空间的进程称为用户线程。     \
 &emsp;task_struct结构体是进程描述符，主要成员
+
 ```c
 volatile long state;    // 进程状态
 pid_t pid;              // 全局进程号
