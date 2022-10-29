@@ -99,13 +99,16 @@ https://www.csdn.net/tags/MtTaAgzsNjg5MTk4LWJsb2cO0O0O.html
 
 
 ```sh
-# 快捷方式
-flameshot gui
-
-
+# 快捷方式 
+# 个人习惯设置为 alt + AQ
+# -c 保存到粘贴板， -p 保存到路径 
+flameshot gui -c -p <path>
 ```
 
 - https://www.cnblogs.com/kendoziyu/p/how_to_screenshot_in_ubuntu2004.html
+
+
+## free
 
 ```sh
 get -O clash.gz https://github.com/Dreamacro/clash/releases/download/v1.11.8/clash-linux-amd64-v1.11.8.gz

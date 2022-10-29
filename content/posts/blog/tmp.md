@@ -29,12 +29,15 @@ cover:
     relative: false
 ---
 
-emojiall 图标可嵌入博客中
-https://www.emojiall.com/zh-hans/sub-categories/A15
 
 
 
 
+PicGo: xclip not found! Please install xclip before run picgo.
+
+PicGo: image not found in clipboard.
+
+![pid_mark](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/pid_mark.png)
 
 
-
+![Q](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/Q.gif)

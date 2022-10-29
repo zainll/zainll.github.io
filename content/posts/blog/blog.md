@@ -113,4 +113,19 @@ https://blog.csdn.net/qq_30930805/article/details/
 https://www.emojiall.com/zh-hans/sub-categories/A15
 
 
+##  图床
 
+> vscode + PicGo + github
+
+```sh
+# 快捷方式
+# 粘贴板上传
+ctrl + alt + u
+# 目录选择上传
+ctrl + alt + e
+
+```
+
+参考链接：
+https://blog.csdn.net/qq_44314954/article/details/122951033
+https://blog.csdn.net/qq_44314954/article/details/122951033
