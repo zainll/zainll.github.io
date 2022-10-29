@@ -84,6 +84,9 @@ https://blog.csdn.net/zhuguanlin121/article/details/119008893
 - gdb
 [《100个gdb小技巧》](https://wizardforcel.gitbooks.io/100-gdb-tips/content/)
 
+https://leetcode-cn.com/circle/article/7mxorv
+
+
 
 - kbuild
 [Kbuild: the Linux Kernel Build System](https://www.linuxjournal.com/content/kbuild-linux-kernel-build-system)        \

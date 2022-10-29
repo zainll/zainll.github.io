@@ -319,12 +319,22 @@ https://iptv-org.github.io/iptv/index.m3u
 <br>
 <br>
 
----------------------未整理部分------------------------------
+
+## Online 
 
 
+### 线上思维导图
+https://gitmind.cn/app/template
 
+<br>
 
+### 在线文档转换
+https://www.aconvert.com/cn/
 
+<br>
+
+### 开源软件下载网站
+https://www.fosshub.com/#
 
 
 
@@ -338,15 +348,7 @@ https://iptv-org.github.io/iptv/index.m3u
 
 剪切板win10自带的有很多剪切记录的快捷键Windows键➕V键
 
-线上思维导图
-https://gitmind.cn/app/template
-在线文档转换
-https://www.aconvert.com/cn/
-开源软件下载网站
-https://www.fosshub.com/#
 
-### windows ternial
-- 添加 git base 到ternial
 
 
 ### chrome插件
@@ -367,10 +369,6 @@ https://www.ganbey.com/youtube-download-3774
 
 
 
-## zlog
-https://blog.csdn.net/twd_1991/article/details/80481920
-
-http://hardysimpson.github.io/zlog/UsersGuide-CN.html
 
 
 ## gdb
