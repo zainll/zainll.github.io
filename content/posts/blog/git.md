@@ -78,8 +78,6 @@ git push
 # 弹出本地栈
 git stash pop 
 
-
-
 ```
 
 ## git配置

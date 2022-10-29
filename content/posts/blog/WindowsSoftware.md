@@ -267,36 +267,73 @@ net start LxssManager
 
 
 
+## l
 
-
-
+### rustdesk  
+> 远程开源软件，跨平台
+https://github.com/rustdesk/rustdesk
 
 <br>
+
+### ditto 粘贴板工具
+https://ditto-cp.sourceforge.io/
+https://github.com/sabrogden/Ditto
+
+<br>
+
+### bleachbit
+https://github.com/bleachbit/bleachbit
+https://www.bleachbit.org/
+
+<br>
+
+### qbittorrent
+https://github.com/qbittorrent/qBittorrent
+
+<br>
+
+
+### imagine gui   
+> 跨平台PNG和JPEG优化GUI工具 
+https://github.com/meowtec/Imagine
+
+<br>
+
+### creentogif  
+>动图捕获软件 录制屏幕上的指定区域
+https://www.screentogif.com/
+
+<br>
+
+
+### grammarly
+https://www.grammarly.com/
+
+<br>
+
+### potplayer 
+https://iptv-org.github.io/iptv/index.m3u
+
+### maya  三维建模软件
 
 <br>
 <br>
 
 ---------------------未整理部分------------------------------
 
-rustdesk  远程开源软件
 
-maya
 
-imagine
 
-screentogif
 
-ditto
 
-bleachbit
 
-qbittorrent
 
-grammarly
 
-potplayer 
-https://iptv-org.github.io/iptv/index.m3u
 
+
+
+
+、
 
 
 剪切板win10自带的有很多剪切记录的快捷键Windows键➕V键
