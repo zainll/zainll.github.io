@@ -107,6 +107,13 @@ flameshot gui
 
 - https://www.cnblogs.com/kendoziyu/p/how_to_screenshot_in_ubuntu2004.html
 
+```sh
+get -O clash.gz https://github.com/Dreamacro/clash/releases/download/v1.11.8/clash-linux-amd64-v1.11.8.gz
+gzip -f clash.gz -d 
+sudo chmod +x clash 
+./clash
+wget -U "Mozilla/6.0" -O ~/.config/clash/config.yaml   https://to.runba.cyou/link/HR6FLUV7z8k7lNyx?clash=1
+```
 
 
 

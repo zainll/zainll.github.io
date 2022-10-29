@@ -101,7 +101,16 @@ https://liam.page/
 
 https://liam.page/en/
 
+
+
+## 装饰
+
 - Hexo博客添加helper-live2d动态模型插件
 https://blog.csdn.net/qq_30930805/article/details/
+
+
+- emojiall 图标可嵌入博客中
+https://www.emojiall.com/zh-hans/sub-categories/A15
+
 
 
