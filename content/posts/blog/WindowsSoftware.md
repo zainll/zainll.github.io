@@ -371,10 +371,5 @@ https://www.ganbey.com/youtube-download-3774
 
 
 
-## gdb
-
-https://leetcode-cn.com/circle/article/7mxorv
-
-
 
 
