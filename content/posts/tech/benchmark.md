@@ -32,3 +32,20 @@ cover:
 
 
 [openbenchmark](https://openbenchmarking.org/test/pts/openssl-3.0.0)
+
+
+```sh
+openssl speed
+openssl speed --multi 1
+
+```
+
+
+
+
+
+
+
+
+
+
