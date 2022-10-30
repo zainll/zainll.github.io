@@ -529,7 +529,7 @@ long _do_fork(unsigned long clone_flags,
 2. copy_process函数
 ![20221030190536](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221030190536.png)
 
-* 标志组合
+* 1）标志组合
 |||
 - | :-: | :-: 
 |CLONE_NEWNS & CLONE_FS|新进程属于新挂载命名空间<br>共享文件系统信息|
@@ -537,10 +537,57 @@ long _do_fork(unsigned long clone_flags,
 |CLONE_THREAD 未设置CLONE_SIGHAND|新进程和当前进程同属一个线程组，但不共享信号处理程序|
 |CLONE_SIGHAND 未设置CLONE_VM|新进程和当前进程共享信号处理程序，但不共享虚拟内存|
 
-* dup_task_struct函数
+* 2）dup_task_struct函数
 &emsp;未新进程的进程描述符分配内存，复制当前进程描述符，为新进程分配内核栈
 
 ![20221030192206](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221030192206.png "进程的内核栈")
+
+```c
+// include/linux/sched.h
+union thread_union {
+#ifndef CONFIG_ARCH_TASK_STRUCT_ON_STACK
+	struct task_struct task;
+#endif
+#ifndef CONFIG_THREAD_INFO_IN_TASK
+	struct thread_info thread_info;
+#endif
+	unsigned long stack[THREAD_SIZE/sizeof(long)];
+};
+```
+
+&ensp;内核栈两种布局
+- 1. thread_info在内核栈顶部，成员task指向进程描述符
+- 2. thread_info未占用内核栈
+&emsp;第二种布局需打开CONFIG_THREAD_INFO_IN_TASK，ARM64使用第二种内核栈布局，thread_info结构体地址与进程描述符地址相同。进程在内核模式时，ARM64架构的内核使用用户栈指针寄存器SP_EL0存放当前进程的thread_info结构体地址，可同时得到thread_info地址和进程描述符地址
+&emsp;内核栈的长度时`THREAD_SIZE`，**ARM64架构内核栈长度为16KB**
+&ensp;thread_info存放汇编代码直接访问的底层数据，ARM64架构定义结构体
+```c
+// arch/arm64/include/asm/thread_info.h
+struct thread_info {
+	unsigned long		flags;		/* low level flags 底层标志位 */
+	mm_segment_t		addr_limit;	/* address limit 地址限制 */
+#ifdef CONFIG_ARM64_SW_TTBR0_PAN
+	u64			ttbr0;		/* saved TTBR0_EL1 保存的寄存器TTBR0_EL1 */
+#endif
+    u64		preempt_count;	/* 抢占计数器 0 => preemptible 可抢占, <0 => bug缺陷 */
+};
+```
+
+
+- 3）copy_creds函数
+&emsp;负责复制或共享证书，证书存放进程的用户标识符、组标识符和访问权限。设置标志CLONE_THREAD，同属一个线程组。CLONE_NEWUSER，需要为新进程创建新的用户命名空间。进程计数器加1
+
+- 4）检查线程数量限制
+&emsp;全局变量nr_threads存放当前线程数量，max_threads存放允许创建的线程最大数量，默认值MAX_THREADS
+
+- 5）sched_fork函数
+&emsp;
+
+
+
+
+
+
 
 
 
