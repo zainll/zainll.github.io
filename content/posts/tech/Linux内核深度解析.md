@@ -529,7 +529,9 @@ long _do_fork(unsigned long clone_flags,
 2. copy_process函数
 ![20221030190536](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221030190536.png)
 
-* 1）标志组合
+
+- **（1）标志组合**
+
 |||
 - | :-: | :-: 
 |CLONE_NEWNS & CLONE_FS|新进程属于新挂载命名空间<br>共享文件系统信息|
@@ -537,7 +539,8 @@ long _do_fork(unsigned long clone_flags,
 |CLONE_THREAD 未设置CLONE_SIGHAND|新进程和当前进程同属一个线程组，但不共享信号处理程序|
 |CLONE_SIGHAND 未设置CLONE_VM|新进程和当前进程共享信号处理程序，但不共享虚拟内存|
 
-* 2）dup_task_struct函数
+  
+- **（2）dup_task_struct函数**
 &emsp;未新进程的进程描述符分配内存，复制当前进程描述符，为新进程分配内核栈
 
 ![20221030192206](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221030192206.png "进程的内核栈")
@@ -574,13 +577,14 @@ struct thread_info {
 ```
 
 
-- 3）copy_creds函数
+- **（3）copy_creds函数**
 &emsp;负责复制或共享证书，证书存放进程的用户标识符、组标识符和访问权限。设置标志CLONE_THREAD，同属一个线程组。CLONE_NEWUSER，需要为新进程创建新的用户命名空间。进程计数器加1
 
-- 4）检查线程数量限制
+- **（4）检查线程数量限制**
 &emsp;全局变量nr_threads存放当前线程数量，max_threads存放允许创建的线程最大数量，默认值MAX_THREADS
 
-- 5）sched_fork函数
+- **（5）sched_fork函数**
+
 &emsp;为新进程设置调度器相关的参数
 ```c
 // linux-5.10.102/kernel/sched/core.c  书中为4.x版本
@@ -648,7 +652,7 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
 ```
 
 
-- 6）复制或共享资源
+- **（6）复制或共享资源**
 &emsp;UNIX系统5信号量，同属一个线程组的线程才共享UNIX系统的5信号量，copy_semundo函数
 ```c
 // linux-4.14.295/ipc/sem.c
@@ -685,12 +689,12 @@ static int copy_files(unsigned long clone_flags, struct task_struct *tsk)
 	if (!oldf)
 		goto out;
 
-	if (clone_flags & CLONE_FILES) {
-		atomic_inc(&oldf->count);
+	if (clone_flags & CLONE_FILES) { // CLONE_FIELS共享打开文件表
+		atomic_inc(&oldf->count);  // files_struct 计数加1
 		goto out;
 	}
 
-	newf = dup_fd(oldf, NR_OPEN_MAX, &error);
+	newf = dup_fd(oldf, NR_OPEN_MAX, &error);  // 新进程把当前进程的打开文件表复制一份
 	if (!newf)
 		goto out;
 
