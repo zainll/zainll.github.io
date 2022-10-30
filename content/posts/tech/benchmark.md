@@ -37,6 +37,8 @@ cover:
 ```sh
 openssl speed
 openssl speed --multi 1
+openssl speed --multi 1 aes-128-cbc
+
 
 ```
 
