@@ -31,7 +31,7 @@
       <pubDate>Mon, 27 Jun 2022 00:21:08 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</guid>
-      <description>openbenchmark openssl speed openssl speed --multi 1</description>
+      <description>openbenchmark openssl speed openssl speed --multi 1 openssl speed --multi 1 aes-128-cbc</description>
     </item>
     
     <item>
