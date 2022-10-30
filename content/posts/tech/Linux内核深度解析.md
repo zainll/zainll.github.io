@@ -581,12 +581,125 @@ struct thread_info {
 &emsp;全局变量nr_threads存放当前线程数量，max_threads存放允许创建的线程最大数量，默认值MAX_THREADS
 
 - 5）sched_fork函数
-&emsp;
+&emsp;为新进程设置调度器相关的参数
+```c
+// linux-5.10.102/kernel/sched/core.c  书中为4.x版本
+int sched_fork(unsigned long clone_flags, struct task_struct *p)
+{
+	__sched_fork(clone_flags, p);   // 执行基本设置
+	/*
+	 * We mark the process as NEW here. This guarantees that
+	 * nobody will actually run it, and a signal or other external
+	 * event cannot wake it up and insert it on the runqueue either.
+	 */
+	p->state = TASK_NEW;    // 新进程状态设置为TASK_NEW
+
+	/*
+	 * Make sure we do not leak PI boosting priority to the child.
+	 */
+	p->prio = current->normal_prio;  // 新进程调度优先级设置为当前进程正常优先级
+
+	uclamp_fork(p);
+
+	/*
+	 * Revert to default priority/policy on fork if requested.
+	 */
+	if (unlikely(p->sched_reset_on_fork)) {
+		if (task_has_dl_policy(p) || task_has_rt_policy(p)) { // 限期进程或实时进程
+			p->policy = SCHED_NORMAL;  // 调度策略
+			p->static_prio = NICE_TO_PRIO(0); // nice值默认值0，静态优先级120
+			p->rt_priority = 0;  
+		} else if (PRIO_TO_NICE(p->static_prio) < 0) // 普通进程
+			p->static_prio = NICE_TO_PRIO(0); // nice值默认值0，静态优先级120
+
+		p->prio = p->normal_prio = p->static_prio;
+		set_load_weight(p, false);
+
+		/*
+		 * We don't need the reset flag anymore after the fork. It has
+		 * fulfilled its duty:
+		 */
+		p->sched_reset_on_fork = 0;
+	}
+
+	if (dl_prio(p->prio)) // 调度优先级是限期调度累的优先级
+		return -EAGAIN;  // 不允许限期进程分叉生成新的限期进程
+	else if (rt_prio(p->prio))  // 调度优先级是实时调度类优先级
+		p->sched_class = &rt_sched_class; // 调度类设置为实时调度类
+	else
+		p->sched_class = &fair_sched_class;  // 调度优先级是公平调度类的优先级，调度类设置为公平调度类
+
+	init_entity_runnable_average(&p->se);
+
+#ifdef CONFIG_SCHED_INFO
+	if (likely(sched_info_on()))
+		memset(&p->sched_info, 0, sizeof(p->sched_info));
+#endif
+#if defined(CONFIG_SMP)
+	p->on_cpu = 0;
+#endif
+	init_task_preempt_count(p);
+#ifdef CONFIG_SMP
+	plist_node_init(&p->pushable_tasks, MAX_PRIO);
+	RB_CLEAR_NODE(&p->pushable_dl_tasks);
+#endif
+	return 0;
+}
+```
 
 
+- 6）复制或共享资源
+&emsp;UNIX系统5信号量，同属一个线程组的线程才共享UNIX系统的5信号量，copy_semundo函数
+```c
+// linux-4.14.295/ipc/sem.c
+int copy_semundo(unsigned long clone_flags, struct task_struct *tsk)
+{
+	struct sem_undo_list *undo_list;
+	int error;
 
+	if (clone_flags & CLONE_SYSVSEM) {  // CLONE_SYSTEM表示UNIX系统5信号量
+		error = get_undo_list(&undo_list);
+		if (error)
+			return error;
+		refcount_inc(&undo_list->refcnt); // 5信号量的撤销请求链表，sem_undo_list 计数+1
+		tsk->sysvsem.undo_list = undo_list;
+	} else
+		tsk->sysvsem.undo_list = NULL; // 新进程5信号量撤销请求链表为空
 
+	return 0;
+}
+```
 
+&ensp;打开文件夹，同属一个线程组的线程直接共享打开文件表，函数copy_files复制或共享打开文件表
+```c
+// linux-5.10.102/kernel/fork.c
+static int copy_files(unsigned long clone_flags, struct task_struct *tsk)
+{
+	struct files_struct *oldf, *newf;
+	int error = 0;
+
+	/*
+	 * A background process may not have any files ...
+	 */
+	oldf = current->files;
+	if (!oldf)
+		goto out;
+
+	if (clone_flags & CLONE_FILES) {
+		atomic_inc(&oldf->count);
+		goto out;
+	}
+
+	newf = dup_fd(oldf, NR_OPEN_MAX, &error);
+	if (!newf)
+		goto out;
+
+	tsk->files = newf;
+	error = 0;
+out:
+	return error;
+}
+```
 
 
 
