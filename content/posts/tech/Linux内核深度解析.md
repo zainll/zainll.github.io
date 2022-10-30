@@ -653,7 +653,7 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
 
 
 - **（6）复制或共享资源**
-&emsp;UNIX系统5信号量，同属一个线程组的线程才共享UNIX系统的5信号量，copy_semundo函数
+&emsp;1）UNIX系统5信号量，同属一个线程组的线程才共享UNIX系统的5信号量，copy_semundo函数
 ```c
 // linux-4.14.295/ipc/sem.c
 int copy_semundo(unsigned long clone_flags, struct task_struct *tsk)
@@ -674,7 +674,7 @@ int copy_semundo(unsigned long clone_flags, struct task_struct *tsk)
 }
 ```
 
-&ensp;打开文件夹，同属一个线程组的线程直接共享打开文件表，函数copy_files复制或共享打开文件表
+&ensp;2）打开文件夹，同属一个线程组的线程直接共享打开文件表，函数copy_files复制或共享打开文件表
 ```c
 // linux-5.10.102/kernel/fork.c
 static int copy_files(unsigned long clone_flags, struct task_struct *tsk)
@@ -705,6 +705,322 @@ out:
 }
 ```
 
+&emsp;3）文件系统信息。进程文件系统信号包括：根目录、当前工作目录和文件模式创建掩码。同属一个线程组的线程之间才会共享文件系统信息     \
+&ensp;&emsp;函数copy_fs复制或共享文件系统信息
+```c
+// linux-5.10.102/kernel/fork.c
+static int copy_fs(unsigned long clone_flags, struct task_struct *tsk)
+{
+	struct fs_struct *fs = current->fs;
+	if (clone_flags & CLONE_FS) {  // CLONE_FS共享文件系统信息
+		/* tsk->fs is already what we want */
+		spin_lock(&fs->lock);
+		if (fs->in_exec) {
+			spin_unlock(&fs->lock);
+			return -EAGAIN;
+		}
+		fs->users++;  // fs_struct共享文件系统信息结构体 加1
+		spin_unlock(&fs->lock);
+		return 0;
+	}
+	tsk->fs = copy_fs_struct(fs);  // 新进程复制当前进程文件系统信息
+	if (!tsk->fs)
+		return -ENOMEM;
+	return 0;
+}
+```
+&emsp;4）信号处理程序，同属一个线程组线程之间才会共享信号处理程序 \
+&ensp;&emsp;函数copy_sighand复制或共享信号处理程序
+```c
+// 
+static int copy_sighand(unsigned long clone_flags, struct task_struct *tsk)
+{
+	struct sighand_struct *sig;
 
+	if (clone_flags & CLONE_SIGHAND) {  // CLONE_SIGHAND 表示共享信号处理程序
+		refcount_inc(&current->sighand->count); // 引用计数加1
+		return 0;
+	}
+    // 新进程复制当前进程信号处理程序
+	sig = kmem_cache_alloc(sighand_cachep, GFP_KERNEL);
+	RCU_INIT_POINTER(tsk->sighand, sig);
+	if (!sig)
+		return -ENOMEM;
 
+	refcount_set(&sig->count, 1);
+	spin_lock_irq(&current->sighand->siglock);
+	memcpy(sig->action, current->sighand->action, sizeof(sig->action));
+	spin_unlock_irq(&current->sighand->siglock);
+
+	/* Reset all signal handler not set to SIG_IGN to SIG_DFL. */
+	if (clone_flags & CLONE_CLEAR_SIGHAND)
+		flush_signal_handlers(tsk, 0);
+
+	return 0;
+}
+
+```
+
+&emsp;5）信号结构体，同属一个线程组的线程才会共享信号结构体   \
+&ensp;&emsp;函数copy_signal复制或共享信号结构体
+```c
+// linux-5.10.102/kernel/fork.c
+static int copy_signal(unsigned long clone_flags, struct task_struct *tsk)
+{
+	struct signal_struct *sig;
+
+	if (clone_flags & CLONE_THREAD)  // CLONE_THREAD表示创建线程，新进程和当前进程共享信号结构体signal_struct
+		return 0;
+    // 为新进程分配结构体，初始化，继承当前进程资源限制
+	sig = kmem_cache_zalloc(signal_cachep, GFP_KERNEL);
+	tsk->signal = sig;
+	if (!sig)
+		return -ENOMEM;
+
+	sig->nr_threads = 1;
+	atomic_set(&sig->live, 1);
+	refcount_set(&sig->sigcnt, 1);
+
+	/* list_add(thread_node, thread_head) without INIT_LIST_HEAD() */
+	sig->thread_head = (struct list_head)LIST_HEAD_INIT(tsk->thread_node);
+	tsk->thread_node = (struct list_head)LIST_HEAD_INIT(sig->thread_head);
+
+	init_waitqueue_head(&sig->wait_chldexit);
+	sig->curr_target = tsk;
+	init_sigpending(&sig->shared_pending);
+	INIT_HLIST_HEAD(&sig->multiprocess);
+	seqlock_init(&sig->stats_lock);
+	prev_cputime_init(&sig->prev_cputime);
+
+#ifdef CONFIG_POSIX_TIMERS
+	INIT_LIST_HEAD(&sig->posix_timers);
+	hrtimer_init(&sig->real_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+	sig->real_timer.function = it_real_fn;
+#endif
+
+	task_lock(current->group_leader);
+	memcpy(sig->rlim, current->signal->rlim, sizeof sig->rlim);
+	task_unlock(current->group_leader);
+
+	posix_cpu_timers_init_group(sig);
+
+	tty_audit_fork(sig);
+	sched_autogroup_fork(sig);
+
+	sig->oom_score_adj = current->signal->oom_score_adj;
+	sig->oom_score_adj_min = current->signal->oom_score_adj_min;
+
+	mutex_init(&sig->cred_guard_mutex);
+	init_rwsem(&sig->exec_update_lock);
+
+	return 0;
+}
+```
+
+&emsp;6）虚拟内存，同属一个线程组的线程才会共享虚拟内存  \ 
+&ensp;&emsp;函数copy_mm复制或共享虚拟内存
+```c
+// linux-5.10.102/kernel/freezer.c
+static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
+{
+	struct mm_struct *mm, *oldmm;
+	int retval;
+
+	tsk->min_flt = tsk->maj_flt = 0;
+	tsk->nvcsw = tsk->nivcsw = 0;
+#ifdef CONFIG_DETECT_HUNG_TASK
+	tsk->last_switch_count = tsk->nvcsw + tsk->nivcsw;
+	tsk->last_switch_time = 0;
+#endif
+
+	tsk->mm = NULL;
+	tsk->active_mm = NULL;
+
+	/*
+	 * Are we cloning a kernel thread?
+	 *
+	 * We need to steal a active VM for that..
+	 */
+	oldmm = current->mm;
+	if (!oldmm)
+		return 0;
+
+	/* initialize the new vmacache entries */
+	vmacache_flush(tsk);
+
+	if (clone_flags & CLONE_VM) {  // CLONE_VM表示共享虚拟内存，新进程和当前进程共享内存描述符mm_struct
+		mmget(oldmm);
+		mm = oldmm;
+		goto good_mm;
+	}
+
+	retval = -ENOMEM;
+    // 新进程复制当前进程的虚拟内存
+	mm = dup_mm(tsk, current->mm);
+	if (!mm)
+		goto fail_nomem;
+
+good_mm:
+	tsk->mm = mm;
+	tsk->active_mm = mm;
+	return 0;
+
+fail_nomem:
+	return retval;
+}
+```
+&emsp;7）命名空间    \
+&ensp;&emsp;函数copy_namespace创建或共享命名空间
+```c
+// linux-5.10.102/kernel/nsproxy.c
+int copy_namespaces(unsigned long flags, struct task_struct *tsk)
+{
+	struct nsproxy *old_ns = tsk->nsproxy;
+	struct user_namespace *user_ns = task_cred_xxx(tsk, user_ns);
+	struct nsproxy *new_ns;
+	int ret;
+    // 如果共享除了用户以外的所有其他命名空间，那么新进程和当前进程共享命名空间代理结构体nsproxy，把计数加1
+	if (likely(!(flags & (CLONE_NEWNS | CLONE_NEWUTS | CLONE_NEWIPC |
+			      CLONE_NEWPID | CLONE_NEWNET |
+			      CLONE_NEWCGROUP | CLONE_NEWTIME)))) {
+		if (likely(old_ns->time_ns_for_children == old_ns->time_ns)) {
+			get_nsproxy(old_ns);
+			return 0;
+		}
+	} else if (!ns_capable(user_ns, CAP_SYS_ADMIN)) // 进程没有系统管理权限，那么不允许创建新的命名空间
+		return -EPERM;
+
+	/*
+	 * CLONE_NEWIPC must detach from the undolist: after switching
+	 * to a new ipc namespace, the semaphore arrays from the old
+	 * namespace are unreachable.  In clone parlance, CLONE_SYSVSEM
+	 * means share undolist with parent, so we must forbid using
+	 * it along with CLONE_NEWIPC.
+	 */
+    // 既要求创建新的进程间通信命名空间，又要求共享UNIX系统5信号量，那么这种要求是不合理的
+	if ((flags & (CLONE_NEWIPC | CLONE_SYSVSEM)) ==
+		(CLONE_NEWIPC | CLONE_SYSVSEM)) 
+		return -EINVAL;
+    // 创建新的命名空间代理，然后创建或者共享命名空间
+	new_ns = create_new_namespaces(flags, tsk, user_ns, tsk->fs);
+	if (IS_ERR(new_ns))
+		return  PTR_ERR(new_ns);
+
+	ret = timens_on_fork(new_ns, tsk);
+	if (ret) {
+		free_nsproxy(new_ns);
+		return ret;
+	}
+
+	tsk->nsproxy = new_ns;
+	return 0;
+}
+```
+
+&emsp;8）I/O上下文    \
+&ensp;&emsp;函数copy_io创建或共享I/O上下文
+```c
+// linux-5.10.102/kernel/fork.c
+static int copy_io(unsigned long clone_flags, struct task_struct *tsk)
+{
+#ifdef CONFIG_BLOCK
+	struct io_context *ioc = current->io_context;
+	struct io_context *new_ioc;
+
+	if (!ioc)
+		return 0;
+	/*
+	 * Share io context with parent, if CLONE_IO is set
+	 */
+	if (clone_flags & CLONE_IO) {  // CLONE_IO 共享I/O上小文
+		ioc_task_link(ioc);  // 计数nr_tasks加1
+		tsk->io_context = ioc;  // 共享I/O上下文结构体io_context
+	} else if (ioprio_valid(ioc->ioprio)) {
+        // 创建新的I/O上下文，初始化，继承当前进程的I/O优先级
+		new_ioc = get_task_io_context(tsk, GFP_KERNEL, NUMA_NO_NODE);
+		if (unlikely(!new_ioc))
+			return -ENOMEM;
+
+		new_ioc->ioprio = ioc->ioprio;
+		put_io_context(new_ioc);
+	}
+#endif
+	return 0;
+}
+```
+
+&emsp;9）复制寄存器值   \
+&ensp;&emsp;函数copy_thread_tls复制当前进程的寄存器值，并修改一部分寄存器值。进程有两处用来保存寄存器值：从用户模式切换到内核模式时，把用户模式的各种寄存器保存在内核栈底部的结构体pt_regs中；进程调度器调度进程时，切换出去的进程把寄存器值保存在进程描述符的成员thread中。因为不同处理器架构的寄存器不同，所以各种处理器架构需要自己定义结构体pt_regs和thread_struct
+
+![20221030211811](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221030211811.png)
+
+&ensp;&emsp;ARM64架构copy_thread_tls->copy_thread
+```c
+// linux-5.10.102/arch/arm64/kernel/process.c
+int copy_thread(unsigned long clone_flags, unsigned long stack_start,
+		unsigned long stk_sz, struct task_struct *p, unsigned long tls)
+{
+	struct pt_regs *childregs = task_pt_regs(p);
+
+	memset(&p->thread.cpu_context, 0, sizeof(struct cpu_context));
+
+	/*
+	 * In case p was allocated the same task_struct pointer as some
+	 * other recently-exited task, make sure p is disassociated from
+	 * any cpu that may have run that now-exited task recently.
+	 * Otherwise we could erroneously skip reloading the FPSIMD
+	 * registers for p.
+	 */
+	fpsimd_flush_task_state(p);
+
+	ptrauth_thread_init_kernel(p);
+
+	if (likely(!(p->flags & PF_KTHREAD))) {  // 用户进程
+		*childregs = *current_pt_regs();
+		childregs->regs[0] = 0;
+
+		/*
+		 * Read the current TLS pointer from tpidr_el0 as it may be
+		 * out-of-sync with the saved value.
+         * 从寄存器tpidr_el0读取当前线程的线程本地存储的地址，
+         * 因为它可能和保存的值不一致
+		 */
+		*task_user_tls(p) = read_sysreg(tpidr_el0);
+
+		if (stack_start) {
+			if (is_compat_thread(task_thread_info(p)))
+				childregs->compat_sp = stack_start;
+			else
+				childregs->sp = stack_start;
+		}
+
+		/*
+		 * If a TLS pointer was passed to clone, use it for the new thread. 
+		 * 如果把线程本地存储的地址传给系统调用clone的第4个参数，那么新线程将使用它
+		 */
+		if (clone_flags & CLONE_SETTLS)
+			p->thread.uw.tp_value = tls;
+	} else {  // 内核线程
+		memset(childregs, 0, sizeof(struct pt_regs));
+		childregs->pstate = PSR_MODE_EL1h;
+		if (IS_ENABLED(CONFIG_ARM64_UAO) &&
+		    cpus_have_const_cap(ARM64_HAS_UAO))
+			childregs->pstate |= PSR_UAO_BIT;
+
+		spectre_v4_enable_task_mitigation(p);
+
+		if (system_uses_irq_prio_masking())
+			childregs->pmr_save = GIC_PRIO_IRQON;
+
+		p->thread.cpu_context.x19 = stack_start;
+		p->thread.cpu_context.x20 = stk_sz;
+	}
+	p->thread.cpu_context.pc = (unsigned long)ret_from_fork;
+	p->thread.cpu_context.sp = (unsigned long)childregs;
+
+	ptrace_hw_copy_thread(p);
+
+	return 0;
+}
+```
 
