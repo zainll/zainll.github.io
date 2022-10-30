@@ -515,16 +515,32 @@ long _do_fork(unsigned long clone_flags,
            unsigned long stack_size,
            int __user *parent_tidptr,
            int __user *child_tidptr,
-           unsigned long tls);
+           unsigned long tls);  // tls 创建线程，clone_flags为CLONE_SETTLS时，tlstls指定新线程的线程本地存储的地址
 
 ```
 
 ![函数_do_fork的执行流程](https://liuz0123.gitee.io/zain/img/_do_fork.png)
 
+&emsp;调用copy_process创建新进程  \
+&emsp;clone_flags设置CLONE_PARENT_SETTID，新线程的进程标识符写到参数parent_tidptr指定的位置   \
+&emsp;wake_up_new_task唤醒新进程
 
 
+2. copy_process函数
+![20221030190536](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221030190536.png)
 
+* 标志组合
+|||
+- | :-: | :-: 
+|CLONE_NEWNS & CLONE_FS|新进程属于新挂载命名空间<br>共享文件系统信息|
+|CLONE_NEWUSER & CLONE_FS|新进程属于新用户命名空间<br>共享文件系统信息|
+|CLONE_THREAD 未设置CLONE_SIGHAND|新进程和当前进程同属一个线程组，但不共享信号处理程序|
+|CLONE_SIGHAND 未设置CLONE_VM|新进程和当前进程共享信号处理程序，但不共享虚拟内存|
 
+* dup_task_struct函数
+&emsp;未新进程的进程描述符分配内存，复制当前进程描述符，为新进程分配内核栈
+
+![20221030192206](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221030192206.png "进程的内核栈")
 
 
 
