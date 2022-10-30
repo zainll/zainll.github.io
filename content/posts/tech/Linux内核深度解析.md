@@ -961,7 +961,7 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
 		unsigned long stk_sz, struct task_struct *p, unsigned long tls)
 {
 	struct pt_regs *childregs = task_pt_regs(p);
-
+    // 把新进程的进程描述符的成员thread.cpu_context清零，在调度进程时切换出去的进程使用这个成员保存通用寄存器的值
 	memset(&p->thread.cpu_context, 0, sizeof(struct cpu_context));
 
 	/*
