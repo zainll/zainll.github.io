@@ -6,7 +6,16 @@
     <description>Recent content in 👨🏻‍💻 技术 on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 05 Oct 2022 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/posts/tech/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 15 Oct 2022 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/posts/tech/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>树莓派</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/%E6%A0%91%E8%8E%93%E6%B4%BE/</link>
+      <pubDate>Sat, 15 Oct 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/%E6%A0%91%E8%8E%93%E6%B4%BE/</guid>
+      <description>https://cloud.tencent.com/developer/article/1863949 系统信息 AIDA64 https://www.aida64.com/</description>
+    </item>
+    
     <item>
       <title>Linux内核深度解析</title>
       <link>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</link>
