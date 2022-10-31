@@ -13,7 +13,7 @@
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/blog/linuxtool/</guid>
-      <description>ubuntu 换源 # 备份 cp /etc/apt/sources.list /etc/apt/sources.list.20211013 lsb_release -c lsb_release -a # sudo apt-get update sudo apt-get upgrade 参考链接： ubuntu20.04更改国内镜像源 https://blog.csdn.net/qq_48490728/article/details/124944114 https://blog.csdn.net/weixin_44916154/article/details/124581334 安装搜狗输入法 https://blog.csdn.net/Mr_Sudo/article/details/124874239 ubuntu 显示 https://ubuntuqa.com/article/8837.html https://www.csdn.net/tags/MtTaAgzsNjg5MTk4LWJsb2cO0O0O.html Ubunut 22.04 LTS 版本 GNU/Lin</description>
+      <description>ubuntu 换源 # 备份 cp /etc/apt/sources.list /etc/apt/sources.list.20211013 lsb_release -c lsb_release -a # sudo apt-get update sudo apt-get upgrade 参考链接： ubuntu20.04更改国内镜像源 https://blog.csdn.net/qq_48490728/article/details/124944114 https://blog.csdn.net/weixin_44916154/article/details/124581334 安装搜狗输入法 https://blog.csdn.net/Mr_Sudo/article/details/124874239 性能显示 bpytop 装X神器 sudo apt-get install bpytop sudo snap install bpyto</description>
     </item>
     
     <item>
