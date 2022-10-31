@@ -488,6 +488,20 @@ struct sysv_shm sysvshm;
 
 ## 2.4 启动程序
 
+```c
+ret = fork();
+if (ret > 0) {
+   /* 父进程继续执行 */
+} else if (ret == 0) {
+    /* 子进程装载程序 */
+    ret = execve(filename, argv, envp);
+} else {
+   /* 创建子进程失败 */
+}
+```
+
+### 2.4.1　创建新进程
+
 &emsp;内核使用静态数据构造出0号内核线程，0号内核线程分叉生成1号内核线程和2号内核线程（kthreadd线程）。1号内核线程完成初始化以后装载用户程序，变成1号进程，其他进程都是1号进程或者它的子孙进程分叉生成的；其他内核线程是kthreadd线程分叉生成的
 &emsp;两个个系统调用创建进程：    \
 - fork：子进程是父进程的副本，用写时复制
@@ -506,7 +520,7 @@ asmlinkage long sys_fork(void)
 - clone传入CLONE_PARENT，兄弟关系
 - clone传入CLONE_THREAD，同属一个线程组
 
-1. _do_fork函数
+#### 1. _do_fork函数
 
 ```c
 // kernel/fork.c
@@ -526,7 +540,7 @@ long _do_fork(unsigned long clone_flags,
 &emsp;wake_up_new_task唤醒新进程
 
 
-2. copy_process函数
+#### 2. copy_process函数
 ![20221030190536](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221030190536.png)
 
 
@@ -961,7 +975,7 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
 		unsigned long stk_sz, struct task_struct *p, unsigned long tls)
 {
 	struct pt_regs *childregs = task_pt_regs(p);
-    // 把新进程的进程描述符的成员thread.cpu_context清零，在调度进程时切换出去的进程使用这个成员保存通用寄存器的值
+    // 新进程的进程描述符的成员thread.cpu_context清零，在调度进程时切换出去的进程使用这个成员保存通用寄存器的值
 	memset(&p->thread.cpu_context, 0, sizeof(struct cpu_context));
 
 	/*
@@ -1023,4 +1037,210 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
 	return 0;
 }
 ```
+
+- **（7）设置进程号和进程关系**
+
+```c
+static __latent_entropy struct task_struct *copy_process(
+					struct pid *pid,
+					int trace,
+					int node,
+					struct kernel_clone_args *args)
+{
+    // 为新进程分配进程号
+    // pid等于init_struct_pid的地址，内核初始化时，引导处理器为每个从处理器分叉生成一个空闲线程（参考函数idle_threads_init），所有处理器的空闲线程使用进程号0，全局变量init_struct_pid存放空闲线程的进程号
+    if (pid != &init_struct_pid) {
+        pid = alloc_pid(p->nsproxy->pid_ns_for_children);
+        if (IS_ERR(pid)) {
+            retval = PTR_ERR(pid);
+            goto bad_fork_cleanup_thread;
+        }
+    }
+    
+    …
+    // 设置新进程退出时发送给父进程的信号
+    p->pid = pid_nr(pid);
+    if (clone_flags & CLONE_THREAD) {
+        p->exit_signal = -1; // 新线程退出时不需要发送信号给父进程
+        p->group_leader = current->group_leader;  // group_leader指向同一个组长
+        p->tgid = current->tgid;  // tgid存放组长的进程号
+    } else {
+        if (clone_flags & CLONE_PARENT) // CLONE_PARENT 新进程和当前进程是兄弟关系
+            p->exit_signal = current->group_leader->exit_signal;  // 新进程的成员exit_signal等于当前进程所属线程组的组长的成员exit_signal
+        else // 父子关系
+            p->exit_signal = (clone_flags & CSIGNAL); // 新进程的成员exit_signal是调用者指定的信号
+        p->group_leader = p;
+        p->tgid = p->pid;
+    }
+    
+    // 控制组的进程数控制器检查是否允许创建新进程：从当前进程所属的控制组一直到控制组层级的根，如果其中一个控制组的进程数量大于或等于限制，那么不允许使用fork和clone创建新进程
+    cgroup_threadgroup_change_begin(current);
+    retval = cgroup_can_fork(p);
+    if (retval)
+        goto bad_fork_free_pid;
+    
+    write_lock_irq(&tasklist_lock);
+    // 为新进程设置父进程
+    if (clone_flags & (CLONE_PARENT|CLONE_THREAD)) {
+        p->real_parent = current->real_parent;  // 新进程和当前进程拥有相同的父进程
+        p->parent_exec_id = current->parent_exec_id;
+    } else {
+        p->real_parent = current;  // 新进程的父进程是当前进程
+        p->parent_exec_id = current->self_exec_id;
+    }
+    
+    …
+    spin_lock(&current->sighand->siglock);
+    …
+    if (likely(p->pid)) {
+        …
+        init_task_pid(p, PIDTYPE_PID, pid);
+        if (thread_group_leader(p)) {  // true 新进程和当前进程属于同一个进程组
+            init_task_pid(p, PIDTYPE_PGID, task_pgrp(current));  // 指向同一个进程组的组长的进程号结构体
+            init_task_pid(p, PIDTYPE_SID, task_session(current));  // 指向同一个会话的控制进程的进程号结构体
+
+            if (is_child_reaper(pid)) {  
+                ns_of_pid(pid)->child_reaper = p;
+                p->signal->flags |= SIGNAL_UNKILLABLE;  // 1号进程是不能杀死的
+            }
+
+            p->signal->leader_pid = pid;
+            p->signal->tty = tty_kref_get(current->signal->tty);
+            p->signal->has_child_subreaper = p->real_parent->signal-> has_child_subreaper ||
+                                p->real_parent->signal->is_child_subreaper;
+            list_add_tail(&p->sibling, &p->real_parent->children);  // 新进程添加到父进程的子进程链表
+            list_add_tail_rcu(&p->tasks, &init_task.tasks);  // 新进程添加到进程链表中，链表节点是成员tasks，头节点是空闲线程的成员tasks（init_task.tasks）
+            attach_pid(p, PIDTYPE_PGID);  // 新进程添加到进程组的进程链表
+            attach_pid(p, PIDTYPE_SID);  // 新进程添加到会话的进程链表
+            __this_cpu_inc(process_counts);
+        } else {  // 创建线程
+            current->signal->nr_threads++;  // 线程组的线程计数值加1
+            atomic_inc(&current->signal->live);  // 原子变量线程组的第2个线程计数值加1
+            atomic_inc(&current->signal->sigcnt);  // 信号结构体的引用计数加1
+            list_add_tail_rcu(&p->thread_group,    
+                        &p->group_leader->thread_group);  // 线程加入线程组的线程链表
+            list_add_tail_rcu(&p->thread_node,
+                        &p->signal->thread_head);  // 线程加入线程组的第二条线程链表
+        }
+        attach_pid(p, PIDTYPE_PID);  // 新进程添加到进程号结构体的进程链表
+        nr_threads++;  // 新进程添加到进程号结构体的进程链表
+    }
+    
+    total_forks++;
+    spin_unlock(&current->sighand->siglock);
+    …
+    write_unlock_irq(&tasklist_lock);
+    
+    proc_fork_connector(p);
+    cgroup_post_fork(p);
+    cgroup_threadgroup_change_end(current);
+    …
+    return p;
+}
+```
+
+#### 3.唤醒新进程
+
+&emsp;wake_up_new_task函数唤醒新进程
+```c
+// linux-5.10.102/kernel/sched/core.c
+void wake_up_new_task(struct task_struct *p)
+{
+	struct rq_flags rf;
+	struct rq *rq;
+
+	raw_spin_lock_irqsave(&p->pi_lock, rf.flags);
+	p->state = TASK_RUNNING;  // 切换TASK_RUNNING
+#ifdef CONFIG_SMP
+	/*
+	 * Fork balancing, do it here and not earlier because:
+	 *  - cpus_ptr can change in the fork path
+	 *  - any previously selected CPU might disappear through hotplug
+	 *
+	 * Use __set_task_cpu() to avoid calling sched_class::migrate_task_rq,
+	 * as we're not fully set-up yet.
+	 */
+	p->recent_used_cpu = task_cpu(p);
+	rseq_migrate(p);
+	__set_task_cpu(p, select_task_rq(p, task_cpu(p), SD_BALANCE_FORK, 0));  // 在SMP系统上，创建新进程是执行负载均衡的绝佳时机，为新进程选择一个负载最轻的处理器
+#endif
+	rq = __task_rq_lock(p, &rf);  // 锁住运行队列
+	update_rq_clock(rq);  // 更新运行队列的时钟
+	post_init_entity_util_avg(p);  // 根据公平运行队列的平均负载统计值，推算新进程的平均负载统计值
+
+	activate_task(rq, p, ENQUEUE_NOCLOCK); // 把新进程插入运行队列
+	trace_sched_wakeup_new(p);
+	check_preempt_curr(rq, p, WF_FORK);  // 检查新进程是否可以抢占当前进程
+#ifdef CONFIG_SMP
+	if (p->sched_class->task_woken) {  // 在SMP系统上，调用调度类的task_woken方法
+		/*
+		 * Nothing relies on rq->lock after this, so its fine to
+		 * drop it.
+		 */
+		rq_unpin_lock(rq, &rf);
+		p->sched_class->task_woken(rq, p);
+		rq_repin_lock(rq, &rf);
+	}
+#endif
+	task_rq_unlock(rq, p, &rf);  // 释放运行队列的锁
+}
+```
+
+
+#### 4.新进程第一次运行
+
+&emsp;新进程第一次运行，是从函数ret_from_fork开始执行，ARM64的ret_from_fork函数
+```c
+// linux-5.10.102/arch/arm64/kernel/entry.S
+    tsk   .req   x28      //当前进程的thread_info结构体的地址
+SYM_CODE_START(ret_from_fork)
+	bl	schedule_tail  // 为上一个进程执行清理操作
+	cbz	x19, 1f  // not a kernel thread 如果寄存器x19的值是0，说明当前进程是用户进程，那么跳转到标号1
+	mov	x0, x20  // 内核线程：x19存放线程函数的地址，x20存放线程函数的参数
+	blr	x19  // 调用线程函数
+1:	get_current_task tsk  // 用户进程：x28 = sp_el0 = 当前进程的thread_info结构体的地址
+	b	ret_to_user  // 返回用户模式
+SYM_CODE_END(ret_from_fork)
+NOKPROBE(ret_from_fork)
+```
+&ensp;&emsp;copy_thread函数中，新进程是内核线程，寄存器x19存放线程函数的地址，寄存器x20存放线程函数的参数，如果新进程是用户进程，寄存器x19值是0   \
+&ensp;&emsp;
+
+```c
+// linux-5.10.102/kernel/sched/core.c
+asmlinkage __visible void schedule_tail(struct task_struct *prev)
+	__releases(rq->lock)
+{
+	struct rq *rq;
+	/*
+	 * New tasks start with FORK_PREEMPT_COUNT, see there and
+	 * finish_task_switch() for details.
+	 *
+	 * finish_task_switch() will drop rq->lock() and lower preempt_count
+	 * and the preempt_enable() will end up enabling preemption (on
+	 * PREEMPT_COUNT kernels).
+	 */
+	rq = finish_task_switch(prev);  // 为上一个进程执行清理操作2.8.6
+	balance_callback(rq);  // 执行运行队列的所有负载均衡回调函数
+	preempt_enable();  // 开启内核抢占
+
+	if (current->set_child_tid)  // pthread库在调用clone()创建线程时设置了标志位CLONE_CHILD_SETTID，那么新进程把自己的进程标识符写到指定位置
+		put_user(task_pid_vnr(current), current->set_child_tid);
+
+	calculate_sigpending();
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
