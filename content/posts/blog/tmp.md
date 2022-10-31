@@ -31,13 +31,10 @@ cover:
 
 
 
-maya  三维建模软件？
-imagine gui   跨平台PNG和JPEG优化GUI工具 
-https://github.com/meowtec/Imagine
+收藏
+博客收藏
+https://simowce.github.io/
 
-
-screentogif  动图捕获软件 录制屏幕上的指定区域
-https://www.screentogif.com/
 
 PicGo: xclip not found! Please install xclip before run picgo.
 

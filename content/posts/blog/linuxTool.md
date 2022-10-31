@@ -61,6 +61,7 @@ https://blog.csdn.net/Mr_Sudo/article/details/124874239
 sudo apt-get install bpytop
 sudo snap install bpyto
 ```
+https://blog.csdn.net/ll837448792/article/details/123103212
 
 ![20221031231755](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221031231755.png)
 
