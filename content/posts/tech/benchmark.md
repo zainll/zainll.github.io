@@ -39,14 +39,17 @@ openssl speed
 openssl speed --multi 1
 openssl speed --multi 1 aes-128-cbc
 
+# 编译
+
+
 
 ```
 
 
+https://www.jianshu.com/p/499c4603cfd5
 
 
-
-
+https://blog.csdn.net/CHYabc123456hh/article/details/125794350
 
 
 

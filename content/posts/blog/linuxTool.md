@@ -54,6 +54,16 @@ https://blog.csdn.net/weixin_44916154/article/details/124581334
 ## 安装搜狗输入法
 https://blog.csdn.net/Mr_Sudo/article/details/124874239
 
+
+## 性能显示 bpytop
+> 装X神器
+```sh
+sudo apt-get install bpytop
+sudo snap install bpyto
+```
+
+![20221031231755](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221031231755.png)
+
 ## ubuntu 显示
 
 https://ubuntuqa.com/article/8837.html
