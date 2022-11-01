@@ -1234,14 +1234,53 @@ asmlinkage __visible void schedule_tail(struct task_struct *prev)
 
 ### 2.4.2 装载程序
 
-&ensp;调度器调度新进程，新进程从函数`ret_from_fork`开始，从系统调用`fork`返回用户空间，返回值0。然后新进程使用系统调用`execve`装载程序    \
-&emsp;
+&ensp;调度器调度新进程，新进程从函数`ret_from_fork`开始，从系统调用`fork`返回用户空间，返回值0。然后新进程使用系统调用`execve`装载程序。Linux内核练个装载程序系统调用：    \
+```c
+// 路径名是相对时execve解释为相对调用进程的当前工作目录
+int execve(const char *filename, char *const argv[], char *const envp[]);
+// 路径名是相对的，execveat解释为相对文件描述符dirfd指向的目录
+// 路径名时绝对的，execveat忽略参数dirfd
+int execveat(int dirfd, const char *pathname, char *const argv[], char *const envp[], int flags);
+```
+&ensp;&emsp;参数argv是传给新程序的参数指针数组，数组的每个元素存放一个参数字符串的地址，argv[0]应该指向要装载的程序的名称。参数envp是传给新程序的环境指针数组，数组的每个元素存放一个环境字符串的地址，环境字符串的形式是“键=值
 
 
+&emsp;两个系统调用最终都调用函数do_execveat_common
+![20221102001015](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221102001015.png)
 
+&ensp;&emsp;函数do_open_execat打开可执行文件。   \
+&ensp;&emsp;函数sched_exec。装载程序是实现处理器负载均衡的机会，此时进程在内存和缓存中的数据是最少的。选择负载最轻的处理器，然后唤醒当前处理器上的迁移线程，当前进程睡眠等待迁移线程把自己迁移到目标处理器      \
+&ensp;&emsp;函数bprm_mm_init创建新的内存描述符，分配长度为一页的临时的用户栈，虚拟地址范围是[STACK_TOP_MAX−页长度，STACK_TOP_MAX]，bprm->p指向在栈底保留一个字长（指针长度）后的位置           \
+&ensp;&emsp;函数prepare_binprm设置进程证书，然后读文件的前面128字节到缓冲区。128字节是什么？      \ 
+&ensp;&emsp;依次把文件名称、环境字符串和参数字符串压到用户栈         \
+![20221102001840](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221102001840.png)
+&ensp;&emsp;函数exec_binprm调用函数search_binary_handler，尝试注册过的每种二进制格式的处理程序，直到某个处理程序识别正在装载的程序为止
 
+#### 1.二进制格式
+&ensp;Linux二进制格式
+```c
+// linux-5.10.102/include/linux/binfmts.h
+struct linux_binfmt {
+	struct list_head lh;
+	struct module *module;
+	int (*load_binary)(struct linux_binprm *);
+	int (*load_shlib)(struct file *);
+	int (*core_dump)(struct coredump_params *cprm);
+	unsigned long min_coredump;	/* minimal dump size */
+} __randomize_layout;
+```
+&emsp;二进制格式提供3个函数        \
+&ensp;&emsp;(1)load_binary 加载普通程序       \
+&ensp;&emsp;(2)load_shlib 加载共享库     \
+&ensp;&emsp;(3)core_dump 在进程异常退出时生成核心转储文件，min_coredump指定核心转储文件的最小长度     \
+&ensp;二进制格式使用`register_binfmt`向内核注册
 
-
+#### 2.装载ELF程序
+&ensp;ELF文件,ELF(Executable and Linkable Format)可执行与可链接格式
+- 目标文件(可重定位文件)，`.o`，多个模板文件链接生成可执行文件或共享库
+- 可执行文件
+- 共享库 `.so`
+- 核心转储文件(core dump file)
 
 
 
