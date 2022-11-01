@@ -35,6 +35,8 @@ cover:
 ## 本项目地址:
 https://github.com/zhuangll/vscode_c_project_config
 
+> 支持gtest
+
 ## 安装
 1. 在vscode中安装C/C++ Project Generator插件       
 2. 下载代码，将代码替换到C/C++ Project Generator插件所在目录，windows环境vscode插件目录,将功能代码复制替换如下目录中 `C:\Users\<用户名>\.vscode\extensions\danielpinto8zz6.c-cpp-project-generator-1.2.4`
