@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>system on zain&#39;s Blog</title>
+    <link>https://liuz0123.gitee.io/zain/tags/system/</link>
+    <description>Recent content in system on zain&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 05 Jun 2022 00:21:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/tags/system/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>深入理解计算机系统</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Sun, 05 Jun 2022 00:21:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/</guid>
+      <description>&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&#34;深入理解计算机系统&#34;&gt;深入理解计算机系统&lt;/h1&gt;
+&lt;h2 id=&#34;第1章-计算机系统&#34;&gt;第1章 计算机系统&lt;/h2&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
