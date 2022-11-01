@@ -311,7 +311,7 @@ vcpu_fd = ioctl(vmfd, KVM_CREATE_VCPU, 0);
 &emsp;（1）QEMU进程调用“ioctl(vcpu_fd, KVM_RUN, 0)”，陷入到内核。     \
 &emsp;（2）KVM执行命令KVM_RUN，从异常级别1切换到异常级别2。           \
 &emsp;（3）KVM首先把调用进程的所有寄存器保存在kvm_vcpu结构体中，然后把所有寄存器设置为客户操作系统的寄存器值，最后从异常级别2返回到异常级别1，执行客户操作系统。           \
-&emsp;为了提高切换速度，ARM64架构引入了虚拟化宿主扩展，在异常级别2执行宿主操作系统的内核，从QEMU切换到客户操作系统的时候，KVM不再需要先从异常级别1切换到异常级别2      \
+&emsp;为了提高切换速度，`ARM64架构引入了虚拟化宿主扩展，在异常级别2执行宿主操作系统的内核`，从QEMU切换到客户操作系统的时候，KVM不再需要先从异常级别1切换到异常级别2      \
 
 <br>
 
@@ -325,8 +325,8 @@ vcpu_fd = ioctl(vmfd, KVM_CREATE_VCPU, 0);
 
 3. 函数__primary_switch
 > 1）__enable_mmu开启内存管理单元            \
-> 2）__primary_switched   \
-&ensp;__enable_mmu执行流程  \
+> 2）__primary_switched      \
+&ensp;__enable_mmu执行流程     \
 &emsp;1）把转换表基准寄存器0(TTBR0_EL1)设置为恒等映射的页全局目录的起始物理地址     \
 &emsp;2）把转换表基准寄存器1(TTBR1_EL1)设置为内核的页全局目录的起始物理地址        \
 &emsp;3）设置系统控制寄存器(SCTLR_EL1)，开启内存管理单元，后MMU把虚拟地址转换成物理地址    \
@@ -1232,6 +1232,10 @@ asmlinkage __visible void schedule_tail(struct task_struct *prev)
 ```
 
 
+### 2.4.2 装载程序
+
+&ensp;调度器调度新进程，新进程从函数`ret_from_fork`开始，从系统调用`fork`返回用户空间，返回值0。然后新进程使用系统调用`execve`装载程序    \
+&emsp;
 
 
 
