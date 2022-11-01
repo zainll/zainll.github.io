@@ -102,6 +102,14 @@ whois  居然可以在Windows使用
 
 <br>
 
+### cmder
+> 同事推荐，值得探索，Windows命令行工具
+[Download](https://cmder.net/)
+[配置](https://juejin.cn/post/6844903817851453453)
+
+<br>
+
+
 ### PowerShell  
 >一款shell，支持Windows、linux、mac，推荐Windows结合 Windows Terminal使用, 使Windows像Linux终端一样爽   \
 [Download](https://github.com/PowerShell/PowerShell)
@@ -150,19 +158,7 @@ https://blog.csdn.net/qq_39052513/article/details/104692026
 
 
 
-### vscode
 
-#### vscode 上传图片
-
-```sh
-# 上传剪贴板中的图片到服务器。
-ctrl + alt + u
-# 打开文件浏览器选择图片上传。
-ctrl + alt + e
-
-```
-- https://www.jianshu.com/p/868b3a2028f8
-https://zhuanlan.zhihu.com/p/131584831
 
 
 <br>
