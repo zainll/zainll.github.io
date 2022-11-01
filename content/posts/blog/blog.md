@@ -119,9 +119,9 @@ https://www.emojiall.com/zh-hans/sub-categories/A15
 
 ```sh
 # 快捷方式
-# 粘贴板上传
+# 上传剪贴板中的图片到服务器。
 ctrl + alt + u
-# 目录选择上传
+# 打开文件浏览器选择图片上传。
 ctrl + alt + e
 
 ```
@@ -129,3 +129,5 @@ ctrl + alt + e
 参考链接：
 https://blog.csdn.net/qq_44314954/article/details/122951033
 https://blog.csdn.net/qq_44314954/article/details/122951033
+https://www.jianshu.com/p/868b3a2028f8
+https://zhuanlan.zhihu.com/p/131584831
