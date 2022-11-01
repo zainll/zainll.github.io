@@ -49,5 +49,5 @@ https://www.mingw-w64.org/changelog/
 
 ## 使用方法
 
-> wingows环境需要安装mingw，并添加到环境变量
-linux环境适配中
+> wingows环境需要安装mingw，并添加到环境变量    \
+linux环境适配中，暂无适配动力
