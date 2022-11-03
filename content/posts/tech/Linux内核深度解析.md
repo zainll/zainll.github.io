@@ -1339,6 +1339,49 @@ static inline void start_thread(struct pt_regs *regs, unsigned long pc,
 &ensp;脚本程序前两个字节是`#!`，后面是解释器程序的名称和参数。解释器用来执行脚本程序
 &emsp;`linux-5.10.102/fs/binfmt_script.c`函数`load_script`负责装载脚本程序
 
+![20221103141127](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221103141127.png)
+
+&ensp;&emsp;1）检查前两个字节是不是脚本程序的标识符    \
+&ensp;&emsp;2）解析处解释程序的名称和参数      \
+&ensp;&emsp;3）从用户栈删除第一个参数，依次把脚本程序的文件名称、传给解释程序的参数和解释程序的名称压到用户栈      \
+&ensp;&emsp;4）调用opens_exec打开解释程序文件       \
+&ensp;&emsp;5）调用函数prepare_binprm设置进程证书，然后读取解释程序文件的前128字节到缓冲区        \
+&ensp;&emsp;6）调用函数search_binary_handler，尝试注册过的每种二进制格式的处理程序，直到某个处理程序识别解释程序为止     \
+
+
+
+## 2.6 进程退出
+
+&ensp;进程退出两种情况：进程主动退出和终止进程    \
+&ensp;Linux内核两个主动退出的系统调用       \
+```c
+// 线程退出
+void exit(int status);
+// 一个线程组所有线程退出
+void exit_group(int status);
+```
+&emsp;glibc库函数exit、_exit和_Exit用来使进程退出，库函数调用系统调用exit_group。库函数exit会执行进程使用的atexit和os_exit注册的函数        \
+&ensp;&emsp;终止进程是退出给进程发送信号实现的，Linux讷河发送信号的系统调用
+```c
+//
+// 发送信号给进程或进程组
+int kill(pid_t pid, int sig);
+// 发送信号给线程  已废弃
+int tkill(int tid, int sig);
+// 发送信号给线程
+int tgkill(int tgid, int tid, int sig);
+```
+&emsp;父进程是否关注子进程退出事假，
+&ensp;&emsp;1）父进程关注子进程退出事件，子进程退出时释放各种资源，留空进程描述符的僵尸进程，发送信号SIGCHLD(CHILD是child)通知父进程，父进程查询进程终止原因从子进程收回进程描述符。    \
+&ensp;&emsp;2）父进程不关注子进程退出事件，进程退出是释放各种资源，释放进程描述符 \
+
+
+
+
+
+
+
+
 
 
 
