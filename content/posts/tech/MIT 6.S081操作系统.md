@@ -30,6 +30,28 @@ cover:
 
 
 
+## Lec18 OS organization
+### 18.1 Monolithic kernel
+
+&ensp;宏内核：Linux，Unix &ensp;微内核：mac
+
+<table>
+	<tr>
+	    <th> </th>
+	    <th>宏内核</th>
+	    <th>微内核</th>  
+	</tr >
+    <tr>
+	    <th> 优点</th>
+	    <th>可移植<br>虚拟地址空间<br>共享资源</th>
+	    <th>微内核</th>  
+	</tr >
+    <tr>
+	    <th> 缺点</th>
+	    <th>复杂</th>
+	    <th></th>  
+	</tr >
+</table>
 
 
 
