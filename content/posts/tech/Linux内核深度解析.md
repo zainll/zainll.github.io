@@ -1267,11 +1267,28 @@ struct linux_binfmt {
 &ensp;二进制格式使用`register_binfmt`向内核注册
 
 #### 2.装载ELF程序
-&ensp;ELF文件,ELF(Executable and Linkable Format)可执行与可链接格式
+&ensp;ELF文件,ELF(Executable and Linkable Format)可执行与可链接格式 `linux-5.10.102/include/uapi/linux/elf.h`
 - 目标文件(可重定位文件)，`.o`，多个模板文件链接生成可执行文件或共享库
 - 可执行文件
 - 共享库 `.so`
 - 核心转储文件(core dump file)
+
+&emsp;ELF文件分成4部分：`ELF首部、程序首部表(programe header table)、节(section)和节首部表(section header table)`，ELF只有首部的位置是固定的。
+
+![20221103105503](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221103105503.png)
+
+&ensp;&emsp;程序首部表就是段表(segment table)，`段(segment)是从运行角度描述`，`节(section)是从链接角度描述`。    \
+&emsp;64位ELF文件格式
+
+
+参考链接：
+ELF 格式详解 https://blog.csdn.net/shanandqiu/article/details/115206426     \
+ELF文件格式简介  https://blog.csdn.net/GrayOnDream/article/details/124564129
+
+
+
+
+
 
 
 
