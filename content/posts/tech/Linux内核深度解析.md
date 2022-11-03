@@ -1286,12 +1286,53 @@ ELF 格式详解 https://blog.csdn.net/shanandqiu/article/details/115206426     
 ELF文件格式简介  https://blog.csdn.net/GrayOnDream/article/details/124564129
 
 
+```sh
+# 查看ELF首部
+readelf -h <ELF文件>
+# 查看程序首部表
+readelf -l <ELF文件>
+# 查看节首部表
+readelf -S <ELF文件>
+```
 
+&emsp;ELF解析程序  \
+&ensp;&emsp;`linux-5.10.102/fs/binfmt_elf.c` 解析64位ELF程序，和处理器架构无关 \
+&ensp;&emsp;`linux-5.10.102/fs/compat_binfmt_elf.c`  在64位内核中解析32位ELF程序，和处理器架构无   \
 
+&emsp;装载ELF程序函数`load_elf_binary`
 
+![20221103112822](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221103112822.png)
 
+&ensp;&emsp;1）检查ELF首部，检查是不是可执行文件或共享库，检查处理器架构
+&ensp;&emsp;2）读取程序首部表
+&ensp;&emsp;3）程序首部表中查找解释器段，如程序需要链接动态库，存在解释器段，从解释器段读取解释器的文件名称，打开文件，读取ELF首部。
+&ensp;&emsp;4）检查解释器的ELF首部，读取解释器的程序首部表
+&ensp;&emsp;5）flush_old_exec函数终止线程组中其他线程，释放旧的用户虚拟地址空间
+&ensp;&emsp;6）setup_new_exec函数调用arch_pick_mmap_layout设置内存映射的布局，在堆和栈直接有一个内存映射区域
+&ensp;&emsp;7）之前调用bprm_mm_init函数创建临时用户栈，调用set_arg_pages函数把用户栈定下来，更新用户栈标志位和访问权限，把用户栈移动到最终位置，并扩大用户栈
+&ensp;&emsp;8）把可加载段映射到进程的虚拟地址空间
+&ensp;&emsp;9）setbrk函数把初始化数据段映射到进程的用户虚拟地址空间，并设置堆的起始虚拟地址，调用padzero函数用零填充未初始化数据段
+&ensp;&emsp;10）得到程序入口。程序有解释器段，加载段映射到进程的用户虚拟地址空间，程序入口切换为解释器程序入口
+&ensp;&emsp;11）调用create_elf_tables依次把传递ELF解释器信息的辅助向量、环境指针数组envp、参数指针数组argv和参数个数argc压到进程的用户栈
+&ensp;&emsp;12）调用函数start_thread设置结构体pt_regs中程序计数器和栈指针寄存器，ARM64架构定义的函数start_thread
+```c
+// linux-5.10.102/arch/arm64/include/asm/processor.h
+static inline void start_thread_common(struct pt_regs *regs, unsigned long pc)
+{
+	memset(regs, 0, sizeof(*regs));
+	forget_syscall(regs);
+	regs->pc = pc; /* 把程序计数器设置为程序的入口 */
+}
 
-
+static inline void start_thread(struct pt_regs *regs, unsigned long pc,
+				unsigned long sp)
+{
+	start_thread_common(regs, pc);
+	regs->pstate = PSR_MODE_EL0t;  /* 把处理器状态设置为0，其中异常级别是0 */
+	spectre_v4_enable_task_mitigation(current);
+	regs->sp = sp;   /*设置用户栈指针 */
+}
+```
 
 
 
