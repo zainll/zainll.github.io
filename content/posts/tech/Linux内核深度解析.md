@@ -88,7 +88,7 @@ save_boot_params_ret:
     msr  cntfrq_el0, x0          /* 初始化寄存器CNTFRQ */
 #endif
     b    0f
-2:  msr   vbar_el2, x0   // 异常级别2
+2:  msr   vbar_el2, x0   		// 异常级别2
     mov  x0, #0x33ff
     msr  cptr_el2, x0            /* 启用浮点和SIMD功能 */
     b    0f
@@ -116,7 +116,8 @@ branch_if_master x0, x1, master_cpu
 */
 slave_cpu:
     wfe
-    ldr  x1, =CPU_RELEASE_ADDR  // 从处理器进入低功耗状态，它被唤醒的时候，从地址CPU_RELEASE_ADDR读取函数
+	// 从处理器进入低功耗状态，它被唤醒的时候，从地址CPU_RELEASE_ADDR读取函数
+    ldr  x1, =CPU_RELEASE_ADDR 
     ldr  x0, [x1]
     cbz  x0, slave_cpu
     br   x0               /* 跳转到指定地址*/
@@ -133,31 +134,26 @@ master_cpu:
 // arch/arm/lib/crt0_64.S
 ENTRY(_main)
 
-/*
- * 设置初始的C语言运行环境，并且调用board_init_f(0)。
- */
+// 设置初始的C语言运行环境，并且调用board_init_f(0)。
 #if defined(CONFIG_SPL_BUILD) && defined(CONFIG_SPL_STACK 
     ldr  x0, =(CONFIG_SPL_STACK)
 #else
     ldr  x0, =(CONFIG_SYS_INIT_SP_ADDR)
 #endif
-    bic  sp, x0, #0xf    /* 为了符合应用二进制接口规范，对齐到16字节*/
+    bic  sp, x0, #0xf   /* 为了符合应用二进制接口规范，对齐到16字节*/
     mov  x0, sp
     bl   board_init_f_alloc_reserve // 在栈的顶部为结构体global_data分配空间
     mov  sp, x0
-    /* 设置gd */
-    mov  x18, x0
-    bl   board_init_f_init_reserve  // 函数board_init_f_init_reserve，初始化结构体global_data
+    mov  x18, x0  /* 设置gd */
+	// 函数board_init_f_init_reserve，初始化结构体global_data
+    bl   board_init_f_init_reserve  
     
     mov  x0, #0
-    bl   board_init_f  // common/board_f.c   执行数组init_sequence_f中的每个函数
+    bl   board_init_f // common/board_f.c 执行数组init_sequence_f中的每个函数
     
 #if !defined(CONFIG_SPL_BUILD)
-/*
- * 设置中间环境（新的栈指针和gd），然后调用函数
- * relocate_code(addr_moni)。
- *
- */
+ // 设置中间环境（新的栈指针和gd），然后调用函数
+ // relocate_code(addr_moni)
     ldr  x0, [x18, #GD_START_ADDR_SP]    /* 把寄存器x0设置为gd->start_addr_sp */
     bic  sp, x0, #0xf             /* 为了符合应用二进制接口规范，对齐到16字节 */
     ldr  x18, [x18, #GD_BD]       /* 把寄存器x18设置为gd->bd */
@@ -170,28 +166,23 @@ ENTRY(_main)
     b    relocate_code
     
 relocation_return:
- 
-/*
- * 设置最终的完整环境
- */
-    bl   c_runtime_cpu_setup      /* 仍然调用旧的例程 把向量基准地址寄存器设置为异常向量表的起始地址*/
+
+// 设置最终的完整环境
+   /* 仍然调用旧的例程 把向量基准地址寄存器设置为异常向量表的起始地址*/
+    bl   c_runtime_cpu_setup  
 #endif /* !CONFIG_SPL_BUILD */
 #if defined(CONFIG_SPL_BUILD)
     bl   spl_relocate_stack_gd    /* 可能返回空指针 重新定位栈*/
-    /*
-     * 执行“sp = (x0 != NULL) ? x0 : sp”，
-     * 规避这个约束：
-     * 带条件的mov指令不能把栈指针寄存器作为操作数
-     */
+    // 执行“sp = (x0 != NULL) ? x0 : sp”，
+    // 规避这个约束：
+    // 带条件的mov指令不能把栈指针寄存器作为操作数
     mov  x1, sp
     cmp  x0, #0
     csel x0, x0, x1, ne
     mov  sp, x0
 #endif
   
-/*
- * 用0初始化未初始化数据段
- */
+// 用0初始化未初始化数据段
     ldr  x0, =__bss_start      /* 这是自动重定位*/
     ldr  x1, =__bss_end        /* 这是自动重定位*/
 clear_loop:
@@ -202,10 +193,10 @@ clear_loop:
     /* 调用函数board_init_r(gd_t *id, ulong dest_addr) */
     mov  x0, x18                     /* gd_t */
     ldr  x1, [x18, #GD_RELOCADDR]    /* dest_addr */
-    b    board_init_r                /* 相对程序计数器的跳转 common/board_r.c 执行数组init_sequence_r中的每个函数，最后一个函数是run_main_loop */
+	/* 相对程序计数器的跳转 common/board_r.c 执行数组init_sequence_r中的每个函数，最后一个函数是run_main_loop */
+    b    board_init_r   
     
  /* 不会运行到这里，因为函数board_init_r()不会返回*/
-
 ENDPROC(_main)
 ```
 
@@ -278,17 +269,17 @@ ENTRY(stext)
     and  x23, x23, MIN_KIMG_ALIGN - 1    // KASLR偏移，默认值是0
     bl   set_cpu_boot_mode_flag  // __boot_cpu_mode[2] 数组
     bl   __create_page_tables  // 创建页表映射
-    /*
-     * 下面调用设置处理器的代码，请看文件“arch/arm64/mm/proc.S”
-     * 了解细节。
+    
+    /* 下面调用设置处理器的代码，请看文件“arch/arm64/mm/proc.S” 了解细节。
      * 返回的时候，处理器已经为开启内存管理单元做好准备，
-     * 转换控制寄存器已经设置好。
-     */
+     * 转换控制寄存器已经设置好。*/
     bl    __cpu_setup        // 初始化处理器
     b    __primary_switch  // 主处理器开启内存管理单元，进入C语言部分入口函数start_kernel
 ENDPROC(stext)
 
 ```
+
+<br>
 
 1. 函数el2_setup
 > a.如果异常级别是1，那么在异常级别1执行内核。   \
@@ -547,7 +538,7 @@ long _do_fork(unsigned long clone_flags,
 - **（1）标志组合**
 
 |||
-- | :-: | :-: 
+:-: | :-: | :-: 
 |CLONE_NEWNS & CLONE_FS|新进程属于新挂载命名空间<br>共享文件系统信息|
 |CLONE_NEWUSER & CLONE_FS|新进程属于新用户命名空间<br>共享文件系统信息|
 |CLONE_THREAD 未设置CLONE_SIGHAND|新进程和当前进程同属一个线程组，但不共享信号处理程序|
