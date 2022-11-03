@@ -658,6 +658,8 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
 
 
 - **（6）复制或共享资源**
+
+
 &emsp;1）UNIX系统5信号量，同属一个线程组的线程才共享UNIX系统的5信号量，copy_semundo函数
 ```c
 // linux-4.14.295/ipc/sem.c
@@ -884,7 +886,8 @@ int copy_namespaces(unsigned long flags, struct task_struct *tsk)
 	struct user_namespace *user_ns = task_cred_xxx(tsk, user_ns);
 	struct nsproxy *new_ns;
 	int ret;
-    // 如果共享除了用户以外的所有其他命名空间，那么新进程和当前进程共享命名空间代理结构体nsproxy，把计数加1
+    // 如果共享除了用户以外的所有其他命名空间，
+	// 那么新进程和当前进程共享命名空间代理结构体nsproxy，把计数加1
 	if (likely(!(flags & (CLONE_NEWNS | CLONE_NEWUTS | CLONE_NEWIPC |
 			      CLONE_NEWPID | CLONE_NEWNET |
 			      CLONE_NEWCGROUP | CLONE_NEWTIME)))) {
@@ -892,16 +895,16 @@ int copy_namespaces(unsigned long flags, struct task_struct *tsk)
 			get_nsproxy(old_ns);
 			return 0;
 		}
-	} else if (!ns_capable(user_ns, CAP_SYS_ADMIN)) // 进程没有系统管理权限，那么不允许创建新的命名空间
+	} else if (!ns_capable(user_ns, CAP_SYS_ADMIN)) 
+	// 进程没有系统管理权限，那么不允许创建新的命名空间
 		return -EPERM;
 
-	/*
-	 * CLONE_NEWIPC must detach from the undolist: after switching
+	
+	/* CLONE_NEWIPC must detach from the undolist: after switching
 	 * to a new ipc namespace, the semaphore arrays from the old
 	 * namespace are unreachable.  In clone parlance, CLONE_SYSVSEM
 	 * means share undolist with parent, so we must forbid using
-	 * it along with CLONE_NEWIPC.
-	 */
+	 * it along with CLONE_NEWIPC. */
     // 既要求创建新的进程间通信命名空间，又要求共享UNIX系统5信号量，那么这种要求是不合理的
 	if ((flags & (CLONE_NEWIPC | CLONE_SYSVSEM)) ==
 		(CLONE_NEWIPC | CLONE_SYSVSEM)) 
@@ -934,9 +937,8 @@ static int copy_io(unsigned long clone_flags, struct task_struct *tsk)
 
 	if (!ioc)
 		return 0;
-	/*
-	 * Share io context with parent, if CLONE_IO is set
-	 */
+	
+	/* Share io context with parent, if CLONE_IO is set */
 	if (clone_flags & CLONE_IO) {  // CLONE_IO 共享I/O上小文
 		ioc_task_link(ioc);  // 计数nr_tasks加1
 		tsk->io_context = ioc;  // 共享I/O上下文结构体io_context
@@ -969,13 +971,12 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
     // 新进程的进程描述符的成员thread.cpu_context清零，在调度进程时切换出去的进程使用这个成员保存通用寄存器的值
 	memset(&p->thread.cpu_context, 0, sizeof(struct cpu_context));
 
-	/*
-	 * In case p was allocated the same task_struct pointer as some
+	
+	/* In case p was allocated the same task_struct pointer as some
 	 * other recently-exited task, make sure p is disassociated from
 	 * any cpu that may have run that now-exited task recently.
 	 * Otherwise we could erroneously skip reloading the FPSIMD
-	 * registers for p.
-	 */
+	 * registers for p. */
 	fpsimd_flush_task_state(p);
 
 	ptrauth_thread_init_kernel(p);
@@ -984,12 +985,11 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
 		*childregs = *current_pt_regs();
 		childregs->regs[0] = 0;
 
-		/*
-		 * Read the current TLS pointer from tpidr_el0 as it may be
+		
+		/* Read the current TLS pointer from tpidr_el0 as it may be
 		 * out-of-sync with the saved value.
          * 从寄存器tpidr_el0读取当前线程的线程本地存储的地址，
-         * 因为它可能和保存的值不一致
-		 */
+         * 因为它可能和保存的值不一致 */
 		*task_user_tls(p) = read_sysreg(tpidr_el0);
 
 		if (stack_start) {
@@ -999,10 +999,9 @@ int copy_thread(unsigned long clone_flags, unsigned long stack_start,
 				childregs->sp = stack_start;
 		}
 
-		/*
-		 * If a TLS pointer was passed to clone, use it for the new thread. 
-		 * 如果把线程本地存储的地址传给系统调用clone的第4个参数，那么新线程将使用它
-		 */
+		
+		/* If a TLS pointer was passed to clone, use it for the new thread. 
+		 * 如果把线程本地存储的地址传给系统调用clone的第4个参数，那么新线程将使用它*/
 		if (clone_flags & CLONE_SETTLS)
 			p->thread.uw.tp_value = tls;
 	} else {  // 内核线程
@@ -1064,7 +1063,10 @@ static __latent_entropy struct task_struct *copy_process(
         p->tgid = p->pid;
     }
     
-    // 控制组的进程数控制器检查是否允许创建新进程：从当前进程所属的控制组一直到控制组层级的根，如果其中一个控制组的进程数量大于或等于限制，那么不允许使用fork和clone创建新进程
+    // 控制组的进程数控制器检查是否允许创建新进程：
+	// 从当前进程所属的控制组一直到控制组层级的根，
+	// 如果其中一个控制组的进程数量大于或等于限制，
+	// 那么不允许使用fork和clone创建新进程
     cgroup_threadgroup_change_begin(current);
     retval = cgroup_can_fork(p);
     if (retval)
@@ -1073,7 +1075,8 @@ static __latent_entropy struct task_struct *copy_process(
     write_lock_irq(&tasklist_lock);
     // 为新进程设置父进程
     if (clone_flags & (CLONE_PARENT|CLONE_THREAD)) {
-        p->real_parent = current->real_parent;  // 新进程和当前进程拥有相同的父进程
+		// 新进程和当前进程拥有相同的父进程
+        p->real_parent = current->real_parent;  
         p->parent_exec_id = current->parent_exec_id;
     } else {
         p->real_parent = current;  // 新进程的父进程是当前进程
@@ -1100,7 +1103,9 @@ static __latent_entropy struct task_struct *copy_process(
             p->signal->has_child_subreaper = p->real_parent->signal-> has_child_subreaper ||
                                 p->real_parent->signal->is_child_subreaper;
             list_add_tail(&p->sibling, &p->real_parent->children);  // 新进程添加到父进程的子进程链表
-            list_add_tail_rcu(&p->tasks, &init_task.tasks);  // 新进程添加到进程链表中，链表节点是成员tasks，头节点是空闲线程的成员tasks（init_task.tasks）
+			// 新进程添加到进程链表中，链表节点是成员tasks，
+			// 头节点是空闲线程的成员tasks（init_task.tasks）
+            list_add_tail_rcu(&p->tasks, &init_task.tasks);  
             attach_pid(p, PIDTYPE_PGID);  // 新进程添加到进程组的进程链表
             attach_pid(p, PIDTYPE_SID);  // 新进程添加到会话的进程链表
             __this_cpu_inc(process_counts);
@@ -1143,14 +1148,12 @@ void wake_up_new_task(struct task_struct *p)
 	raw_spin_lock_irqsave(&p->pi_lock, rf.flags);
 	p->state = TASK_RUNNING;  // 切换TASK_RUNNING
 #ifdef CONFIG_SMP
-	/*
-	 * Fork balancing, do it here and not earlier because:
+	
+	/* Fork balancing, do it here and not earlier because:
 	 *  - cpus_ptr can change in the fork path
 	 *  - any previously selected CPU might disappear through hotplug
-	 *
 	 * Use __set_task_cpu() to avoid calling sched_class::migrate_task_rq,
-	 * as we're not fully set-up yet.
-	 */
+	 * as we're not fully set-up yet.*/
 	p->recent_used_cpu = task_cpu(p);
 	rseq_migrate(p);
 	__set_task_cpu(p, select_task_rq(p, task_cpu(p), SD_BALANCE_FORK, 0));  // 在SMP系统上，创建新进程是执行负载均衡的绝佳时机，为新进程选择一个负载最轻的处理器
@@ -1164,10 +1167,9 @@ void wake_up_new_task(struct task_struct *p)
 	check_preempt_curr(rq, p, WF_FORK);  // 检查新进程是否可以抢占当前进程
 #ifdef CONFIG_SMP
 	if (p->sched_class->task_woken) {  // 在SMP系统上，调用调度类的task_woken方法
-		/*
-		 * Nothing relies on rq->lock after this, so its fine to
-		 * drop it.
-		 */
+		
+		/* Nothing relies on rq->lock after this, so its fine to
+		 * drop it.*/
 		rq_unpin_lock(rq, &rf);
 		p->sched_class->task_woken(rq, p);
 		rq_repin_lock(rq, &rf);
@@ -1203,14 +1205,12 @@ asmlinkage __visible void schedule_tail(struct task_struct *prev)
 	__releases(rq->lock)
 {
 	struct rq *rq;
-	/*
-	 * New tasks start with FORK_PREEMPT_COUNT, see there and
+	/* New tasks start with FORK_PREEMPT_COUNT, see there and
 	 * finish_task_switch() for details.
 	 *
 	 * finish_task_switch() will drop rq->lock() and lower preempt_count
 	 * and the preempt_enable() will end up enabling preemption (on
-	 * PREEMPT_COUNT kernels).
-	 */
+	 * PREEMPT_COUNT kernels).*/
 	rq = finish_task_switch(prev);  // 为上一个进程执行清理操作2.8.6
 	balance_callback(rq);  // 执行运行队列的所有负载均衡回调函数
 	preempt_enable();  // 开启内核抢占
