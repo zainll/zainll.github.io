@@ -1382,17 +1382,221 @@ pit_t wiat4(pit_t pid, int *wstatus, int options, staruct usage *rusage);  // �
 ```
 
 &emsp;父进程退出时，给子进程寻找领养者
-&ensp;&emsp;1）进程属于一个线程组，且还有其他线程，选择任意其他线程
-&ensp;&emsp;2）选择最亲近的充当"替补领养者"的祖先进程，进程使用系统调用prtctl(PR_SET_CHILD_SUBREAPER)设置为替换领养者
-&ensp;&emsp;3）选择所属进程号命名空间的1号进程
+&ensp;&emsp;1）进程属于一个线程组，且还有其他线程，选择任意其他线程   \
+&ensp;&emsp;2）选择最亲近的充当"替补领养者"的祖先进程，进程使用系统调用prtctl(PR_SET_CHILD_SUBREAPER)设置为替换领养者     \
+&ensp;&emsp;3）选择所属进程号命名空间的1号进程      \
 &ensp;&emsp;
 
+### 2.6.1 线程组退出 exit_group
+&emsp; 系统调用exit_group执行流程
+
+![20221103145928](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221103145928.png)
+
+
+&emsp;一个线程组的两个线程，线程1和线程2，线程1调用exit_group使线程组退出，线程1执行流程：
+&emsp;1）把退出码保存在结构体成员group_exit_code中，传递给线程2    \
+&emsp;2）给线程组设置正在退出标志     \
+&emsp;3）向线程2发送杀死信号，唤醒线程2，线程2处理杀死信号    \
+&emsp;4）线程1调用函数do_exit以退出    \
+&emsp;线程2退出的执行流程，函数do_group_exit执行流程
+
+ 
+
+![20221103151545](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221103151545.png)
+
+&emsp;线程2可能发挥用户模式3种情况
+&emsp;（1）执行完系统调用      \
+&emsp;（2）被中断抢占，中断处理程序执行完    \
+&emsp;（3）执行指令是生成异常，异常处理程序执行完     \
+
+&emsp;do_exit函数执行流程
+&emsp;（1）释放各种资源，把资源引用计数减一，如果引用计数变为0，则释放数据结构   \
+&emsp;（2）调用函数exit_notify，为子进程选择领养者，然后把自己死讯通知父进程   \
+&emsp;（3）把进程状态设置为死亡(TASK_DEAD)     \
+&emsp;（4）最后一次调用函数__schedule以调度进程    \
+&emsp;死亡进程调用__schedule时进程调度器处理流程
+```c
+// linux-5.10.102/kernel/sched/core.c
+__schedule() --> context_switch() --> finish_task_switch()
+static struct rq *finish_task_switch(struct task_struct *prev)
+ __releases(rq->lock)
+{
+	…
+	prev_state = prev->state;
+	…
+	if (unlikely(prev_state == TASK_DEAD)) {
+		if (prev->sched_class->task_dead)
+			prev->sched_class->task_dead(prev);  // 执行调度类task_dead
+		…
+		// 如果结构体thread_info放在进程描述符里面，
+		// 而不是放在内核栈的顶部，那么释放进程的内核栈
+		put_task_stack(prev);
+		// 进程描述符的引用计数减1，如果引用计数变为0，那么释放进程描述符
+		put_task_struct(prev);
+	}
+	…
+}
+```
+
+### 2.6.2 终止进程
+&emsp;系统调用kill向线程组或进程组发送信号linux-5.10.102/kernel/signal.c，执行流程
+![20221103154752](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221103154752.png)
+
+&emsp;函数__send_signal主要代码
+```c
+// linux-5.10.102/kernel/signal.c
+static int __send_signal(int sig, struct siginfo *info, struct task_struct *t,
+           int group, int from_ancestor_ns)
+{
+	struct sigpending *pending;
+	struct sigqueue *q;
+	int override_rlimit;
+	int ret = 0, result;
+
+	…
+	result = TRACE_SIGNAL_IGNORED;
+	// 目标线程忽略信号,不发送信号
+	if (!prepare_signal(sig, t,
+			from_ancestor_ns || (info == SEND_SIG_FORCED)))
+		goto ret;
+	// 确定把信号添加到哪个信号队列和集合
+	pending = group ? &t->signal->shared_pending : &t->pending;
+
+	result = TRACE_SIGNAL_ALREADY_PENDING;
+	// 传统信号，并且信号集合已经包含同一个信号,不发送
+	if (legacy_queue(pending, sig))
+		goto ret;
+
+	…
+	// 判断分配信号队列节点时是否可以忽略信号队列长度的限制
+	if (sig < SIGRTMIN)
+		override_rlimit = (is_si_special(info) || info->si_code >= 0);
+	else
+		override_rlimit = 0;
+	// 分配一个信号队列节点
+	q = __sigqueue_alloc(sig, t, GFP_ATOMIC | __GFP_NOTRACK_FALSE_POSITIVE,
+		override_rlimit);
+	if (q) {
+		list_add_tail(&q->list, &pending->list); // 添加到信号队列中
+		…
+	} else if (!is_si_special(info)) {
+		…
+	}
+
+out_set:
+	signalfd_notify(t, sig);
+	sigaddset(&pending->signal, sig);  // 信号添加到信号集合中
+	// 在线程组中查找一个没有屏蔽信号的线程，唤醒它，让它处理信号
+	complete_signal(sig, t, group); 
+ret:
+	…
+	return ret;
+}
+```
+
+
+### 2.6.3 查询子进程终止原因
+
+&ensp;系统调用waitid
+```c
+int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);
+pid_t waitpid(pid_t pid, int *wstatus, int options);
+```
+<table>
+	<tr>
+	    <th>参数</th>
+	    <th>参数值</th>
+	    <th>含义</th>  
+	</tr >
+	<tr >
+	    <td rowspan="3">idtype</td>
+	    <td>P_ALL</td>
+	    <td>等待任意子进程，忽略参数id</td>
+	</tr>
+	<tr>
+	    <td>P_PID</td>
+	    <td>等待进程号为id的子进程</td>
+	</tr>
+	<tr>
+	    <td>P_PGID</td>
+	    <td>等待进程组标识符是id的任意子进程</td>
+	</tr>
+	<tr >
+	    <td rowspan="5">options</td>
+	    <td>WEXITED</td>
+	    <td>等待退出的子进程</td>
+	</tr>
+	<tr>
+	    <td >WSTOPPED</td>
+	    <td>等待收到信号SIGSTOP并停止执行的子进程</td>
+	</tr>
+	<tr>
+	    <td >WCONTINUED</td>
+	    <td >等待收到信号SIGCONT并继续执行的子进程</td>
+	</tr>
+	<tr>
+	    <td >WNOHANG</td>
+	    <td >如果没有子进程退出，立即返回</td>
+	</tr>
+	<tr>
+	    <td >WNOWAIT</td>
+	    <td >让子进程处于僵尸状态，以后可以再次查询状态信息</td>
+	</tr>
+</table>
+
+&emsp;do_wait函数执行流程
+
+![20221103162302](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221103162302.png)
 
 
 
 
+## 2.7 进程状态
 
 
+
+<table>
+	<tr>
+	    <th>状态</th>
+	    <th>state</th>
+	    <th>含义</th>  
+	</tr >
+	<tr >
+	    <td>就绪状态</td>
+	    <td>TASK_RUNNING</td>
+	    <td>正在运行队列中等待调度器调度</td>
+	</tr>
+	<tr>
+	    <td>运行状态</td>
+	    <td>TASK_RUNNING</td>
+	    <td>被调度器选中，正在处理器上运行</td>
+	</tr>
+	<tr>
+	    <td>轻度睡眠</td>
+	    <td>TASK_INTERRUPTIBLE</td>
+	    <td>可信号打断的睡眠状态</td>
+	</tr>
+	<tr >
+	    <td>中度睡眠</td>
+	    <td>TASK_KILLABLE</td>
+	    <td>只能被致命的信号打断</td>
+	</tr>
+	<tr>
+	    <td>深度睡眠</td>
+	    <td>TASK_UNINTERRUPTIBLE</td>
+	    <td>不可打断的睡眠状态</td>
+	</tr>
+	<tr>
+	    <td>僵尸状态</td>
+	    <td>TASK_DEAD</td>
+	    <td>被调度器选中，正在处理器上运行</td>
+	</tr>
+	<tr>
+	    <td>死亡状态</td>
+	    <td>TASK_DEAD</td>
+	    <td>如果父进程不关注子进程退出事件，那么子进程退出时自动消亡</td>
+	</tr>
+</table>
 
 
 
