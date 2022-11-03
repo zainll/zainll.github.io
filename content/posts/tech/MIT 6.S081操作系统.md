@@ -31,6 +31,8 @@ cover:
 
 
 
+
+
 XV6编译
 XV6代码三部分：kernel、user和mkfs
 QEMU
