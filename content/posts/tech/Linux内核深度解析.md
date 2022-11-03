@@ -541,8 +541,8 @@ long _do_fork(unsigned long clone_flags,
 :-: | :-: | :-: 
 |CLONE_NEWNS & CLONE_FS|新进程属于新挂载命名空间<br>共享文件系统信息|
 |CLONE_NEWUSER & CLONE_FS|新进程属于新用户命名空间<br>共享文件系统信息|
-|CLONE_THREAD 未设置CLONE_SIGHAND|新进程和当前进程同属一个线程组，但不共享信号处理程序|
-|CLONE_SIGHAND 未设置CLONE_VM|新进程和当前进程共享信号处理程序，但不共享虚拟内存|
+|CLONE_THREAD <br> 未设置CLONE_SIGHAND|新进程和当前进程同属一个线程组，但不共享信号处理程序|
+|CLONE_SIGHAND <br> 未设置CLONE_VM|新进程和当前进程共享信号处理程序，但不共享虚拟内存|
 
   
 - **（2）dup_task_struct函数**
