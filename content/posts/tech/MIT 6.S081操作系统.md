@@ -54,16 +54,16 @@ gdb-multiarch
 layout split
 
 
-b站课程：
-https://www.bilibili.com/video/BV19k4y1C7kA?p=2&spm_id_from=pageDriver&vd_source=6768732acbd0f78ac59230d2faa59a86
+b站课程：\
+https://www.bilibili.com/video/BV19k4y1C7kA?p=2&spm_id_from=pageDriver&vd_source=6768732acbd0f78ac59230d2faa59a86      \
 
-课程翻译
-https://github.com/huihongxiao/MIT6.S081
-https://mit-public-courses-cn-translatio.gitbook.io/mit6-s081/
+课程翻译: \
+https://github.com/huihongxiao/MIT6.S081       \
+https://mit-public-courses-cn-translatio.gitbook.io/mit6-s081/     \
 
-https://pdos.csail.mit.edu/6.828/2020/schedule.html
+https://pdos.csail.mit.edu/6.828/2020/schedule.html   \
 
-https://pdos.csail.mit.edu/6.828/2020/schedule.html
+https://pdos.csail.mit.edu/6.828/2020/schedule.html     \
 
 
 
