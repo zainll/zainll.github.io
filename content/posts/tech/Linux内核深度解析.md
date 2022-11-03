@@ -1334,5 +1334,9 @@ static inline void start_thread(struct pt_regs *regs, unsigned long pc,
 }
 ```
 
+#### 3.装载脚本程序
+
+
+
 
 
