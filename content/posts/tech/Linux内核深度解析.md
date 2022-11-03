@@ -1599,6 +1599,14 @@ pid_t waitpid(pid_t pid, int *wstatus, int options);
 </table>
 
 
+&emsp;进程状态变迁
+![20221103163416](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221103163416.png)
+
+
+
+## 2.8 进程调度
+
+
 
 
 
