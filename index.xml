@@ -121,7 +121,7 @@
       <pubDate>Fri, 05 Aug 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/mit-6.s081%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</guid>
-      <description>XV6编译 XV6代码三部分：kernel、user和mkfs QEMU https://blog.csdn.net/fangye945a/article/details/121962409 sudo apt-get install ninja-build https://blog.csdn.net/Leo_h1104/article/details/115580753 https://zhuanlan.zhihu.com/p/351865040 https://zhuanlan.zhihu.com/p/466423677 gdb make qemu echo set auto-load safe-path / &amp;gt; ~/.gdbinit gdb-multiarch layout split b站课程： https://www.bilibili.com/video/BV19k4y1C7kA?p=2&amp;amp;spm_id_from=pageDriver&amp;amp;vd_source=6768732acbd0f78ac59230d2faa59a86 \ 课程翻译: https://github.com/huihongxiao/MIT6.S081 https://mit-public-courses-cn-translatio.gitbook.io/mit6-s081/ \ https://pdos.csail.mit.edu/6.828/2020/schedule.html \ https://pdos.csail.mit.edu/6.828/2020/schedule.html</description>
+      <description>Lec18 OS organization 18.1 Monolithic kernel 宏内核：Linux，Unix 微内核：mac 宏内核 微内核 优点 可移植 虚拟地址空间 共享资源 微内核 缺点 复杂 XV6编译 XV6代码三部分：k</description>
     </item>
     
     <item>
