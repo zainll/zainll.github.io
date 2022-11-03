@@ -1372,8 +1372,21 @@ int tkill(int tid, int sig);
 int tgkill(int tgid, int tid, int sig);
 ```
 &emsp;父进程是否关注子进程退出事假，
-&ensp;&emsp;1）父进程关注子进程退出事件，子进程退出时释放各种资源，留空进程描述符的僵尸进程，发送信号SIGCHLD(CHILD是child)通知父进程，父进程查询进程终止原因从子进程收回进程描述符。    \
+&ensp;&emsp;1）父进程关注子进程退出事件，子进程退出时释放各种资源，留空进程描述符的僵尸进程，发送信号SIGCHLD(CHILD是child)通知父进程，父进程查询进程终止原因从子进程收回进程描述符。进程默认关注子进程退出事件，通过系统调用sigaction对信号SIGHLD设置标志SA_NOCLDWAIT(CLD是child)，子进程退出时不变成僵尸进程或设置忽略信号SIGCHLD    \
 &ensp;&emsp;2）父进程不关注子进程退出事件，进程退出是释放各种资源，释放进程描述符 \
+&emsp;Linux内核3个系统调用等待子进程状态改变：子进程终止、信号SIGSTOP使子进程停止执行或信号SIGCONT使子进程继续执行
+```c
+pid_t waitpid(pid_t pid, int *wstatus, int options);
+int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);
+pit_t wiat4(pit_t pid, int *wstatus, int options, staruct usage *rusage);  // 废弃
+```
+
+&emsp;父进程退出时，给子进程寻找领养者
+&ensp;&emsp;1）进程属于一个线程组，且还有其他线程，选择任意其他线程
+&ensp;&emsp;2）选择最亲近的充当"替补领养者"的祖先进程，进程使用系统调用prtctl(PR_SET_CHILD_SUBREAPER)设置为替换领养者
+&ensp;&emsp;3）选择所属进程号命名空间的1号进程
+&ensp;&emsp;
+
 
 
 
