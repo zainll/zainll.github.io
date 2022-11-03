@@ -145,7 +145,7 @@ winget install Microsoft.PowerShell
 <br>
 
 ### 终端连接程序
->secureCRT 需要破解
+>secureCRT 需要破解    \
 https://blog.csdn.net/qq_39052513/article/details/104692026
 
 
@@ -209,7 +209,7 @@ scoop install postman
 <br>
 
 ###  vcpkg 
-> C/C++ 库管理工具，跨平台
+> C/C++ 库管理工具，跨平台       \
 [Get started with vcpkg](https://vcpkg.io/en/getting-started.html)
 
 
@@ -217,7 +217,7 @@ scoop install postman
 <br>
 
 ### cget
-https://cget.readthedocs.io/en/latest/#
+https://cget.readthedocs.io/en/latest/#         \
 
 [开源库集成器Vcpkg全教程](https://blog.csdn.net/cjmqas/article/details/79282847)
 
@@ -267,19 +267,19 @@ net start LxssManager
 ## l
 
 ### rustdesk  
-> 远程开源软件，跨平台
+> 远程开源软件，跨平台          \
 https://github.com/rustdesk/rustdesk
 
 <br>
 
 ### ditto 粘贴板工具
-https://ditto-cp.sourceforge.io/
+https://ditto-cp.sourceforge.io/           \
 https://github.com/sabrogden/Ditto
 
 <br>
 
 ### bleachbit
-https://github.com/bleachbit/bleachbit
+https://github.com/bleachbit/bleachbit         \
 https://www.bleachbit.org/
 
 <br>
@@ -291,13 +291,13 @@ https://github.com/qbittorrent/qBittorrent
 
 
 ### imagine gui   
-> 跨平台PNG和JPEG优化GUI工具 
+> 跨平台PNG和JPEG优化GUI工具          \
 https://github.com/meowtec/Imagine
 
 <br>
 
 ### creentogif  
->动图捕获软件 录制屏幕上的指定区域
+>动图捕获软件 录制屏幕上的指定区域              \
 https://www.screentogif.com/
 
 <br>
