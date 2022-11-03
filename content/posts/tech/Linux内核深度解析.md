@@ -1336,6 +1336,8 @@ static inline void start_thread(struct pt_regs *regs, unsigned long pc,
 
 #### 3.装载脚本程序
 
+&ensp;脚本程序前两个字节是`#!`，后面是解释器程序的名称和参数。解释器用来执行脚本程序
+&emsp;`linux-5.10.102/fs/binfmt_script.c`函数`load_script`负责装载脚本程序
 
 
 
