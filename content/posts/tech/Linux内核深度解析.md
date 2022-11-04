@@ -1633,4 +1633,48 @@ struct task_struct {
 
 
 
+<table>
+	<tr>
+	    <th>优先级</th>
+	    <th>限期进程</th>
+	    <th>实时进程</th>  
+	    <th>普通进程</th>  
+	</tr >
+	<tr >
+	    <td>prio<br>调度优先级(数值越小，表示优先级越高)</td>
+	    <td colspan="3">大多数prio等于normal_prio</td>
+	</tr>
+	<tr>
+	    <td>static_prio<br>静态优先级</td>
+	    <td>总是0</td>
+	    <td>总是0</td>
+	    <td>120 + nice值数值越小，<br>表示优先级越高</td>
+	</tr>
+	<tr>
+	    <td>normal_prio<br>正常优先级(数值越小，表示优先级越高)</td>
+	    <td>-1</td>
+	    <td>99 − rt_priority</td>
+	    <td>static_prio</td>
+	</tr>
+		<tr>
+	    <td>实时优先级</td>
+	    <td>总是0</td>
+	    <td>值越大，优先级越高</td>
+	    <td> </td>
+	</tr>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
