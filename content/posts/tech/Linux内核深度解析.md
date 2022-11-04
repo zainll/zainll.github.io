@@ -1665,9 +1665,48 @@ struct task_struct {
 </table>
 
 
+### 2.8.3 调度类
+&ensp;Linux内核抽象一个调度类`sched_class`，目前实现5种调度类，优先级从上到下从高到低：
 
-
-
+<table>
+	<tr>
+	    <th>调度类</th>
+	    <th>调度策略</th>
+	    <th>调度算法</th>  
+	    <th>调度对象</th>  
+	</tr >
+	<tr >
+	    <td>停机调度类<br>stop_sched_class</td>
+	    <td>无</td>
+	    <td>无</td>
+	    <td>停机进程</td>
+	</tr>
+	<tr>
+	    <td>限期调度类<br>dl_sched_class</td>
+	    <td>SCHED_DEADLINE</td>
+	    <td>最早期限优先</td>
+	    <td>限期进程</td>
+	</tr>
+	<tr>
+	    <td>实时调度类<br>rt_sched_class</td>
+	    <td>SCHED_FIFO<br>SCHED_RR</td>
+	    <td>先进先出<br>轮流调度</td>
+	    <td>实时进程</td>
+	</tr>
+		<tr>
+	    <td>公平调度类<br>cfs_sched_class</td>
+	    <td>SCHED_NORMAL<br>SCHED_IDIE</td>
+	    <td>完全公平调度算法</td>
+	    <td>普通进程</td>
+	</tr>
+	</tr>
+		<tr>
+	    <td>空闲调度类<br>idle_sched_class</td>
+	    <td>无</td>
+	    <td>无</td>
+	    <td>每个处理器上的空闲线程</td>
+	</tr>
+</table>
 
 
 
