@@ -49,7 +49,7 @@
       <pubDate>Fri, 05 Aug 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/mit-6.s081%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</guid>
-      <description>Lec18 OS organization 18.1 Monolithic kernel 宏内核：Linux，Unix 微内核：mac 宏内核 微内核 优点 可移植 虚拟地址空间 共享资源 微内核 缺点 复杂 XV6编译 XV6代码三部分：k</description>
+      <description>Lec18 OS organization 18.1 Monolithic kernel 宏内核：Linux，Unix 微内核：mac 宏内核 微内核 优点 可移植 虚拟地址空间 共享资源 通用性 缺点 Bug和安全漏洞 XV6编译 XV6代</description>
     </item>
     
     <item>
