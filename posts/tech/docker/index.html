@@ -5,13 +5,15 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>👨🏻‍💻 技术 | zain&#39;s Blog</title>
+<title>docker | zain&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="不积跬步，无以至千里；不积小流，无以成江海">
+<meta name="description" content="Ubuntu22.04 中使用docker容器，在容器内运行qemu可行否？ Docker默认禁用ptrace？ https://www.mocusez.site/posts/1912.html">
 <meta name="author" content="
 &nbsp;Zain">
-<link rel="canonical" href="https://liuz0123.gitee.io/zain/posts/tech/">
+<link rel="canonical" href="https://liuz0123.gitee.io/zain/posts/tech/docker/">
 <link crossorigin="anonymous" href="/zain/assets/css/stylesheet.6bbe4903eaf247f5c3db656a51fd7b09d982ab42029edfdc123f359e2748dc03.css" integrity="sha256-a75JA&#43;ryR/XD22VqUf17CdmCq0ICnt/cEj81nidI3AM=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/zain/assets/js/highlight.acb54fd32bbc1982428b8850317e45d076b95012730a5936667e6bc21777692a.js" integrity="sha256-rLVP0yu8GYJCi4hQMX5F0Ha5UBJzClk2Zn5rwhd3aSo="
+        onload="hljs.initHighlightingOnLoad();"></script>
 <link rel="icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
 <link rel="icon" type="image/png" sizes="16x16" href="https://liuz0123.gitee.io/zain/img/Q.gif">
 <link rel="icon" type="image/png" sizes="32x32" href="https://liuz0123.gitee.io/zain/img/Q.gif">
@@ -19,7 +21,6 @@
 <link rel="mask-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="https://liuz0123.gitee.io/zain/posts/tech/index.xml">
 <noscript>
     <style>
         #theme-toggle,
@@ -66,14 +67,16 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-<meta property="og:title" content="👨🏻‍💻 技术" />
-<meta property="og:description" content="不积跬步，无以至千里；不积小流，无以成江海" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://liuz0123.gitee.io/zain/posts/tech/" />
+<meta property="og:title" content="docker" />
+<meta property="og:description" content="Ubuntu22.04 中使用docker容器，在容器内运行qemu可行否？ Docker默认禁用ptrace？ https://www.mocusez.site/posts/1912.html" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liuz0123.gitee.io/zain/posts/tech/docker/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-11-02T00:22:58&#43;08:00" />
+<meta property="article:modified_time" content="2022-11-02T00:22:58&#43;08:00" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="👨🏻‍💻 技术"/>
-<meta name="twitter:description" content="不积跬步，无以至千里；不积小流，无以成江海"/>
+<meta name="twitter:title" content="docker"/>
+<meta name="twitter:description" content="Ubuntu22.04 中使用docker容器，在容器内运行qemu可行否？ Docker默认禁用ptrace？ https://www.mocusez.site/posts/1912.html"/>
 
 
 <script type="application/ld+json">
@@ -92,13 +95,52 @@ var _hmt = _hmt || [];
       "position":  2 ,
       "name": "👨🏻‍💻 技术",
       "item": "https://liuz0123.gitee.io/zain/posts/tech/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "docker",
+      "item": "https://liuz0123.gitee.io/zain/posts/tech/docker/"
     }
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "docker",
+  "name": "docker",
+  "description": "Ubuntu22.04 中使用docker容器，在容器内运行qemu可行否？ Docker默认禁用ptrace？ https://www.mocusez.site/posts/1912.html",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "Ubuntu22.04 中使用docker容器，在容器内运行qemu可行否？ Docker默认禁用ptrace？\nhttps://www.mocusez.site/posts/1912.html\n",
+  "wordCount" : "45",
+  "inLanguage": "en",
+  "datePublished": "2022-11-02T00:22:58+08:00",
+  "dateModified": "2022-11-02T00:22:58+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Zain"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://liuz0123.gitee.io/zain/posts/tech/docker/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "zain's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://liuz0123.gitee.io/zain/img/Q.gif"
+    }
+  }
+}
+</script>
 </head>
 
-<body class="list" id="top">
+<body class="" id="top">
 <script>
     if (localStorage.getItem("pref-theme") === "dark") {
         document.body.classList.add('dark');
@@ -110,6 +152,9 @@ var _hmt = _hmt || [];
 
 </script>
 
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 
 
 <header class="header">
@@ -180,287 +225,125 @@ var _hmt = _hmt || [];
         </ul>
     </nav>
 </header>
-<main class="main"> 
-<header class="page-header"><div class="breadcrumbs"><a href="https://liuz0123.gitee.io/zain/">主页</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/posts/">📚文章</a></div>
-  <h1>👨🏻‍💻 技术</h1>
-  <div class="post-description">
-    不积跬步，无以至千里；不积小流，无以成江海
-  </div>
-</header>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>docker
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        
-        
-      </p>
-    </section>
-    <footer class="entry-footer">Create:&nbsp;<span title='2022-11-02 00:22:58 +0800 CST'>2022-11-02</span>&nbsp;|&nbsp;Update:&nbsp;2022-11-02&nbsp;|&nbsp;Words:&nbsp;45&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
+<main class="main page">
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://liuz0123.gitee.io/zain/">主页</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/posts/tech/">👨🏻‍💻 技术</a></div>
+            <h1 class="post-title">
+                docker
+            </h1>
+            <div class="post-meta">Create:&nbsp;<span title='2022-11-02 00:22:58 +0800 CST'>2022-11-02</span>&nbsp;|&nbsp;Update:&nbsp;2022-11-02&nbsp;|&nbsp;Words:&nbsp;45&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
 &nbsp;Zain
 
 
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to docker" href="https://liuz0123.gitee.io/zain/posts/tech/docker/"></a>
-</article>
 
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>树莓派
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
+                &nbsp;|&nbsp;tags: &nbsp;
+                <ul class="post-tags-meta">
+                    <a href="https://liuz0123.gitee.io/zain/tags/docker/">docker</a>
+                    <a href="https://liuz0123.gitee.io/zain/tags/linux/">、linux</a>
+                </ul>
+
+                
+                <span id="busuanzi_container_page_pv">
+                &nbsp;| Viewers: <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+</div>
+        </header> 
         
         
-      </p>
-    </section>
-    <footer class="entry-footer">Create:&nbsp;<span title='2022-10-15 00:17:58 +0800 CST'>2022-10-15</span>&nbsp;|&nbsp;Update:&nbsp;2022-10-15&nbsp;|&nbsp;Words:&nbsp;7&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
-&nbsp;Zain
+        <div class="post-content"><p>Ubuntu22.04 中使用docker容器，在容器内运行qemu可行否？
+Docker默认禁用ptrace？</p>
+<p><a href="https://www.mocusez.site/posts/1912.html">https://www.mocusez.site/posts/1912.html</a></p>
 
 
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to 树莓派" href="https://liuz0123.gitee.io/zain/posts/tech/%E6%A0%91%E8%8E%93%E6%B4%BE/"></a>
-</article>
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://liuz0123.gitee.io/zain/img/wechat_pay.jpg" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://liuz0123.gitee.io/zain/img/alipay.jpg" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
 
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>Linux内核深度解析
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        
-        ...
-      </p>
-    </section>
-    <footer class="entry-footer">Create:&nbsp;<span title='2022-10-05 00:17:58 +0800 CST'>2022-10-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-10-05&nbsp;|&nbsp;Words:&nbsp;18485&nbsp;|&nbsp;&nbsp;37 min&nbsp;|&nbsp;
-&nbsp;Zain
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://liuz0123.gitee.io/zain/posts/read/read/ebookwebsite/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>电子书网站</span>
+  </a>
+  <a class="next" href="https://liuz0123.gitee.io/zain/posts/na/%E8%BF%87%E5%8E%BB/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>过去</span>
+  </a>
+</nav>
 
-
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to Linux内核深度解析" href="https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>logging
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        
-        ...
-      </p>
-    </section>
-    <footer class="entry-footer">Create:&nbsp;<span title='2022-09-05 00:17:58 +0800 CST'>2022-09-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-09-05&nbsp;|&nbsp;Words:&nbsp;476&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
-&nbsp;Zain
-
-
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to logging" href="https://liuz0123.gitee.io/zain/posts/tech/logging/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>MIT 6.S081操作系统
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        
-        ...
-      </p>
-    </section>
-    <footer class="entry-footer">Create:&nbsp;<span title='2022-08-05 00:17:58 +0800 CST'>2022-08-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-08-05&nbsp;|&nbsp;Words:&nbsp;140&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
-&nbsp;Zain
+        </footer>
+    </div>
 
 
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to MIT 6.S081操作系统" href="https://liuz0123.gitee.io/zain/posts/tech/mit-6.s081%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"></a>
-</article>
 
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>ARM64体系结构编程与实践
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        
-        
-      </p>
-    </section>
-    <footer class="entry-footer">Create:&nbsp;<span title='2022-07-12 00:21:58 +0800 CST'>2022-07-12</span>&nbsp;|&nbsp;Update:&nbsp;2022-07-12&nbsp;|&nbsp;Words:&nbsp;0&nbsp;|&nbsp;&nbsp;0 min&nbsp;|&nbsp;
-&nbsp;Zain
+<div>
+    <div class="pagination__title">
+        <span class="pagination__title-h" style="font-size: 20px;">💬评论</span>
+        <hr />
+    </div>
 
+    <div id="tcomment"></div>
 
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to ARM64体系结构编程与实践" href="https://liuz0123.gitee.io/zain/posts/tech/arm64%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E7%BC%96%E7%A8%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/"></a>
-</article>
+    <script src="https://cdn.staticfile.org/twikoo/1.6.7/twikoo.all.min.js">
+    </script>
+    
 
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>benchmark
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        
-        
-      </p>
-    </section>
-    <footer class="entry-footer">Create:&nbsp;<span title='2022-06-27 00:21:08 +0800 CST'>2022-06-27</span>&nbsp;|&nbsp;Update:&nbsp;2022-06-28&nbsp;|&nbsp;Words:&nbsp;17&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
-&nbsp;Zain
+    
 
+    <script>
+        twikoo.init({
+            envId: "https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2", 
+            el: "#tcomment",
+            lang: 'zh-CN',
+            region: 'ap-guangzhou', 
+            path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+            
+            
+            
+            
+            
+            
+            
+        });
+    </script>
 
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to benchmark" href="https://liuz0123.gitee.io/zain/posts/tech/benchmark/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>深入理解计算机系统
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        
-        ...
-      </p>
-    </section>
-    <footer class="entry-footer">Create:&nbsp;<span title='2022-06-05 00:21:58 +0800 CST'>2022-06-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-06-06&nbsp;|&nbsp;Words:&nbsp;18813&nbsp;|&nbsp;&nbsp;38 min&nbsp;|&nbsp;
-&nbsp;Zain
-
-
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to 深入理解计算机系统" href="https://liuz0123.gitee.io/zain/posts/tech/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>cmake
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        
-        ...
-      </p>
-    </section>
-    <footer class="entry-footer">Create:&nbsp;<span title='2022-05-17 00:17:58 +0800 CST'>2022-05-17</span>&nbsp;|&nbsp;Update:&nbsp;2022-05-18&nbsp;|&nbsp;Words:&nbsp;2831&nbsp;|&nbsp;&nbsp;6 min&nbsp;|&nbsp;
-&nbsp;Zain
-
-
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to cmake" href="https://liuz0123.gitee.io/zain/posts/tech/cmake/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>DynamoRIO
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        
-        ...
-      </p>
-    </section>
-    <footer class="entry-footer">Create:&nbsp;<span title='2022-05-05 00:17:58 +0800 CST'>2022-05-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-05-05&nbsp;|&nbsp;Words:&nbsp;67&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
-&nbsp;Zain
-
-
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to DynamoRIO" href="https://liuz0123.gitee.io/zain/posts/tech/dynamorio/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>leetcode基础题目
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        
-        ...
-      </p>
-    </section>
-    <footer class="entry-footer">Create:&nbsp;<span title='2022-05-05 00:17:58 +0800 CST'>2022-05-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-05-05&nbsp;|&nbsp;Words:&nbsp;12325&nbsp;|&nbsp;&nbsp;25 min&nbsp;|&nbsp;
-&nbsp;Zain
-
-
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to leetcode基础题目" href="https://liuz0123.gitee.io/zain/posts/tech/leetcode%E5%9F%BA%E7%A1%80%E9%A2%98%E7%9B%AE/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>Linux Read Tool
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        
-        ...
-      </p>
-    </section>
-    <footer class="entry-footer">Create:&nbsp;<span title='2022-05-05 00:17:58 +0800 CST'>2022-05-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-05-05&nbsp;|&nbsp;Words:&nbsp;199&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
-&nbsp;Zain
-
-
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to Linux Read Tool" href="https://liuz0123.gitee.io/zain/posts/tech/linuxreadtool/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>Tech
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        
-        
-      </p>
-    </section>
-    <footer class="entry-footer">Create:&nbsp;<span title='2022-05-05 00:17:58 +0800 CST'>2022-05-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-05-05&nbsp;|&nbsp;Words:&nbsp;0&nbsp;|&nbsp;&nbsp;0 min&nbsp;|&nbsp;
-&nbsp;Zain
-
-
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to Tech" href="https://liuz0123.gitee.io/zain/posts/tech/tech/"></a>
+</div>
 </article>
 </main>
+
+
+<script async src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
 
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
@@ -582,6 +465,59 @@ var _hmt = _hmt || [];
                 clipboardData.setData('text/html', htmlData);
                 clipboardData.setData('text/plain', textData);
             }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {
+            }
+            ;
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
         }
     });
 </script>
