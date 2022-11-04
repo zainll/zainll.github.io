@@ -43,12 +43,12 @@ cover:
 	</tr >
     <tr>
 	    <th> 优点</th>
-	    <th>可移植<br>虚拟地址空间<br>共享资源</th>
-	    <th>微内核</th>  
+	    <th>可移植<br>虚拟地址空间<br>共享资源<br>通用性</th>
+	    <th></th>  
 	</tr >
     <tr>
 	    <th> 缺点</th>
-	    <th>复杂</th>
+	    <th>Bug和安全漏洞</th>
 	    <th></th>  
 	</tr >
 </table>
