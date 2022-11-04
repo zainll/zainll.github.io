@@ -1709,6 +1709,222 @@ struct task_struct {
 </table>
 
 
+&emsp;详细信息参考书籍      
+
+
+### 2.8.4 运行队列
+
+&ensp;每个处理器有一个运行队列，结构体rq，定义全局变量
+```c
+// linux-5.10.102/kernel/sched/cpuacct.c
+DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+// linux-5.10.102/kernel/sched/sched.h  
+struct rq { // 运行队列
+	...
+	struct cfs_rq		cfs;  // 公平运行队列
+	struct rt_rq		rt;   // 实时运行队列
+	struct dl_rq		dl;   // 限期运行队列
+	...
+	struct task_struct	*idle;  // 空闲线程
+	struct task_struct	*stop;  // 迁移线程
+};
+```
+
+### 2.8.5 任务分组
+#### 1.任务分组方式
+<table>
+	<tr>
+	    <th>任务分组方式</th>
+	    <th>控制宏</th>
+	    <th>配置方式</th>  
+	</tr >
+	<tr >
+	    <td>自动组</td>
+	    <td>CONFIG_SCHED_AUTOGROUP</td>
+	    <td>/proc/sys/kernel/sched_autogroup_enabled <br>运行过程中开启关闭，默认值1<br>源文件kernel/sched/auto_group.c</td>
+	</tr>
+	<tr>
+	    <td>CPU控制组版本1</td>
+	    <td>CONFIG_CGROUPS<br>CONFIG_CGROUP_SCHED</td>
+	    <td>mount -t tmpfs cgroup_root /sys/fs/cgroup<br>mkdir /sys/fs/cgroup/cpu<br>mount -t cgroup -o cpu none /sys/fs/cgroup/cpu<br>cd /sys/fs/cgroup/cpu<br>mkdir multimedia  # 创建"multimedia"任务组<br>mkdir browser     # 创建"browser"任务组<br>echo 2048 > multimedia/cpu.shares<br>echo 1024 > browser/cpu.shares<br>echo < pid1> > browser/tasks <br>echo < pid2> > multimedia/tasks<br>echo < pid1> > browser/cgroup.procs<br>echo < pid2> > multimedia/cgroup.procs</td>
+	</tr>
+	<tr>
+	    <td>cgroup版本2</td>
+	    <td> </td>
+	    <td>mount -t tmpfs cgroup_root /sys/fs/cgroup<br>mount -t cgroup2  none /sys/fs/cgroup<br>cd /sys/fs/cgroup <br>
+echo "+cpu" > cgroup.subtree_control<br>mkdir multimedia   # 创建"multimedia"任务组 <br>mkdir browser      # 创建"browser"任务组<br>echo 2048 > multimedia/cpu.weight<br>echo 1024 > browser/cpu.weight<br>echo < pid1> > browser/cgroup.procs<br>echo < pid2> > multimedia/cgroup.procs <br>echo threaded > browser/cgroup.type <br> echo < pid1> > browser/cgroup.threads <br>echo threaded > multimedia/cgroup.type <br>echo < pid2> > multimedia/cgroup.threads
+</td>
+	</tr>
+</table>
+
+
+#### 2. 数据结构
+
+&ensp;task_group,默认任务组是更任务组(全局变量root_task_group)
+
+
+<table>
+	<tr>
+	    <th>成员</th>
+	    <th>说明</th>
+	</tr >
+	<tr >
+	    <td>const struct sched_class *sched_class</td>
+	    <td>调度类</td>
+	</tr>
+	<tr >
+	    <td>struct sched_entity se</td>
+	    <td>公平调度实体</td>
+	</tr>
+		<tr >
+	    <td>struct sched_dl_entity dl</td>
+	    <td>限期调度实体</td>
+	</tr>
+</table>
+
+&emsp;任务组在每个处理器上有公平调度实体、公平运行队列、实时调度实体和实时运行队列，根任务组比较特殊：没有公平调度实体和实时调度实体
+
+![20221104104612](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221104104612.png)
+
+
+&ensp;每个处理器上，计算任务组的公平调度实体的权重的方法如下（参考源文件“kernel/ sched/fair.c”中的函数update_cfs_shares
+
+
+
+
+
+
+
+### 2.8.6 调度进程
+
+&ensp;调度进程的核心函数是`__schedule()`
+```c
+kernel/sched/core.c
+// preempt是否抢占，true抢占调度，false主动调度
+static void __sched notrace __schedule(bool preempt)
+{
+	1. 调用pick_next_task选择下一个进程
+	2. 调用context_switch切换进程
+}
+```
+#### 1.选择下一个进程 函数pick_next_task
+```c
+// linux-5.10.102/kernel/sched/core.c
+static inline struct task_struct *
+pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+{
+	const struct sched_class *class;
+	struct task_struct *p;
+
+	
+	/* Optimization: we know that if all tasks are in the fair class we can
+	 * call that function directly, but only if the @prev task wasn't of a
+	 * higher scheduling class, because otherwise those loose the
+	 * opportunity to pull in more work from other CPUs.*/
+	// 优化：如果所有进程属于公平调度类
+	// 直接调用公平调度类的pick_next_task方法
+	if (likely(prev->sched_class <= &fair_sched_class &&
+		   rq->nr_running == rq->cfs.h_nr_running)) {
+
+		p = pick_next_task_fair(rq, prev, rf);
+		if (unlikely(p == RETRY_TASK))
+			goto restart;
+
+		/* Assumes fair_sched_class->next == idle_sched_class */
+		// 假定公平调度类的下一个调度类是空闲调度类
+		if (!p) {
+			put_prev_task(rq, prev);
+			p = pick_next_task_idle(rq);
+		}
+
+		return p;
+	}
+
+restart:
+	put_prev_task_balance(rq, prev, rf);
+
+	for_each_class(class) {
+		p = class->pick_next_task(rq);
+		if (p)
+			return p;
+	}
+
+	/* The idle class should always have a runnable task: */
+	// 空闲调度类应该总是有一个运行的进程
+	BUG();
+}
+```
+
+> 待补充
+
+
+#### 2.切换进程 context_switch
+
+> 1）switch_mm_irqs_off负责切换进程的用户虚拟地址空间
+> 2）switch_to切换处理器的寄存器
+
+```c
+// linux-5.10.102/kernel/sched/core.c
+static __always_inline struct rq *
+context_switch(struct rq *rq, struct task_struct *prev,
+	       struct task_struct *next, struct rq_flags *rf)
+{
+	prepare_task_switch(rq, prev, next); // 准备工作，调用prepare_arch_switch
+
+	
+	/* For paravirt, this is coupled with an exit in switch_to to
+	 * combine the page table reload and the switch backend into
+	 * one hypercall. */
+	// 开始上下文切换
+	arch_start_context_switch(prev);
+
+	/*
+	 * kernel -> kernel   lazy + transfer active
+	 *   user -> kernel   lazy + mmgrab() active
+	 *
+	 * kernel ->   user   switch + mmdrop() active
+	 *   user ->   user   switch
+	 */
+	if (!next->mm) {                 // to kernel
+		// 通知处理器架构不需要切换用户虚拟地址空间，加速进程切换的技术称为惰性TLB
+		enter_lazy_tlb(prev->active_mm, next);
+
+		next->active_mm = prev->active_mm;
+		if (prev->mm)     // from user 切换进程的用户虚拟地址空间
+			mmgrab(prev->active_mm);
+		else
+			prev->active_mm = NULL;
+	} else {                                        // to user
+		membarrier_switch_mm(rq, prev->active_mm, next->mm);
+		/*
+		 * sys_membarrier() requires an smp_mb() between setting
+		 * rq->curr / membarrier_switch_mm() and returning to userspace.
+		 *
+		 * The below provides this either through switch_mm(), or in
+		 * case 'prev->active_mm == next->mm' through
+		 * finish_task_switch()'s mmdrop().
+		 */
+		switch_mm_irqs_off(prev->active_mm, next->mm, next);
+
+		if (!prev->mm) {                        // from kernel
+			/* will mmdrop() in finish_task_switch(). */
+			rq->prev_mm = prev->active_mm;
+			prev->active_mm = NULL;
+		}
+	}
+
+	rq->clock_update_flags &= ~(RQCF_ACT_SKIP|RQCF_REQ_SKIP);
+
+	prepare_lock_switch(rq, next, rf);
+
+	/* Here we just switch the register state and the stack. */
+	// 只切换寄存器状态和栈
+	switch_to(prev, next, prev);
+	barrier();
+
+	return finish_task_switch(prev);
+}
+```
 
 
 
