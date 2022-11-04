@@ -17,6 +17,7 @@ echo -e "
 "
 # ----------------------------------------------
 # Add changes to git.
+git status
 git add .
 # Commit changes.
 msg="Update $(date +"[%x %T]")"
@@ -38,6 +39,7 @@ echo -e "
 cd public
 # ----------------------------------------------
 # Add changes to git.
+git status
 git add .
 # Commit changes.
 msg="Update $(date +"[%x %T]")"
