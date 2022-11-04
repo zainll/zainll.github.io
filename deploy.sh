@@ -13,7 +13,7 @@ hugo -F --cleanDestinationDir
 #### Action 2 ####
 
 echo -e "
-++++++++++++++++Upload the HUGO site...++++++++++++++
+++++++++++++++++Upload the HUGO br_hugo site...++++++++++++++
 "
 # ----------------------------------------------
 # Add changes to git.
@@ -33,7 +33,7 @@ git push origin br_hugo
 #### Action 3 ####
 
 echo -e "
------------Upload pages to CODING... [HTML]----------
+-----------Upload pages to master CODING... [HTML]----------
 "
 # Go To Repository folder
 cd public
