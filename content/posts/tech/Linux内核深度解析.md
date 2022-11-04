@@ -1926,6 +1926,45 @@ context_switch(struct rq *rq, struct task_struct *prev,
 }
 ```
 
+&ensp; switch_mm函数
+```c
+// linux-5.10.102/arch/arm64/include/asm/mmu_context.h
+static inline void
+switch_mm(struct mm_struct *prev, struct mm_struct *next,
+	  struct task_struct *tsk)
+{
+	if (prev != next)
+		__switch_mm(next);
+
+	/* Update the saved TTBR0_EL1 of the scheduled-in task as the previous
+	 * value may have not been initialised yet (activate_mm caller) or the
+	 * ASID has changed since the last run (following the context switch
+	 * of another thread of the same process).*/
+	/* 更新调入进程保存的寄存器TTBR0_EL1值，
+    * 因为可能还没有初始化（调用者是函数activate_mm），
+    * 或者ASID自从上次运行以来已经改变（在同一个线程组的另一个线程切换上下文以后）
+    * 避免把保留的寄存器TTBR0_EL1值设置为swapper_pg_dir（init_mm；例如通过函数idle_task_exit）*/
+	update_saved_ttbr0(tsk, next);
+}
+
+static inline void __switch_mm(struct mm_struct *next)
+{
+	/*init_mm.pgd does not contain any user mappings and it is always
+	 * active for kernel addresses in TTBR1. Just set the reserved TTBR0.*/
+	/*init_mm.pgd没有包含任何用户虚拟地址的映射，对于TTBR1的内核虚拟地址总是有效的。
+    * 只设置保留的TTBR0 */
+	if (next == &init_mm) {
+		cpu_set_reserved_ttbr0();
+		return;
+	}
+
+	check_and_switch_context(next);
+}
+```
+
+> 待补充
+
+
 
 
 
