@@ -477,7 +477,7 @@ struct sysv_shm sysvshm;
 
 
 
-## 2.4 启动程序
+## 2.5 启动程序
 
 ```c
 ret = fork();
@@ -491,7 +491,7 @@ if (ret > 0) {
 }
 ```
 
-### 2.4.1　创建新进程
+### 2.5.1　创建新进程
 
 &emsp;内核使用静态数据构造出0号内核线程，0号内核线程分叉生成1号内核线程和2号内核线程（kthreadd线程）。1号内核线程完成初始化以后装载用户程序，变成1号进程，其他进程都是1号进程或者它的子孙进程分叉生成的；其他内核线程是kthreadd线程分叉生成的
 &emsp;两个个系统调用创建进程：    \
@@ -1223,7 +1223,7 @@ asmlinkage __visible void schedule_tail(struct task_struct *prev)
 ```
 
 
-### 2.4.2 装载程序
+### 2.5.2 装载程序
 
 &ensp;调度器调度新进程，新进程从函数`ret_from_fork`开始，从系统调用`fork`返回用户空间，返回值0。然后新进程使用系统调用`execve`装载程序。Linux内核练个装载程序系统调用：    \
 ```c
@@ -1606,7 +1606,30 @@ pid_t waitpid(pid_t pid, int *wstatus, int options);
 
 ## 2.8 进程调度
 
+### 2.8.1 调度策略
+&ensp;Linux内核支持的调度策略
+&emsp;（1）限制进程使用限期调度策略(SCHED_DEADLINE)，3个参数：运行时间runtime，截止期限deadline和周期period    \
+&emsp;（2）实时进程支持两种调度策略：先进先出调度(SCHED_FIFO)和轮流调度(SCHED_RR)   \
+&emsp;（3）普通进程两种调度策略：标准轮流分时(SCHED_NORMAL)和空闲(SCHED_BATCH)，Linux内核引入完全公平调度算法后，批量调度策略废弃。     \
 
+### 2.8.2 进程优先级
+
+&ensp;限期进程的优先级比实时进程高，实时进程的优先级比普通进程高。  \
+&ensp;限期进程的优先级是−1。        \
+&ensp;实时进程的实时优先级是1～99，优先级数值越大，表示优先级越高。    \
+&ensp;普通进程的静态优先级是100～139，优先级数值越小，表示优先级越高，可通过修改nice值（即相对优先级，取值范围是−20～19）改变普通进程的优先级，优先级等于120加上nice值   \
+&emsp;task_struct中，4个成员和优先级有关   \
+```c
+include/linux/sched.h
+struct task_struct {
+	…
+	int                  prio;
+	int                  static_prio;
+	int                  normal_prio;
+	unsigned int         rt_priority;
+	…
+};
+```
 
 
 
