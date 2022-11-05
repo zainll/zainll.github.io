@@ -1925,7 +1925,14 @@ context_switch(struct rq *rq, struct task_struct *prev,
 	return finish_task_switch(prev);
 }
 ```
-
+&ensp;（1）切换用户虚拟地址空间。
+```c
+// ARM64架构使用switch_mm_irqs_off
+include/linux/mmu_context.h
+#ifndef switch_mm_irqs_off
+#define switch_mm_irqs_off switch_mm
+#endif
+```
 &ensp; switch_mm函数
 ```c
 // linux-5.10.102/arch/arm64/include/asm/mmu_context.h
@@ -1957,12 +1964,108 @@ static inline void __switch_mm(struct mm_struct *next)
 		cpu_set_reserved_ttbr0();
 		return;
 	}
-
+	// 为进程分配地址空间标识符
 	check_and_switch_context(next);
 }
 ```
 
 > 待补充
+
+
+&ensp;（2）切换寄存器
+```c
+// linux-5.10.102/include/asm-generic/switch_to.h
+#define switch_to(prev, next, last)					\
+	do {								\
+		((last) = __switch_to((prev), (next)));			\
+	} while (0)
+
+```
+&emsp;函数__switch_to
+```c
+__notrace_funcgraph struct task_struct *__switch_to(struct task_struct *prev,
+				struct task_struct *next)
+{
+	struct task_struct *last;
+
+	fpsimd_thread_switch(next);  // 切换浮点寄存器
+	tls_thread_switch(next);  // 切换本地存储相关的寄存器
+	hw_breakpoint_thread_switch(next);  // 切换吊事寄存器
+	contextidr_thread_switch(next);  // 把上下文标识符寄存器CONTEXTIDR_EL1设置为下一个进程号
+	entry_task_switch(next);  // 使用处理器变量__entry_task记录下一个进程描述符的地址
+	uao_thread_switch(next);  // 根据下一个进程可访问的虚拟地址空间上限恢复用户访问覆盖（User Access Override，UAO）状态
+	ssbs_thread_switch(next);  // 
+	erratum_1418040_thread_switch(next);
+
+	
+	/* Complete any pending TLB or cache maintenance on this CPU in case
+	 * the thread migrates to a different CPU.
+	 * This full barrier is also required by the membarrier system
+	 * call.*/
+	// 在这个处理器上执行完前面的所有页表缓存或者缓存维护操作
+	// 以防线程迁移到其他处理器
+	// 数据同步屏障，确保屏障前面的缓存维护操作和页表缓存维护操作执行完
+	dsb(ish);
+
+	
+	/* MTE thread switching must happen after the DSB above to ensure that
+	 * any asynchronous tag check faults have been logged in the TFSR*_EL1
+	 * registers.*/ 
+	mte_thread_switch(next);
+
+	/* the actual thread switch */
+	// 实际线程切换  切换通用寄存器
+	last = cpu_switch_to(prev, next);
+
+	return last;
+}
+```
+
+
+&ensp;1）切换浮点寄存器，函数fpsimd_thread_switch负责切换浮点，内核不允许使用浮点数，只有用户空间可以使用浮点数,切换出去的进程把浮点寄存器的值保存在进程描述符的成员thread.fpsimd_state中。ARM64架构实现的linux-5.10.102/arch/arm64/kernel/fpsimd.c函数fpsimd_thread_switch   \ 
+&ensp;2）切换通用寄存器，
+- 被调用函数负责保存的寄存器x19～x28
+- 寄存器x29，即帧指针（Frame Pointer，FP）寄存器
+- 栈指针（Stack Pointer，SP）寄存器
+- 寄存器x30，即链接寄存器（Link Register，LR），它存放函数的返回地址
+- 用户栈指针寄存器SP_EL0，内核使用它存放当前进程的进程描述符的第一个成员thread_info的地址
+
+
+&ensp;&emsp;cpu_switch_to有两个参数：寄存器x0存放上一个进程的进程描述符的地址，寄存器x1存放下一个进程的进程描述符的地址
+```c
+// linux-5.10.102/arch/arm64/kernel/entry.S
+SYM_FUNC_START(cpu_switch_to)
+	mov	x10, #THREAD_CPU_CONTEXT  // cpu_switch_to有两个参数：寄存器x0存放上一个进程的进程描述符的地址，寄存器x1存放下一个进程的进程描述符的地址
+	add	x8, x0, x10  // x8存放上一个进程的进程描述符的成员thread.cpu_context的地址
+	mov	x9, sp  // x9保存栈指针
+	stp	x19, x20, [x8], #16		// store callee-saved registers
+	stp	x21, x22, [x8], #16  // 把上一个进程的寄存器x19～x28、x29、SP和LR
+	stp	x23, x24, [x8], #16  // 保存到上一个进程的进程描述符的成员thread.cpu_context中
+	stp	x25, x26, [x8], #16  // 
+	stp	x27, x28, [x8], #16
+	stp	x29, x9, [x8], #16  
+	str	lr, [x8]  // LR存放函数的返回地址
+	add	x8, x1, x10  // x8存放下一个进程的进程描述符的成员thread.cpu_context的地址
+	ldp	x19, x20, [x8], #16		// restore callee-saved registers
+	ldp	x21, x22, [x8], #16  // 使用下一个进程的进程描述符的成员thread.cpu_context
+	ldp	x23, x24, [x8], #16  // 保存的值恢复下一个进程的寄存器x19～x28、x29、SP和LR
+	ldp	x25, x26, [x8], #16
+	ldp	x27, x28, [x8], #16
+	ldp	x29, x9, [x8], #16
+	ldr	lr, [x8]
+	mov	sp, x9
+	msr	sp_el0, x1  // 用户栈指针寄存器SP_EL0设置为下一个进程的进程描述符的第一个成员thread_info的地址
+	ptrauth_keys_install_kernel x1, x8, x9, x10
+	scs_save x0, x8  // 函数返回，返回值是寄存器x0的值：上一个进程的进程描述符的地址
+	scs_load x1, x8
+	ret
+SYM_FUNC_END(cpu_switch_to)
+NOKPROBE(cpu_switch_to)
+```
+&ensp;&emsp;cpu_switch_to切换通用寄存器的过程，从进程prev切换到进程next。进程prev把通用寄存器的值保存在进程描述符的成员thread.cpu_context中，然后进程next从进程描述符的成员thread.cpu_context恢复通用寄存器的值，使用用户栈指针寄存器SP_EL0存放进程next的进程描述符的成员thread_info的地址  
+
+
+
 
 
 
