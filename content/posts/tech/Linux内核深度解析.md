@@ -2062,11 +2062,12 @@ SYM_FUNC_START(cpu_switch_to)
 SYM_FUNC_END(cpu_switch_to)
 NOKPROBE(cpu_switch_to)
 ```
-&ensp;&emsp;cpu_switch_to切换通用寄存器的过程，从进程prev切换到进程next。进程prev把通用寄存器的值保存在进程描述符的成员thread.cpu_context中，然后进程next从进程描述符的成员thread.cpu_context恢复通用寄存器的值，使用用户栈指针寄存器SP_EL0存放进程next的进程描述符的成员thread_info的地址  
+&ensp;&emsp;cpu_switch_to切换通用寄存器的过程，从进程prev切换到进程next。进程prev把通用寄存器的值保存在进程描述符的成员thread.cpu_context中，然后进程next从进程描述符的成员thread.cpu_context恢复通用寄存器的值，使用用户栈指针寄存器SP_EL0存放进程next的进程描述符的成员thread_info的地址    \
 
 
+<center>ARM64架构切换通用寄存器</center>
 
-
+![2022-11-05_21-28](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/2022-11-05_21-28.png)
 
 
 
