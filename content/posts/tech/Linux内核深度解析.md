@@ -2069,6 +2069,316 @@ NOKPROBE(cpu_switch_to)
 
 ![2022-11-05_21-28](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/2022-11-05_21-28.png)
 
+&emsp;链接寄存器存放函数的返回地址，函数cpu_switch_to把链接寄存器设置为进程描述符的成员thread.cpu_context.pc，进程被调度后从返回地址开始执行   \
+进程的返回地址分为以下两种情况:
+- 创建的新进程，函数copy_thread把进程描述符的成员thread.cpu_context.pc设置为函数ret_from_fork的地址
+- 其他情况，返回地址是函数context_switch中调用函数cpu_switch_to之后的一行代码：“last = 函数cpu_switch_to的返回值”，返回地址记录在进程描述符的成员thread.cpu_context.pc中
+
+
+
+
+
+&ensp;（3）清理工作
+&ensp;&emsp;函数finish_task_switch在从进程prev切换到进程next后为进程prev执行清理工作
+```c
+// kernel/sched/core.c
+static struct rq *finish_task_switch(struct task_struct *prev)
+	__releases(rq->lock)
+{
+	struct rq *rq = this_rq();  // rq是当前处理器的运行队列
+	struct mm_struct *mm = rq->prev_mm;
+	long prev_state;
+
+	/*  The previous task will have left us with a preempt_count of 2
+	 * because it left us after:
+	 *	schedule()
+	 *	  preempt_disable();			// 1
+	 *	  __schedule()
+	 *	    raw_spin_lock_irq(&rq->lock)	// 2
+	 * Also, see FORK_PREEMPT_COUNT.*/
+	if (WARN_ONCE(preempt_count() != 2*PREEMPT_DISABLE_OFFSET,
+		      "corrupted preempt_count: %s/%d/0x%x\n",
+		      current->comm, current->pid, preempt_count()))
+		preempt_count_set(FORK_PREEMPT_COUNT);
+
+	rq->prev_mm = NULL;
+
+	
+	/* A task struct has one reference for the use as "current".
+	 * If a task dies, then it sets TASK_DEAD in tsk->state and calls
+	 * schedule one last time. The schedule call will never return, and
+	 * the scheduled task must drop that reference.
+	 *
+	 * We must observe prev->state before clearing prev->on_cpu (in
+	 * finish_task), otherwise a concurrent wakeup can get prev
+	 * running on another CPU and we could rave with its RUNNING -> DEAD
+	 * transition, resulting in a double drop.*/
+	prev_state = prev->state;
+	vtime_task_switch(prev);  // 计算进程prev的时间统计
+	perf_event_task_sched_in(prev, current);
+	finish_task(prev);
+	// 把prev->on_cpu设置为0，表示进程prev没有在处理器上运行；然后释放运行队列的锁，开启硬中断
+	finish_lock_switch(rq); 
+	finish_arch_post_lock_switch(); // 执行处理器架构特定的清理工作,ARM64为空
+	kcov_finish_switch(current);
+
+	fire_sched_in_preempt_notifiers(current);
+	
+	/* When switching through a kernel thread, the loop in
+	 * membarrier_{private,global}_expedited() may have observed that
+	 * kernel thread and not issued an IPI. It is therefore possible to
+	 * schedule between user->kernel->user threads without passing though
+	 * switch_mm(). Membarrier requires a barrier after storing to
+	 * rq->curr, before returning to userspace, so provide them here:
+	 *
+	 * - a full memory barrier for {PRIVATE,GLOBAL}_EXPEDITED, implicitly
+	 *   provided by mmdrop(),
+	 * - a sync_core for SYNC_CORE.*/
+	if (mm) {
+		membarrier_mm_sync_core_before_usermode(mm);
+		mmdrop(mm);
+	}
+	if (unlikely(prev_state == TASK_DEAD)) { // 进程主动退出或者被终止
+		if (prev->sched_class->task_dead)
+			prev->sched_class->task_dead(prev); // 所属调度类的task_dead方法
+
+		/* * Remove function-return probe instances associated with this
+		 * task and put them back on the free list.*/
+		kprobe_flush_task(prev);
+
+		/* Task is done with its stack. */
+		/*释放进程的内核栈 */
+		put_task_stack(prev);
+		// 把进程描述符的引用计数减1，如果引用计数变为0，那么释放进程描述符
+		put_task_struct_rcu_user(prev);
+	}
+
+	tick_nohz_task_switch();
+	return rq;
+}
+```
+
+
+### 2.8.7 调度时机
+
+> 调度进程的时机: \
+> （1）进程主动调用`schedule()`函数
+> （2）周期性地调度，抢占当前进程，强迫当前进程让出处理器
+> （3）唤醒进程的时候，被唤醒的进程可能抢占当前进程
+> （4）创建新进程的时候，新进程可能抢占当前进程。
+
+
+#### 1.主动调度
+&ensp;内核中3种主动调度方式：
+&emsp;（1）直接调用`schedule()`函数来调度进程
+&emsp;（2）调用有条件重调度函数cond_resched()。非抢占式内核中，函数cond_resched()判断当前进程是否设置了需要重新调度的标志，如果设置了，就调度进程；抢占式内核中，cond_resched()为空
+&emsp;（3）如果需要等待某个资源，例如互斥锁或信号量，那么把进程的状态设置为睡眠状态，然后调用schedule()函数以调度进程
+
+
+
+#### 2.周期调度
+&emsp;周期调度的函数是scheduler_tick()，它调用当前进程所属调度类的task_tick方法。
+&ensp;（1）限期调度类的周期调度   \
+&emsp;task_tick --> task_tick_dl --> update_curr_dl
+```c
+// kernel/sched/deadline.c
+static void update_curr_dl(struct rq *rq)
+{
+	struct task_struct *curr = rq->curr;
+	struct sched_dl_entity *dl_se = &curr->dl;
+	u64 delta_exec, scaled_delta_exec;
+	...
+	delta_exec = now - curr->se.exec_start;
+	if (unlikely((s64)delta_exec <= 0)) {
+		if (unlikely(dl_se->dl_yielded))
+			goto throttle;
+		return;
+	}
+
+	...
+	dl_se->runtime -= scaled_delta_exec; // 计算限期进程的剩余运行时间
+
+throttle:
+	// // 如果限期进程用完了运行时间或者主动让出处理器
+	if (dl_runtime_exceeded(dl_se) || dl_se->dl_yielded) { 
+		dl_se->dl_throttled = 1;  // 设置节流标志
+
+		/* If requested, inform the user about runtime overruns. */
+		if (dl_runtime_exceeded(dl_se) &&
+		    (dl_se->flags & SCHED_FLAG_DL_OVERRUN))
+			dl_se->dl_overrun = 1;
+
+		__dequeue_task_dl(rq, curr, 0);
+		if (unlikely(is_dl_boosted(dl_se) || !start_dl_timer(curr)))
+			enqueue_task_dl(rq, curr, ENQUEUE_REPLENISH);
+
+		if (!is_leftmost(curr, &rq->dl))
+			resched_curr(rq);
+	}
+
+	...
+}
+```
+
+&ensp;（2）实时调度类的周期调度   \
+
+&emsp;实时调度类的task_tick方法是函数task_tick_rt
+```c
+// linux-5.10.102/kernel/sched/rt.c
+static void task_tick_rt(struct rq *rq, struct task_struct *p, int queued)
+{
+	struct sched_rt_entity *rt_se = &p->rt;
+
+	...
+	if (p->policy != SCHED_RR) // 调度策略不是轮流调度
+		return;
+    // 把时间片减一，如果没用完时间片，那么返回
+	if (--p->rt.time_slice)
+		return;
+	// 用完了时间片，那么重新分配时间片
+	p->rt.time_slice = sched_rr_timeslice;
+
+	/* Requeue to the end of queue if we (and all of our ancestors) are not
+	 * the only element on the queue */
+	for_each_sched_rt_entity(rt_se) {
+		if (rt_se->run_list.prev != rt_se->run_list.next) {
+			requeue_task_rt(rq, p, 0);
+			resched_curr(rq);
+			return;
+		}
+	}
+}
+```
+
+
+
+
+
+
+&ensp;（3）公平调度类的周期调度     \
+&emsp;公平调度类的task_tick方法是函数task_tick_fair
+```c
+// kernel/sched/fair.c
+static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+{
+	struct cfs_rq *cfs_rq;
+	struct sched_entity *se = &curr->se;
+
+	for_each_sched_entity(se) {
+		cfs_rq = cfs_rq_of(se);
+		entity_tick(cfs_rq, se, queued);
+	}
+
+	...
+}
+
+// kernel/sched/fair.c
+static void
+entity_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr, int queued)
+{
+	...
+	if (cfs_rq->nr_running > 1) // 公平运行队列的进程数量超过1
+		check_preempt_tick(cfs_rq, curr);
+}
+
+
+```
+
+
+```c
+// kernel/sched/fair.c
+static void
+check_preempt_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr)
+{
+	unsigned long ideal_runtime, delta_exec;
+	struct sched_entity *se;
+	s64 delta;
+
+	ideal_runtime = sched_slice(cfs_rq, curr);
+	delta_exec = curr->sum_exec_runtime - curr->prev_sum_exec_runtime;
+	if (delta_exec > ideal_runtime) {
+		resched_curr(rq_of(cfs_rq));
+		/* The current task ran long enough, ensure it doesn't get
+		 * re-elected due to buddy favours.*/
+		clear_buddies(cfs_rq, curr);
+		return;
+	}
+
+	
+	/* Ensure that a task that missed wakeup preemption by a
+	 * narrow margin doesn't have to wait for a full slice.
+	 * This also mitigates buddy induced latencies under load.*/
+	if (delta_exec < sysctl_sched_min_granularity)
+		return;
+
+	se = __pick_first_entity(cfs_rq);
+	delta = curr->vruntime - se->vruntime;
+
+	if (delta < 0)
+		return;
+
+	if (delta > ideal_runtime)
+		resched_curr(rq_of(cfs_rq));
+}
+```
+
+
+
+&ensp;（4）中断返回时调度。
+&emsp;ARM64架构的中断处理程序的入口是e10_irq，中断处理程序执行完以后，跳转到标号ret_to_user以返回用户模式。标号ret_to_user判断当前进程的进程描述符的成员thread_info.flags有没有设置标志位集合_TIF_WORK_MASK中的任何一个标志位，如果设置了其中一个标志位，那么跳转到标号work_pending，标号work_pending调用函数do_notify_resume
+
+```c
+// arch/arm64/kernel/entry.S  5.10.102 代码中没有？
+ret_to_user:
+     disable_irq                   // 禁止中断
+     ldr  x1, [tsk, #TSK_TI_FLAGS]
+     and  x2, x1, #_TIF_WORK_MASK
+     cbnz x2, work_pending
+finish_ret_to_user:
+     enable_step_tsk x1, x2
+     kernel_exit 0
+ENDPROC(ret_to_user)
+
+work_pending:
+     mov  x0, sp
+     /*
+      * 寄存器x0存放第一个参数regs
+      * 寄存器x1存放第二个参数task_struct.thread_info.flags
+      */
+     bl  do_notify_resume
+#ifdef CONFIG_TRACE_IRQFLAGS
+     bl  trace_hardirqs_on         // 在用户空间执行时开启中断
+#endif
+     ldr x1, [tsk, #TSK_TI_FLAGS]  // 重新检查单步执行
+     b   finish_ret_to_user
+
+
+```
+&emsp;函数do_notify_resume判断当前进程的进程描述符的成员thread_info.flags有没有设置需要重新调度的标志位_TIF_NEED_RESCHED，如果设置了，那么调用函数schedule()以调度进程。
+
+
+```c
+// arch/arm64/kernel/signal.c
+asmlinkage void do_notify_resume(struct pt_regs *regs,
+                         unsigned int thread_flags)
+{
+    ...
+    do {
+        if (thread_flags & _TIF_NEED_RESCHED) {
+             schedule();
+        } else {
+             …
+        }
+
+        local_irq_disable();
+        thread_flags = READ_ONCE(current_thread_info()->flags);
+    } while (thread_flags & _TIF_WORK_MASK);
+}
+
+```
+
+
+
 
 
 
