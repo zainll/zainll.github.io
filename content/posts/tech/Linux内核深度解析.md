@@ -2378,6 +2378,410 @@ asmlinkage void do_notify_resume(struct pt_regs *regs,
 ```
 
 
+#### 3.唤醒进程时抢占
+
+&emsp;唤醒进程的时候，被唤醒的进程可能抢占当前进程
+<center>唤醒进程时抢占</center>
+![20221106214732](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221106214732.png)
+
+&ensp;（1）如果被唤醒的进程和当前进程属于相同的调度类，那么调用调度类的check_preempt_curr方法以检查是否可以抢占当前进程   \
+&ensp;（2）如果被唤醒的进程所属调度类的优先级高于当前进程所属调度类的优先级，那么给当前进程设置需要重新调度的标志
+
+
+<table>
+	<tr>
+	    <th>调度类</th>
+	    <th>check_preempt_curr方法是函数</th>
+	    <th>算法</th>  
+	</tr >
+	<tr >
+	    <td>停机调度类</td>
+	    <td>check_preempt_curr_stop</td>
+	    <td>空函数</td>
+	</tr>
+	<tr >
+	    <td>限期调度类</td>
+	    <td>check_preempt_curr_dl</td>
+	    <td>如果被唤醒的进程的绝对截止期限比当前进程的绝对截止期限小，那么给当前进程设置需要重新调度的标志</td>
+	</tr>
+	<tr >
+	    <td>实时调度类</td>
+	    <td>check_preempt_curr_rt</td>
+	    <td>优先级比当前进程的优先级高，那么给当前进程设置需要重新调度的标志</td>
+	</tr>
+	<tr >
+	    <td>公平调度类</td>
+	    <td>check_preempt_wakeup</td>
+	    <td></td>
+	</tr>
+	<tr >
+	    <td>空闲调度类</td>
+	    <td>check_preempt_curr_idle</td>
+	    <td>无条件抢占，给当前进程设置需要重新调度的标志</td>
+	</tr>
+</table>
+
+&emsp;check_preempt_wakeup函数
+```c
+// linux-5.10.102/kernel/sched/fair.c
+static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_flags)
+{
+	// 当前进程的调度策略是SCHED_IDLE，被唤醒的进程的调度策略是SCHED_NORMAL或者SCHED_BATCH，那么允许抢占，给当前进程设置需要重新调度的标志
+	struct task_struct *curr = rq->curr;
+	struct sched_entity *se = &curr->se, *pse = &p->se;
+	...
+	if (unlikely(task_has_idle_policy(curr)) &&
+	    likely(!task_has_idle_policy(p)))
+		goto preempt;
+
+	if (unlikely(p->policy != SCHED_NORMAL) || !sched_feat(WAKEUP_PREEMPTION))
+		return;
+	// 为当前进程和被唤醒的进程找到两个兄弟调度实体
+	find_matching_se(&se, &pse);
+	update_curr(cfs_rq_of(se));
+	BUG_ON(!pse);
+	if (wakeup_preempt_entity(se, pse) == 1) { // 判断是否可以抢占
+		// 允许抢占，给当前进程设置需要重新调度的标志
+		...
+		goto preempt;
+	}
+
+	return;
+
+preempt:
+	resched_curr(rq);
+	...
+}
+
+static int
+wakeup_preempt_entity(struct sched_entity *curr, struct sched_entity *se)
+{
+	s64 gran, vdiff = curr->vruntime - se->vruntime;
+
+	if (vdiff <= 0)
+		return -1;
+
+	gran = wakeup_gran(se);
+	if (vdiff > gran)
+		return 1;
+
+	return 0;
+}
+```
+
+
+#### 4.创建新进程时抢占
+&emsp;使用系统调用fork、clone和 vfork创建新进程使，新进程可抢占当前进程；使用韩式kernel_thread创建新的内核线程是，新内核线程可抢占当前进程
+![20221106220629](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221106220629.png)
+
+
+#### 5.内核抢占
+&emsp;内核抢占是指当进程在内核模式下运行的时候可以被其他进程抢占，需要打开配置宏CONFIG_PREEMPT。抢占式内核和非抢占式内核。进程tthread_info结构体一个类型为int的成员preempt_count为抢占计数器。
+
+
+> 待补充
+
+#### 6.高精度调度时钟
+
+&emsp;高精度时钟的精度是纳秒,需要通过配置宏启用。
+
+
+### 2.8.8 带宽管理
+
+&emsp;调度类管理进程占用的处理器带宽的方法
+#### 1.限期调度类的带框管理
+&emsp;每个限期进程有自己的带宽，内核把限期进程的运行时间统计到根实时任务组的运行时间里面了，限期进程共享实时进程的带宽
+```c
+// kernel/sched/deadline.c
+static void update_curr_dl(struct rq *rq)
+{
+      …
+      if (rt_bandwidth_enabled()) {
+            struct rt_rq *rt_rq = &rq->rt;
+
+            raw_spin_lock(&rt_rq->rt_runtime_lock);
+            if (sched_rt_bandwidth_account(rt_rq))
+                  rt_rq->rt_time += delta_exec;
+            raw_spin_unlock(&rt_rq->rt_runtime_lock);
+      }
+}
+```
+
+#### 2.实时调度类的带宽管理
+&ensp;指定实时进程的带宽有以下两种方式
+&ensp;（1）指定全局带宽：带宽包含的两个参数是周期和运行时间，即指定在每个周期内所有实时进程的运行时间总和。   \
+&emsp;默认的周期是1秒，默认的运行时间是0.95秒。可以借助文件“/proc/sys/kernel/sched_rt_period_us”设置周期，借助文件“/proc/sys/kernel/sched_rt_runtime_us”设置运行时间        \
+&emsp;配置宏CONFIG_RT_GROUP_SCHED，即支持实时任务组，那么全局带宽指定了所有实时任务组的总带宽
+&ensp;（2）指定每个实时任务组的带宽：在每个指定的周期，允许一个实时任务组最多执行长时间。当实时任务组在一个周期用完了带宽时，这个任务组将会被节流，不允许继续运行，直到下一个周期。可以使用cgroup设置一个实时任务组的周期和运行时间，cgroup版本1的配置方法如下
+
+
+<details>
+<summary>cgroup版本1的配置方法</summary>
+<br>
+1）cpu.rt_period_us：周期，默认值是1秒。   <br>
+2）cpu.rt_runtime_us：运行时间，默认值是0，把运行时间设置为非零值以后才允许把实时进程加入任务组，设置为−1表示没有带宽限制。
+cgroup版本1的配置示例如下。 <br>
+1）挂载cgroup文件系统，把CPU控制器关联到控制组层级树。   <br>
+mount -t cgroup -o cpu none /sys/fs/cgroup/cpu      <br>
+2）创建一个任务组。     <br>
+cd /sys/fs/cgroup/cpu      <br>
+mkdir browser   # 创建"browser"任务组       <br>
+3）把实时运行时间设置为10毫秒。         <br>
+echo 10000 > browser/cpu.rt_runtime_us      <br>
+4）把一个实时进程加入任务组。         <br>
+echo <pid> > browser/cgroup.procs      <br>
+</details>
+
+&ensp;cgroup版本2从内核4.15版本开始支持CPU控制器，暂时不支持实时进程。
+
+&emsp;一个处理器用完了实时运行时间，可以从其他处理器借用实时运行时间，称为实时运行时间共享，对应调度特性RT_RUNTIME_SHARE，默认开启。
+```c
+kernel/sched/features.h
+SCHED_FEAT(RT_RUNTIME_SHARE, true)
+```
+实时任务组的带宽存放在结构体task_group的成员rt_bandwidth中：
+
+```c
+// kernel/sched/sched.h
+struct task_group {
+     …
+#ifdef CONFIG_RT_GROUP_SCHED
+     …
+     struct rt_bandwidth rt_bandwidth;
+#endif
+     …
+};
+```
+&emsp;节流
+> 书中详细解释
+
+
+#### 3.公平调度类的带宽管理
+&emsp;使用周期和限额指定一个公平任务组的带宽    \
+&emsp;使用cgroup设置一个公平任务组的周期和限额，cgroup版本1的配置  \
+<details>
+<summary>cgroup版本1的配置方法</summary>
+</details>
+&emsp;cgroup版本2的配置示例  \
+<details>
+<summary>cgroup版本2的配置方法</summary>
+</details>
+
+&ensp;（1）节流：在以下两种情况下，调度器会检查公平运行队列是否用完运行时间。
+&emsp;1）put_prev_task_fair：调度器把当前正在运行的普通进程放回公平运行队列。
+&emsp;2）pick_next_task_fair：当前正在运行的进程属于公平调度类，调度器选择下一个普通进程。
+
+![20221106231743](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221106231743.png)
+
+
+
+
+&ensp;（2）周期定时器：在每个周期的开始，重新填充任务组的带宽，把带宽分配给节流的公平运行队列。周期定时器的处理函数是sched_cfs_period_timer，它把主要工作委托给函数do_sched_cfs_period_timer
+
+![20221106232422](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221106232422.png)
+
+```c
+// kernel/sched/fair.c
+static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun)
+{
+	…
+	throttled = !list_empty(&cfs_b->throttled_cfs_rq);
+	…
+	__refill_cfs_bandwidth_runtime(cfs_b); // 新填充任务组的带宽
+
+	if (!throttled) {
+		cfs_b->idle = 1;
+		return 0;
+	}
+	…
+
+	while (throttled && cfs_b->runtime > 0) {
+		runtime = cfs_b->runtime;
+		raw_spin_unlock(&cfs_b->lock);
+		// 把任务组的可用运行时间分配给节流的公平运行队列
+		runtime = distribute_cfs_runtime(cfs_b, runtime,
+								runtime_expires);
+		raw_spin_lock(&cfs_b->lock);
+
+		throttled = !list_empty(&cfs_b->throttled_cfs_rq);
+		cfs_b->runtime -= min(runtime, cfs_b->runtime);
+	}
+	…
+}
+```
+
+&ensp;函数__refill_cfs_bandwidth_runtime负责重新填充任务组的带宽：“把可用运行时间设置成限额，把运行时间的到期时间设置成当前时间加上1个周期”
+
+```c
+// kernel/sched/fair.c
+void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
+{
+     u64 now;
+
+     if (cfs_b->quota == RUNTIME_INF)
+           return;
+
+     now = sched_clock_cpu(smp_processor_id());
+     cfs_b->runtime = cfs_b->quota;
+     cfs_b->runtime_expires = now + ktime_to_ns(cfs_b->period);
+}
+```
+
+&ensp;函数distribute_cfs_runtime负责把任务组的可用运行时间分配给节流的公平运行队列
+
+```c
+static void distribute_cfs_runtime(struct cfs_bandwidth *cfs_b)
+{
+	struct cfs_rq *cfs_rq;
+	u64 runtime, remaining = 1;
+
+	rcu_read_lock();
+	list_for_each_entry_rcu(cfs_rq, &cfs_b->throttled_cfs_rq,
+				throttled_list) {
+		struct rq *rq = rq_of(cfs_rq);
+		struct rq_flags rf;
+
+		rq_lock_irqsave(rq, &rf);
+		if (!cfs_rq_throttled(cfs_rq))
+			goto next;
+
+		/* By the above check, this should never be true */
+		SCHED_WARN_ON(cfs_rq->runtime_remaining > 0);
+
+		raw_spin_lock(&cfs_b->lock);
+		/* cfs_rq->runtime_remaining是公平运行队列的剩余运行时间 */
+		runtime = -cfs_rq->runtime_remaining + 1;
+		if (runtime > cfs_b->runtime)
+			runtime = cfs_b->runtime;
+		cfs_b->runtime -= runtime;
+		remaining = cfs_b->runtime;
+		raw_spin_unlock(&cfs_b->lock);
+
+		cfs_rq->runtime_remaining += runtime;
+
+		/* we check whether we're throttled above */
+		/* 上面检查过是否被节流 */
+		if (cfs_rq->runtime_remaining > 0)
+			unthrottle_cfs_rq(cfs_rq);
+
+next:
+		rq_unlock_irqrestore(rq, &rf);
+
+		if (!remaining)
+			break;
+	}
+	rcu_read_unlock();
+}
+```
+
+
+
+&ensp;（3）取有余补不足：
+
+
+
+## 2.9 SMP调度
+
+&ensp;SMP系统进程调度器特性:
+&ensp;（1）使每个处理器负载尽可能均衡
+&ensp;（2）设置进程的处理器亲和性(affinity)，即允许进程在哪些处理器上执行
+&ensp;（3）进程从一个处理器迁移到另一个处理器
+
+### 2.9.1 进程的处理器亲和性
+&ensp;进程描述符增加两个成员
+```c
+// include/linux/sched.h
+struct task_struct {
+	…
+	int               nr_cpus_allowed;   // 保存允许的处理器掩码
+	cpumask_t         cpus_allowed;		// 保存允许的处理器数量
+	…
+};
+```
+#### 1.应用编程接口
+&ensp;内核系统调用
+```c
+// sched_setaffinity用来设置进程的处理器亲和性掩码
+int sched_setaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask);
+// sched_getaffinity用来获取进程的处理器亲和性掩码
+int sched_getaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask);
+```
+&ensp;内核线程函数设置处理器亲和性掩码
+```c
+// kthread_bind用来把一个刚刚创建的内核线程绑定到一个处理器
+void kthread_bind(struct task_struct *p, unsigned int cpu);
+// set_cpus_allowed_ptr用来设置内核线程的处理器亲和性掩码
+int set_cpus_allowed_ptr(struct task_struct *p, const struct cpumask *new_mask);
+```
+#### 2.使用cpuset配置
+&ensp;cpuset在单独使用的时候，可以使用cpuset伪文件系统配置，配置方法
+
+
+
+### 2.9.2 对调度器的扩展
+&emsp;SMP系统上，调度类增加方法
+```c
+// kernel/sched/sched.h
+struct sched_class {
+     …
+#ifdef CONFIG_SMP
+	// 为进程选择运行队列
+	int  (*select_task_rq)(struct task_struct *p, int task_cpu, int sd_flag, int flags);  
+	// 在进程被迁移到新的处理器之前调用
+	void (*migrate_task_rq)(struct task_struct *p);
+	// 用来在进程被唤醒以后调用
+	void (*task_woken) (struct rq *this_rq, struct task_struct *task);
+	// 设置处理器亲和性的时候执行调度类的特殊处理
+	void (*set_cpus_allowed)(struct task_struct *p,
+					const struct cpumask *newmask);
+#endif
+     …
+};
+```
+
+&ensp;进程在内存和缓存中的数据是最少的，是有价值的实现负载均衡的机会：1）创建新进程，2）调用execve装载程序
+<center>创建新进程时负载均衡</center>
+![20221106235035](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221106235035.png)
+
+<center>装载程序时负载均衡</center>
+![20221106235110](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221106235110.png)
+
+
+### 2.9.3 限期调度类的处理器负载均衡
+
+
+
+### 2.9.4 实时调度类的处理器负载均衡
+
+
+
+### 2.9.5 公平调度类的处理器负载均衡
+
+### 2.9.6 迁移线程
+
+&ensp;每个处理器有一个迁移线程，线程名称是“migration/<cpu_id>”，属于停机调度类，可以抢占所有其他进程，其他进程不可以抢占它。迁移线程有两个作用   \
+&ensp;（1）调度器发出迁移请求，迁移线程处理迁移请求，把进程迁移到目标处理器。
+&ensp;（2）执行主动负载均衡。
+
+### 2.9.7 隔离处理器
+
+
+
+
+
+
+
+
+
+## 2.10 进程的上下文安全
+
+
+
+
+
+
+
+
 
 
 
