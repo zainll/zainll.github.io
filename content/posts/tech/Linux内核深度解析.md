@@ -2784,6 +2784,61 @@ struct sched_class {
 
 
 
+# 第3章 内存管理
+
+## 3.1 内存管理子系统架构
+&emsp;用户空间、内核空间和硬件3个层面
+![20221107001723](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221107001723.png)
+#### 1.用户空间
+&ensp;应用程序使用`malloc()`申请内存，使用`free()`释放内存。 \
+&ensp;malloc()和free()是glibc库的内存分配器`ptmalloc`提供的接口，ptmalloc使用系统调用`brk`或`mmap`向内核以页为单位申请内存，然后划分成小内存块分配给应用程序    \
+&ensp;用户空间的内存分配器，除了glibc库的ptmalloc，还有谷歌的tcmalloc和FreeBSD的`jemalloc`
+
+#### 2.内核空间
+（1）内核空间的基本功能   \
+&emsp;虚拟内存管理负责从进程的虚拟地址空间分配虚拟页，sys_brk用来扩大或收缩堆，sys_mmap用来在内存映射区域分配虚拟页，sys_munmap用来释放虚拟页   \
+&emsp;内核使用延迟分配物理内存的策略，进程第一次访问虚拟页的时候，触发页错误异常，页错误异常处理程序从页分配器申请物理页，在进程的页表中把虚拟页映射到物理页   \
+&ensp;页分配器负责分配物理页，当前使用的页分配器是伙伴分配器。 \
+&emsp;内核空间提供了把页划分成小内存块分配的块分配器，提供分配内存的接口kmalloc()和释放内存的接口kfree()，支持3种块分配器：SLAB分配器、SLUB分配器和SLOB分配器。   \
+
+（2）内核空间的扩展功能。 \
+
+&emsp;不连续页分配器提供了分配内存的接口vmalloc和释放内存的接口vfree  \
+&emsp;连续内存分配器（Contiguous Memory Allocator，CMA）用来给驱动程序预留一段连续的内存，当驱动程序不用的时候，可以给进程使用；当驱动程序需要使用的时候，把进程占用的内存通过回收或迁移的方式让出来，给驱动程序使用  \
+
+
+
+#### 3.硬件层面
+&emsp;处理器包含一个称为内存管理单元（Memory Management Unit，MMU）的部件，负责把虚拟地址转换成物理地址   \
+&emsp;内存管理单元包含一个称为页表缓存（Translation Lookaside Buffer，TLB）的部件，保存最近使用过的页表映射，避免每次把虚拟地址转换成物理地址都需要查询内存中的页表   \
+
+
+## 3.2 虚拟地址空间布局
+&emsp;RM64处理器不支持完全的64位虚拟地址，ARMv8.2 标准的大虚拟地址(Large Virtual Address，LVA)支持，并且页长度是64KB，那么虚拟地址的最大宽度是52位    \
+&emsp;可以为虚拟地址配置比最大宽度小的宽度，并且可以为内核虚拟地址和用户虚拟地址配置不同的宽度。转换控制寄存器（Translation Control Register）TCR_EL1的字段T0SZ定义了必须是全0的最高位的数量，字段T1SZ定义了必须是全1的最高位的数量，用户虚拟地址的宽度是（64-TCR_EL1.T0SZ），内核虚拟地址的宽度是（64-TCR_EL1.T1SZ）   \
+
+<table>
+	<tr>
+	    <th>页长度</th>
+	    <th>虚拟地址宽度</th>
+	</tr >
+	<tr >
+	    <td>4KB</td>
+	    <td>39</td>
+	</tr>
+	<tr >
+	    <td>16KB</td>
+	    <td>47</td>
+	</tr>
+	<tr >
+	    <td>64KB</td>
+	    <td>42</td>
+	</tr>
+	<tr >
+	    <td colspan="2">可选择48位虚拟地址</td>
+	</tr>
+</table>
+
 
 
 
