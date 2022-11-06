@@ -65,9 +65,9 @@ netsh wlan show
 
 <br>
 
-### ZoomIt 
-> 屏幕缩放、标记、录制 展示小工具   \
-whois  居然可以在Windows使用
+### ZoomIt  
+> 屏幕缩放、标记、录制 展示小工具     \
+whois  居然可以在Windows使用      \
 [Download](https://learn.microsoft.com/en-us/sysinternals/downloads/zoomit)
 
 <br>
@@ -104,9 +104,9 @@ whois  居然可以在Windows使用
 
 ### cmder
 > 同事推荐，值得探索，Windows命令行工具    \ 
-[Download](https://cmder.app/)
-[github](https://github.com/cmderdev/cmder)
-[配置](https://juejin.cn/post/6844903817851453453)
+[Download](https://cmder.app/)   \
+[github](https://github.com/cmderdev/cmder)    \
+[配置](https://juejin.cn/post/6844903817851453453)   \
 
 <br>
 
