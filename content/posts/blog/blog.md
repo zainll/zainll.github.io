@@ -55,8 +55,9 @@ mongodb+srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true
 ```
 
 ## 托管
-&ensp; 为了提高访问速度托管在gitee上，迁移完成后将会同时托管到github中。
-&ensp; 通过不同分支保存源码和静态网页内容，用br_hugo管理源码，master分支管理public
+&ensp; 为了提高访问速度托管在gitee上，迁移完成后将会同时托管到github中。   \
+&ensp; 通过不同分支保存源码和静态网页内容，用br_hugo管理源码，master分支管理public      \
+&ensp;域名申请中...，个人域名审批流程真麻烦
 
 # hexo
 
