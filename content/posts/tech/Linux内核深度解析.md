@@ -2814,7 +2814,10 @@ struct sched_class {
 
 
 ## 3.2 虚拟地址空间布局
-&emsp;RM64处理器不支持完全的64位虚拟地址，ARMv8.2 标准的大虚拟地址(Large Virtual Address，LVA)支持，并且页长度是64KB，那么虚拟地址的最大宽度是52位    \
+
+### 3.2.1 虚拟地址空间划分
+
+&emsp;ARM64处理器不支持完全的64位虚拟地址，ARMv8.2 标准的大虚拟地址(Large Virtual Address，LVA)支持，并且页长度是64KB，那么虚拟地址的最大宽度是52位    \
 &emsp;可以为虚拟地址配置比最大宽度小的宽度，并且可以为内核虚拟地址和用户虚拟地址配置不同的宽度。转换控制寄存器（Translation Control Register）TCR_EL1的字段T0SZ定义了必须是全0的最高位的数量，字段T1SZ定义了必须是全1的最高位的数量，用户虚拟地址的宽度是（64-TCR_EL1.T0SZ），内核虚拟地址的宽度是（64-TCR_EL1.T1SZ）   \
 
 <table>
@@ -2839,11 +2842,192 @@ struct sched_class {
 	</tr>
 </table>
 
+### 3.2.2 用户虚拟地址空间布局
+
+&ensp;进程的用户虚拟地址空间的起始地址是0，长度是TASK_SIZE，ARM64架构下TASK_SIZE下  \
+&ensp;（1）32位用户空间程序：TASK_SIZE值是TASK_SIZE_32，即0x100000000，4GB    \
+&ensp;（2）64位用户空间程序：TASK_SIZE值是TASK_SIZE_64，即 `2^VA_BITS`，VA_BITS是编译内核时选择的虚拟地址位数。   \
+
+```c
+//arch/arm64/include/asm/memory.h    linux4.x
+#define VA_BITS          (CONFIG_ARM64_VA_BITS)
+#define TASK_SIZE_64     (UL(1) << VA_BITS)
+
+#ifdef CONFIG_COMPAT    /* 支持执行32位用户空间程序 */
+#define TASK_SIZE_32     UL(0x100000000)
+/* test_thread_flag(TIF_32BIT)判断用户空间程序是不是32位 */
+#define TASK_SIZE       (test_thread_flag(TIF_32BIT) ? \
+                  TASK_SIZE_32 : TASK_SIZE_64)
+#define TASK_SIZE_OF(tsk)  (test_tsk_thread_flag(tsk, TIF_32BIT) ? \
+                  TASK_SIZE_32 : TASK_SIZE_64)
+#else
+#define TASK_SIZE    TASK_SIZE_64
+#endif /* CONFIG_COMPAT */
+```
 
 
+```c
+// linux-5.10.102/arch/arm64/include/asm/memory.h
+#define VA_BITS			(CONFIG_ARM64_VA_BITS)
+#define _PAGE_OFFSET(va)	(-(UL(1) << (va)))
+#define PAGE_OFFSET		(_PAGE_OFFSET(VA_BITS))
+#define KIMAGE_VADDR		(MODULES_END)
+#define BPF_JIT_REGION_START	(KASAN_SHADOW_END)
+#define BPF_JIT_REGION_SIZE	(SZ_128M)
+#define BPF_JIT_REGION_END	(BPF_JIT_REGION_START + BPF_JIT_REGION_SIZE)
+#define MODULES_END		(MODULES_VADDR + MODULES_VSIZE)
+#define MODULES_VADDR		(BPF_JIT_REGION_END)
+#define MODULES_VSIZE		(SZ_128M)
+#define VMEMMAP_START		(-VMEMMAP_SIZE - SZ_2M)
+#define VMEMMAP_END		(VMEMMAP_START + VMEMMAP_SIZE)
+#define PCI_IO_END		(VMEMMAP_START - SZ_2M)
+#define PCI_IO_START		(PCI_IO_END - PCI_IO_SIZE)
+#define FIXADDR_TOP		(PCI_IO_START - SZ_2M)
+```
+
+&ensp;进程的用户虚拟地址空间包含：    \
+&ensp;（1）代码段、数据段和未初始化数据段    \
+&ensp;（2）动态库代码段、数据段和初始化数据段    \
+&ensp;（3）存放动态生成的数据的堆      \
+&ensp;（4）存放局部变量和实现函数调用的栈   \
+&ensp;（5）存放在栈底部的环境变量和参数字符串   \
+&ensp;（6）把文件区间映射到虚拟地址空间的内存映射区域   \
+&emsp;内核使用内存描述符`mm_struct`描述进程的用户虚拟地址空间，内存描述符主要成员
 
 
+```c
+atomic_t mm_users;  // 共享同一个用户虚拟地址空间进程的数量，即线程组包含的进程的数量
+atomic_t mm_count;  // 内存描述符的引用计数
+struct vm_area_struct *mmap;  // 虚拟内存区域链表
+struct rb_root mm_rb;  // 虚拟内存区域红黑树
+unsigned long(*get_unmapped_area)(struct file *filp, unsigned long addr, unsigned long len, unsigned long pgoff, unsigned long flags);  // 在内存映射区域找到一个没有映射的区域
+pgd_t *pgd;  // 指向页全局目录，即第一级页表
+unsigned long mmap_base;  // 内存映射区的起始地址
+unsigned long task_size;  // 用户虚拟地址空间的长度
+unsigned long start_code, end_code;  // 代码段的起始地址和结束地址
+unsigned long start_data, end_data;  // 数据段的起始地址和结束地址
+unsigned long start_brk, brk;  // 堆的起始地址和结束地址
+unsigned long start_stack;  // 栈的起始地址
+unsigned long arg_start, arg_end;  // 参数字符串起始地址和结束地址
+unsigned long env_start, env_end;  // 环境变量的起始地址和结束地址
+```
 
 
+```c
+struct mm_struct *mm;  // 进程mm指向一个内存描述符，内核线程mm为空指针
+struct mm_struct　*active_mm;  // 进程的active_mm和mm总是指向同一个内存描述符
+// 内核线程的active_mm在没有运行时是空指针，在运行时指向从上一个进程借用的内存描述符
+```
 
+&ensp;进程地址空间随机化：  \
+&ensp;（1）进程描述符成员personality是否设置ADDR_NO_RANDOMIZE   \
+&ensp;（2）全局变量`randomize_va_spce`：0表示关闭虚拟地址空间随机化，1表示内存映射区和栈起始地址随机化，2表示内存映射区、栈和堆起始地址随机化，文件`/proc/sys/kernel/randomize_va_space`修改 \
+
+&ensp;栈向下增长，起始地址STACK_TOP，
+```c
+// arch/arm64/include/asm/processor.h
+#define STACK_TOP_MAX         TASK_SIZE_64
+#ifdef CONFIG_COMPAT  /* 支持执行32位用户空间程序 */
+#define AARCH32_VECTORS_BASE  0xffff0000
+#define STACK_TOP   (test_thread_flag(TIF_32BIT) ? \
+                 AARCH32_VECTORS_BASE : STACK_TOP_MAX)
+#else
+#define STACK_TOP    STACK_TOP_MAX
+#endif /* CONFIG_COMPAT */
+```
+
+&ensp;内存映射区域的起始地址是内存描述符的成员 mmap_base
+
+<center>用户虚拟地址空间两种布局</center>
+![20221109013928](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221109013928.png)
+
+&ensp;新布局：内存映射区域自顶向下增长，起始地址是(STACK_TOP − 栈的最大长度 − 间隙)，默认启用内存映射区域随机化，需要把起始地址减去一个随机值   \
+
+&ensp;进程调用execve以装载ELF文件的时候，函数load_elf_binary将会创建进程的用户虚拟地址空间   \
+
+![20221109014232](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221109014232.png)
+
+&ensp;函数arch_pick_mmap_layout负责选择内存映射区域的布局。ARM64架构定义的函数arch_pick_mmap_layout
+```c
+// linux-5.10.102/mm/util.c
+void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+{
+	unsigned long random_factor = 0UL;
+
+	if (current->flags & PF_RANDOMIZE)
+		random_factor = arch_mmap_rnd();
+
+	if (mmap_is_legacy(rlim_stack)) { // 自底向上
+		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
+		mm->get_unmapped_area = arch_get_unmapped_area;  // 
+	} else {  // 自顶向下
+		mm->mmap_base = mmap_base(random_factor, rlim_stack);
+		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
+	}
+}
+
+static int mmap_is_legacy(struct rlimit *rlim_stack)
+{
+	if (current->personality & ADDR_COMPAT_LAYOUT)
+		return 1;
+
+	if (rlim_stack->rlim_cur == RLIM_INFINITY)
+		return 1;
+
+	return sysctl_legacy_va_layout;
+}
+```
+
+&ensp;内存映射区域的起始地址的计算
+
+```c
+// linux-5.10.102/arch/arm64/include/asm/efi.h
+#ifdef CONFIG_COMPAT
+#define STACK_RND_MASK			(test_thread_flag(TIF_32BIT) ? \
+						0x7ff >> (PAGE_SHIFT - 12) : \
+						0x3ffff >> (PAGE_SHIFT - 12))
+#else
+#define STACK_RND_MASK			(0x3ffff >> (PAGE_SHIFT - 12))
+#endif
+```
+
+```c
+// arch/arm64/mm/mmap.c
+#define MIN_GAP (SZ_128M + ((STACK_RND_MASK << PAGE_SHIFT) + 1))
+#define MAX_GAP (STACK_TOP/6*5)
+static unsigned long mmap_base(unsigned long rnd)
+{
+     unsigned long gap = rlimit(RLIMIT_STACK);
+
+     if (gap < MIN_GAP)
+           gap = MIN_GAP;
+     else if (gap > MAX_GAP)
+           gap = MAX_GAP;
+
+     return PAGE_ALIGN(STACK_TOP - gap - rnd);
+}
+
+
+```
+
+&ensp;函数load_elf_binary：函数setup_arg_pages把栈顶设置为STACK_TOP减去随机值，然后把环境变量和参数从临时栈移到最终的用户栈；函数set_brk设置堆的起始地址，如果启用堆随机化，把堆的起始地址加上随机值
+
+```c
+// fs/binfmt_elf.c
+static int load_elf_binary(struct linux_binprm *bprm)
+{
+     …
+     retval = setup_arg_pages(bprm, randomize_stack_top(STACK_TOP),
+                     executable_stack);
+     …
+     retval = set_brk(elf_bss, elf_brk, bss_prot);
+     …
+     if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
+           current->mm->brk = current->mm->start_brk =
+                arch_randomize_brk(current->mm);
+     }
+     …
+}
+
+```
 
