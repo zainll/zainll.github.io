@@ -25,7 +25,7 @@ showbreadcrumbs: false
 <br/>
 <br/>
 
-<div style="font-size: 20px;">做一个终生不与女人吵架的男人有那么难吗？ </div>
+<div style="font-size: 20px;">做一个终生不与女人吵架的男人有那么难吗？😇 </div>
 
 <br/>
 
