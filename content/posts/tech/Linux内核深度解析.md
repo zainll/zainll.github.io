@@ -3074,7 +3074,7 @@ void iounmap(void *addr);
 &emsp;（3）Device-nGRE。       \
 &emsp;（4）Device-GRE         \
 
-
+&ensp;寄存器TCR_EL1（Translation Control Register for Exception Level 1，异常级别1的转换控制寄存器）的字段IPS（Intermediate Physical Address Size，中间物理地址长度）控制物理地址的宽度，IPS字段的长度是3位
 
 
 
