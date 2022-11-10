@@ -3033,3 +3033,54 @@ static int load_elf_binary(struct linux_binprm *bprm)
 
 ```
 
+### 3.2.3 内核地址空间布局
+
+
+<center>ARM64处理器架构内核地址空间布局</center>
+![20221109225722](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221109225722.png)
+
+&ensp;(1)先行映射区范围[PAGE_OFFSET, 2^64-1]，起始地址PAGE_OFFSET = (OxFFFF FFFF FFFF FFFF << (VA_BITS-1))，长度为内核虚拟地址空间的一半，虚拟地址和物理地址是线性关系  \ 
+&emsp;虚拟地址 = ((物理地址-PHYS_OFFSET)+PAGE_OFFSET)，PHY_OFFSET是内存起始物理地址
+&ensp;(2)vmemmap 区域的范围是[VMEMMAP_START, PAGE_OFFSET)，长度是VMEMMAP_SIZE =（线性映射区域的长度 / 页长度 * page结构体的长度上限）
+&ensp;(3)PCI I/O区域的范围是[PCI_IO_START, PCI_IO_END)，长度是16MB，结束地址是PCI_IO_END = (VMEMMAP_START − 2MB)。外围组件互联（Peripheral Component Interconnect，PCI）是一种总线标准，PCI I/O区域是PCI设备的I/O地址空间
+&ensp;(4)定映射区域的范围是[FIXADDR_START, FIXADDR_TOP)，长度是FIXADDR_SIZE，结束地址是FIXADDR_TOP = (PCI_IO_START − 2MB)
+&ensp;(5)vmalloc区域的范围是[VMALLOC_START, VMALLOC_END），起始地址是VMALLOC_START，等于内核模块区域的结束地址，结束地址是VMALLOC_END = (PAGE_OFFSET − PUD_SIZE − VMEMMAP_SIZE − 64KB)，其中PUD_SIZE是页上级目录表项映射的地址空间的长度   \
+&emsp;vmalloc区域是函数vmalloc使用的虚拟地址空间，内核镜像在vmalloc区域，起始虚拟地址是(KIMAGE_VADDR + TEXT_OFFSET) ，其中KIMAGE_VADDR是内核镜像的虚拟地址的基准值，等于内核模块区域的结束地址MODULES_END；TEXT_OFFSET是内存中的内核镜像相对内存起始位置的偏移      \
+&ensp;(6)内核模块区域的范围是[MODULES_VADDR, MODULES_END)，长度是128MB，起始地址是MODULES_VADDR =（内核虚拟地址空间的起始地址 + KASAN影子区域的长度）。内核模块区域是内核模块使用的虚拟地址空间    \
+&ensp;(7)KASAN影子区域的起始地址是内核虚拟地址空间的起始地址，长度是内核虚拟地址空间长度的1/8。内核地址消毒剂（Kernel Address SANitizer，KASAN）是一个动态的内存错误检查工具       \
+
+
+## 3.3 物理地址空间
+
+&ensp;处理器通过外围设备控制器的寄存器访问外围设备，寄存器分为控制寄存器、状态寄存器和数据寄存器三大类，外围设备的寄存器通常被连续地编址。处理器对外围设备寄存器的编址方式有两种：     \
+&emsp;（1）I/O映射方式(I/O-mapped)  \
+&emsp;（2）内存映射方式(memroy-mapped)：精简指令集的处理器通常只实现一个物理地址空间，外围设备和物理内存使用统一的物理地址空间，处理器可以像访问一个内存单元那样访问外围设备，不需要提供专门的I/O指令     \
+
+&emsp;程序通过虚拟地址访问外设寄存器，内核函数把外设寄存器物理地址映射到虚拟地址空间
+```c
+// ioremap()把外设寄存器物理地址映射到内核虚拟地址空间
+void* ioremap(unsigned long phys_addr, unsigned long size, unsigned long flags);
+// io_remap_pfn_range()函数把外设寄存器的物理地址映射到进程的用户虚拟地址空间
+int io_remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,unsigned long pfn, unsigned long size, pgprot_t prot);
+// iounmap()删除函数ioremap()创建映射
+void iounmap(void *addr);
+```
+&ensp;ARM64架构两种内存类型：
+&emsp;（1）正常内存(Normal Memory)：包括物理内存和只读存储器(ROM)，共享属性和可缓存     \
+&emsp;（2）设备内存(Device Memory)：指分配给外围设备寄存器的物理地址区域，外部共享，不可缓存  \
+&ensp;ARM64架构3种属性把设备分为4种类型:      \
+&emsp;（1）Device-nGnRnE          \
+&emsp;（2）Device-nGnRE。          \
+&emsp;（3）Device-nGRE。       \
+&emsp;（4）Device-GRE         \
+
+
+
+
+
+
+
+
+
+
+
