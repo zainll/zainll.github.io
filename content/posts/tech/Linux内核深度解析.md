@@ -3227,8 +3227,23 @@ struct vm_area_struct {
 &ensp;（2）成员vm_pgoff存放文件的以页为单位的偏移。   \
 &ensp;（3）成员vm_ops指向共享内存的虚拟内存操作集合shmem_vm_ops。
 
+<center>私有匿名映射的虚拟内存区域</center>
+![20221112001338](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221112001338.png)
 
+&ensp;（1）页保护位（vm_area_struct.vm_page_prot）：描述虚拟内存区域的访问权限。内核定义了一个保护位映射数组，把VM_READ、VM_WRITE、VM_EXEC和VM_SHARED这4个标志转换成保护位组合        \
+&ensp;P代表私有（Private），S代表共享（Shared），后面的3个数字分别表示可读、可写和可执行，例如__P000表示私有、不可读、不可写和不可执行，__S111表示共享、可读、可写和可执行  
 
+```c
+// mm/mmap.c
+pgprot_t protection_map[16] = {
+    __P000, __P001, __P010, __P011, __P100, __P101, __P110, __P111,
+    __S000, __S001, __S010, __S011, __S100, __S101, __S110, __S111
+};
 
-
-
+pgprot_t vm_get_page_prot(unsigned long vm_flags)
+{
+    return __pgprot(pgprot_val(protection_map[vm_flags &
+                (VM_READ|VM_WRITE|VM_EXEC|VM_SHARED)]) |
+             pgprot_val(arch_vm_get_page_prot(vm_flags)));
+}
+```
