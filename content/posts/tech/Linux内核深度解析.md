@@ -3134,14 +3134,98 @@ int io_remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,unsigned l
 
 #### 1. 虚拟内存区域
 
+&ensp;内核使用结构体`vm_area_struct`描述虚拟内存区域
+
+```c
+struct vm_area_struct {
+	/* The first cache line has the info for VMA tree walking. */
+	/* Our start address within vm_mm. */
+	unsigned long vm_start;	  // 起始地址 
+	/* The first byte after our end address within vm_mm. */
+	unsigned long vm_end;  // 结束地址
+	/* linked list of VM areas per task, sorted by address */
+	// 虚拟内存区域链表，按起始地址排序
+	struct vm_area_struct *vm_next, *vm_prev;
+	// 	红黑树节点
+	struct rb_node vm_rb;
+	
+	/* Largest free memory gap in bytes to the left of this VMA.
+	 * Either between this VMA and vma->vm_prev, or between one of the
+	 * VMAs below us in the VMA rbtree and its ->vm_prev. This helps
+	 * get_unmapped_area find a free area of the right size.*/
+	unsigned long rb_subtree_gap;
+
+	/* Second cache line starts here. */
+	// 指向内存描述符，即虚拟内存区域所属的用户虚拟地址空间
+	struct mm_struct *vm_mm;	/* The address space we belong to. */
+	
+	/* Access permissions of this VMA.
+	 * See vmf_insert_mixed_prot() for discussion.*/
+	// 保护位，即访问权限
+	pgprot_t vm_page_prot;
+	unsigned long vm_flags;		/* Flags, see mm.h. */
+
+	/* For areas with an address space and backing store,
+	 * linkage into the address_space->i_mmap interval tree.*/
+	// 为了支持查询一个文件区间被映射到哪些虚拟内存区域，
+	// 把一个文件映射到的所有虚拟内存区域加入该文件的地址空间结构体
+	// address_space的成员i_mmap指向的区间树
+	struct {
+		struct rb_node rb;
+		unsigned long rb_subtree_last;
+	} shared;
+
+	
+	/*  file's MAP_PRIVATE vma can be in both i_mmap tree and anon_vma
+	 * list, after a COW of one of the file pages.	A MAP_SHARED vma
+	 * can only be in the i_mmap tree.  An anonymous MAP_PRIVATE, stack
+	 * or brk vma (with NULL file) can only be in an anon_vma list.*/
+	// 把虚拟内存区域关联的所有anon_vma实例串联起来。
+	// 一个虚拟内存区域会关联到父进程的anon_vma实例和自己的anon_vma实例 
+	struct list_head anon_vma_chain; /* Serialized by mmap_lock &
+					  * page_table_lock */
+	// 指向一个anon_vma实例，结构体anon_vma用来组织匿名页
+	// 被映射到的所有虚拟地址空间
+	struct anon_vma *anon_vma;	/* Serialized by page_table_lock */
+
+	/* Function pointers to deal with this struct. */
+	// 虚拟内存操作集合
+	const struct vm_operations_struct *vm_ops;
+
+	/* Information about our backing store: */
+	// 文件偏移，单位是页
+	unsigned long vm_pgoff;		/* Offset (within vm_file) in PAGE_SIZE
+					   units */
+	// 文件，如果是私有的匿名映射，该成员是空指针
+	struct file * vm_file;		/* File we map to (can be NULL). */
+	void * vm_private_data;		/* was vm_pte (shared mem) */
+
+#ifdef CONFIG_SWAP
+	atomic_long_t swap_readahead_info;
+#endif
+#ifndef CONFIG_MMU
+	struct vm_region *vm_region;	/* NOMMU mapping region */
+#endif
+#ifdef CONFIG_NUMA
+	struct mempolicy *vm_policy;	/* NUMA policy for the VMA */
+#endif
+	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
+} __randomize_layout;
+```
+<center>文件映射的虚拟内存区域</center>
+![20221111234010](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221111234010.png)
+
+&ensp;（1）成员vm_file指向文件的一个打开实例（file）。索引节点代表一个文件，描述文件的属性。    \
+&ensp;（2）成员vm_pgoff存放文件的以页为单位的偏移。   \
+&ensp;（3）成员vm_ops指向虚拟内存操作集合，创建文件映射的时候调用文件操作集合中的mmap方法（file->f_op->mmap）以注册虚拟内存操作集合。例如：假设文件属于EXT4文件系统，文件操作集合中的mmap方法是函数ext4_file_mmap，该函数把虚拟内存区域的成员vm_ops设置为ext4_file_vm_ops
 
 
+<center>共享匿名映射的虚拟内存区域</center>
+![20221111234048](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221111234048.png)
 
-
-
-
-
-
+&ensp;（1）成员vm_file指向文件的一个打开实例（file）。   \
+&ensp;（2）成员vm_pgoff存放文件的以页为单位的偏移。   \
+&ensp;（3）成员vm_ops指向共享内存的虚拟内存操作集合shmem_vm_ops。
 
 
 
