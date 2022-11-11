@@ -3094,5 +3094,57 @@ void iounmap(void *addr);
 &ensp;（2）Linux内核采用延迟分配物理内存的策略，在进程第一次访问虚拟页的时候，产生缺页异常。如果是文件映射，那么分配物理页，把文件指定区间的数据读到物理页中，然后在页表中把虚拟页映射到物理页；如果是匿名映射，那么分配物理页，然后在页表中把虚拟页映射到物理页
 
 
+#### 3.4.1 应用编程接口
+
+&ensp;系统调用
+```c
+// 1.mmap()创建内存映射
+void *mmap(void *addr, size_t length, int prot, int flags, in fd, off_t offset);
+// 2. mremap()扩大或缩小内存映射，可移动
+void *mreemap(void *old_address, size_t old_size, size_t new_size, int flags, ... /*void *new_address */);
+// 3. munmap() 删除内存印刷
+int munmap(void *addr, size_t length);
+// 4. brk() 设置堆上界
+int brk(void *addr);
+// 6. mprotect()设置虚拟内存区域的访问权限
+int mprotect(void *addr, size_t len, int prot);
+// 7. madvise 箱内核体术内存使用建议，配合内核预读和缓存
+int madvise(void *addr, size_t length, int advice);
+
+```
+&ensp;内核空间函数
+```c
+// 1. remap_pfn_range把内存的物理页映射到进程的虚拟地址空间，实现进程和内核共享内存
+int remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,unsigned long pfn,unsigned long size, pgprot_t prot);
+
+// 2.io_remap_pfn_range把外设寄存器的物理地址映射到进程的虚拟地址空间，进程可以直接访问外设寄存器
+int io_remap_pfn_range(struct vm_area_struct *vma, unsigned long addr,unsigned long pfn, unsigned long size, pgprot_t prot);
+
+```
+
+&ensp;应用程序通常使用C标准库提供的函数malloc()申请内存。glibc库的内存分配器ptmalloc使用brk或mmap向内核以页为单位申请虚拟内存，然后把页划分成小内存块分配给应用程序。默认的阈值是128KB，如果应用程序申请的内存长度小于阈值，ptmalloc分配器使用brk向内核申请虚拟内存，否则ptmalloc分配器使用mmap向内核申请虚拟内存   \
+
+&ensp;应用程序可以直接使用mmap向内核申请虚拟内存
+系统调用mmap()  \
+系统调用mprotect()  \
+系统调用madvise()
+
+
+### 3.4.2 数据结构
+
+#### 1. 虚拟内存区域
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
