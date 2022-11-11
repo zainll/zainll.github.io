@@ -44,3 +44,10 @@ PicGo: image not found in clipboard.
 
 
 ![Q](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/Q.gif)
+
+
+
+
+
+内存检测王者之剑—valgrind
+https://zhuanlan.zhihu.com/p/56538645/
