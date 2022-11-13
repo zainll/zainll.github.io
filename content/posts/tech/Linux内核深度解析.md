@@ -3294,6 +3294,32 @@ struct vm_operations_struct {
 
 
 
+### 3.4.3 创建内存映射
+&ensp;C标准库封装了函数mmap用来创建内存映射
+```c
+asmlinkage long sys_mmap(unsigned long addr, unsigned long len, 
+              unsigned long prot, unsigned long flags, 
+              unsigned long fd, off_t off); 
+
+asmlinkage long sys_mmap2(unsigned long addr, unsigned long len, 
+              unsigned long prot, unsigned long flags, 
+              unsigned long fd, off_t off); 
+
+```
+
+&ensp;ARM64架构只实现了系统调用mmap
+
+<center>系统调用sys_mmap执行流程</center>
+![20221114010335](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221114010335.png)
+
+
+<center>do_mmap的执行流程</center>
+![20221114010503](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221114010503.png)
+
+待补充
+
+
+### 3.4.4 虚拟内存过量提交策略
 
 
 
