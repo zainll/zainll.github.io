@@ -3040,6 +3040,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 
 
 <center>ARM64处理器架构内核地址空间布局</center>
+
 ![20221109225722](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221109225722.png)
 
 &ensp;(1)先行映射区范围[PAGE_OFFSET, 2^64-1]，起始地址PAGE_OFFSET = (OxFFFF FFFF FFFF FFFF << (VA_BITS-1))，长度为内核虚拟地址空间的一半，虚拟地址和物理地址是线性关系  \ 
@@ -3216,6 +3217,7 @@ struct vm_area_struct {
 } __randomize_layout;
 ```
 <center>文件映射的虚拟内存区域</center>
+
 ![20221111234010](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221111234010.png)
 
 &ensp;（1）成员vm_file指向文件的一个打开实例（file）。索引节点代表一个文件，描述文件的属性。    \
@@ -3224,6 +3226,7 @@ struct vm_area_struct {
 
 
 <center>共享匿名映射的虚拟内存区域</center>
+
 ![20221111234048](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221111234048.png)
 
 &ensp;（1）成员vm_file指向文件的一个打开实例（file）。   \
@@ -3231,6 +3234,7 @@ struct vm_area_struct {
 &ensp;（3）成员vm_ops指向共享内存的虚拟内存操作集合shmem_vm_ops。
 
 <center>私有匿名映射的虚拟内存区域</center>
+
 ![20221112001338](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221112001338.png)
 
 &ensp;（1）页保护位（vm_area_struct.vm_page_prot）：描述虚拟内存区域的访问权限。内核定义了一个保护位映射数组，把VM_READ、VM_WRITE、VM_EXEC和VM_SHARED这4个标志转换成保护位组合        \
@@ -3290,7 +3294,9 @@ struct vm_operations_struct {
 
 
 #### 2.链表和树
+
 <center>虚拟内存区域的链表和树</center>
+
 ![20221114005059](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221114005059.png)
 &ensp;(1)双向链表，mm_struct.mmap指向第一个vm_area_struct实例   \
 &ensp;(2)红黑树，mm_struct.mm_rb指向红黑树的根    \
@@ -3313,10 +3319,12 @@ asmlinkage long sys_mmap2(unsigned long addr, unsigned long len,
 &ensp;ARM64架构只实现了系统调用mmap
 
 <center>系统调用sys_mmap执行流程</center>
+
 ![20221114010335](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221114010335.png)
 
 
 <center>do_mmap的执行流程</center>
+
 ![20221114010503](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221114010503.png)
 
 待补充
