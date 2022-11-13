@@ -175,7 +175,7 @@
       <pubDate>Mon, 27 Jun 2022 00:21:08 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</guid>
-      <description>openbenchmark openssl speed openssl speed --multi 1 openssl speed --multi 1 aes-128-cbc # 编译 https://www.jianshu.com/p/499c4603cfd5 https://blog.csdn.net/CHYabc123456hh/article/details/125794350</description>
+      <description>openbenchmark openssl speed openssl speed --multi 1 openssl speed --multi 1 aes-128-cbc # 编译 https://www.jianshu.com/p/499c4603cfd5 https://blog.csdn.net/CHYabc123456hh/article/details/125794350 perf sudo apt install linux-tools-common sudo apt install linux-tools-generic sudo apt install linux-cloud-tools-generic perf --version https://blog.csdn.net/qq_44158431/article/details/125199825</description>
     </item>
     
     <item>
