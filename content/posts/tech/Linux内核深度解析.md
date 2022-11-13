@@ -3246,4 +3246,60 @@ pgprot_t vm_get_page_prot(unsigned long vm_flags)
                 (VM_READ|VM_WRITE|VM_EXEC|VM_SHARED)]) |
              pgprot_val(arch_vm_get_page_prot(vm_flags)));
 }
+
+// include/linux/mman.h
+#ifndef arch_vm_get_page_prot
+#define arch_vm_get_page_prot(vm_flags) __pgprot(0)
+#endif
 ```
+
+&ensp;虚拟内存区域标志：结构体vm_area_struct的成员vm_flags存放虚拟内存区域的标志，头文件“include/linux/mm.h”定义了各种标志         \
+VM_READ、VM_WRITE、VM_EXEC、VM_SHARED、VM_GROWSDOWN、VM_DONTEXPAND、VM_ACCOUNT、VM_NORESERVE、VM_HUGETLB、VM_ARCH_1、VM_ARCH_2、VM_HUGEPAGE、VM_MERGEABLE
+
+
+&ensp;虚拟内存操作集合（vm_operations_struct）：定义了虚拟内存区域的各种操作方法  
+```c
+// include/linux/mm.h
+struct vm_operations_struct {
+	// 在创建虚拟内存区域时调用open方法，通常不使用，设置为空指针
+	void (*open)(struct vm_area_struct * area);
+	// 在删除虚拟内存区域时调用close方法，通常不使用，设置为空指针
+	void (*close)(struct vm_area_struct * area);
+	// 使用系统调用mremap移动虚拟内存区域时调用mremap方法
+	int (*mremap)(struct vm_area_struct * area);
+	// 使用系统调用mremap移动虚拟内存区域时调用mremap方法
+	int (*fault)(struct vm_fault *vmf);
+	// huge_fault方法针对使用透明巨型页的文件映射
+	int (*huge_fault)(struct vm_fault *vmf, enum page_entry_size pe_size);
+	// 读文件映射的虚拟页时，如果没有映射到物理页，生成缺页异常
+	void (*map_pages)(struct vm_fault *vmf,
+			pgoff_t start_pgoff, pgoff_t end_pgoff);
+
+	/* 通知以前的只读页即将变成可写，
+	* 如果返回一个错误，将会发送信号SIGBUS给进程*/
+	int (*page_mkwrite)(struct vm_fault *vmf);
+
+	/* 使用VM_PFNMAP或者VM_MIXEDMAP时调用，功能和page_mkwrite相同*/
+	int (*pfn_mkwrite)(struct vm_fault *vmf);
+	…
+}
+```
+
+
+#### 2.链表和树
+<center>虚拟内存区域的链表和树</center>
+![20221114005059](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221114005059.png)
+&ensp;(1)双向链表，mm_struct.mmap指向第一个vm_area_struct实例   \
+&ensp;(2)红黑树，mm_struct.mm_rb指向红黑树的根    \
+
+
+
+
+
+
+
+
+
+
+
+
