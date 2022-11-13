@@ -2740,10 +2740,13 @@ struct sched_class {
 ```
 
 &ensp;进程在内存和缓存中的数据是最少的，是有价值的实现负载均衡的机会：1）创建新进程，2）调用execve装载程序
+
 <center>创建新进程时负载均衡</center>
+
 ![20221106235035](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221106235035.png)
 
 <center>装载程序时负载均衡</center>
+
 ![20221106235110](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221106235110.png)
 
 
