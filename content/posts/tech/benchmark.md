@@ -30,6 +30,9 @@ cover:
 ---
 
 
+# 
+
+
 
 [openbenchmark](https://openbenchmarking.org/test/pts/openssl-3.0.0)
 
@@ -52,5 +55,18 @@ https://www.jianshu.com/p/499c4603cfd5
 https://blog.csdn.net/CHYabc123456hh/article/details/125794350
 
 
+
+# perf
+
+```sh
+
+sudo apt install linux-tools-common
+sudo apt install linux-tools-generic
+sudo apt install linux-cloud-tools-generic 
+perf --version
+```
+
+
+https://blog.csdn.net/qq_44158431/article/details/125199825
 
 
