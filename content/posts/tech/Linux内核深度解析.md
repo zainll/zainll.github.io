@@ -2382,6 +2382,7 @@ asmlinkage void do_notify_resume(struct pt_regs *regs,
 
 &emsp;唤醒进程的时候，被唤醒的进程可能抢占当前进程
 <center>唤醒进程时抢占</center>
+
 ![20221106214732](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221106214732.png)
 
 &ensp;（1）如果被唤醒的进程和当前进程属于相同的调度类，那么调用调度类的check_preempt_curr方法以检查是否可以抢占当前进程   \
@@ -2942,6 +2943,7 @@ struct mm_struct　*active_mm;  // 进程的active_mm和mm总是指向同一个�
 &ensp;内存映射区域的起始地址是内存描述符的成员 mmap_base
 
 <center>用户虚拟地址空间两种布局</center>
+
 ![20221109013928](https://raw.githubusercontent.com/zhuangll/PictureBed/main/blogs/pictures/20221109013928.png)
 
 &ensp;新布局：内存映射区域自顶向下增长，起始地址是(STACK_TOP − 栈的最大长度 − 间隙)，默认启用内存映射区域随机化，需要把起始地址减去一个随机值   \
@@ -3331,6 +3333,251 @@ asmlinkage long sys_mmap2(unsigned long addr, unsigned long len,
 
 
 ### 3.4.4 虚拟内存过量提交策略
+&ensp;虚拟内存过量提交，是指所有进程提交的虚拟内存的总和超过物理内存的容量，内存管理子系统支持3种虚拟内存过量    \
+&ensp;（1）OVERCOMMIT_GUESS(0)：猜测，估算可用内存的数量，因为没法准确计算可用内存的数量，所以说是猜测。   \
+&ensp;（2）OVERCOMMIT_ALWAYS(1)：总是允许过量提交。   \
+&ensp;（3）OVERCOMMIT_NEVER(2)：不允许过量提交。     \
+&emsp;`/proc/sys/vm/overcommit_memory`修改策略
+&ensp;在创建新的内存映射时，调用函数__vm_enough_memory根据虚拟内存过量提交策略判断内存是否足够
+
+
+
+### 3.4.5 删除内存映射
+
+&ensp;系统调用munmap用来删除内存映射，它有两个参数：起始地址和长度，`mm/mmap.c`中的函数do_munmap
+
+<center>系统调用munmap执行流程</center>
+
+![20221114231356](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221114231356.png)
+
+
+## 3.5 物理内存组织
+
+### 3.5.1 体系结构
+&ensp;多处理器系统两种体系结构：
+&ensp;(1)非一致内存访问(Non-Uniform Memory Access NUMA)：内存为多个内存节点多处理器系统  \
+&ensp;(2)对称多处理器(Symmetric Multi-Process SMP)：一直内存访问(UMA)
+
+### 3.5.2 内存模型
+&ensp;内存管理子系统支持3种内存模型
+&ensp;(1)平坦内存(Flat Memory)：内存物理地址空间是连续的   \
+&ensp;(2)不连续内存(Discontiguous Memory)：内存物理地址空间存在空洞
+&ensp;(3)系数内存(Sparse Memory)：内存物理地址空间存在空洞
+
+### 3.5.3 三级结构
+
+&ensp;内存管理子系统使用节点(node)、区域(zone)和页(page)三级结构描述物理内存。   \
+#### 1.内存节点
+&ensp;内存节点两种情况：
+&ensp;（1）NUMA系统内存节点  \
+&ensp;（2）具有不连续内存的UMA系统  \
+&ensp;内存节点使用`pglist_data`结构体描述内存布局，内核定义宏NODE_DATA(nid)，获取节点的pglist_data实例。平坦内存模型，只有一个pglist_data实例contig_page_data
+
+![20221114233416](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221114233416.png)
+<center>内存节点的pglist_data实例</center>
+
+&ensp;pglist_data结构主要成员：
+```c
+// include/linux/mmzone.h
+typedef struct pglist_data {
+    struct zone node_zones[MAX_NR_ZONES];          /* 内存区域数组 */
+    struct zonelist node_zonelists[MAX_ZONELISTS]; /* 备用区域列表 */
+    int nr_zones;                                  /* 该节点包含的内存区域数量 */
+#ifdef CONFIG_FLAT_NODE_MEM_MAP                    /* 除了稀疏内存模型以外 */
+    struct page *node_mem_map;                     /* 页描述符数组 */
+#ifdef CONFIG_PAGE_EXTENSION
+    struct page_ext *node_page_ext;                /* 页的扩展属性 */
+#endif
+#endif
+    …
+    unsigned long node_start_pfn;                  /* 该节点的起始物理页号 */
+    unsigned long node_present_pages;              /* 物理页总数 */
+    unsigned long node_spanned_pages;              /* 物理页范围的总长度，包括空洞 */
+    int node_id;                                   /* 节点标识符 */
+    …
+} pg_data_t;
+```
+
+#### 2.内存区域
+
+&ensp;内核定义内存节点区域
+```c
+// include/linux/mmzone.h
+enum zone_type {
+#ifdef CONFIG_ZONE_DMA
+     ZONE_DMA,  // 直接内存访问区域
+#endif
+#ifdef CONFIG_ZONE_DMA32
+     ZONE_DMA32,
+#endif
+    // 内核虚拟地址和物理地址是线性映射的关系，即虚拟地址 =（物理地址 + 常量）
+     ZONE_NORMAL,  // 直接映射区域
+#ifdef CONFIG_HIGHMEM
+     ZONE_HIGHMEM,  // 高端内存区域
+#endif
+     ZONE_MOVABLE,  // 可移动区域
+#ifdef CONFIG_ZONE_DEVICE
+     ZONE_DEVICE,  // 设备区域
+#endif
+     __MAX_NR_ZONES
+};
+
+```
+
+&ensp;每个内存区域用一个zone结构体描述
+```c
+// include/linux/mmzone.h
+struct zone {
+	unsigned long watermark[NR_WMARK];        /* 页分配器使用的水线 */
+	…
+	long lowmem_reserve[MAX_NR_ZONES];         /* 页分配器使用，当前区域保留多少页不能借给  
+											高的区域类型 */
+	…
+	struct pglist_data  *zone_pgdat;          /* 指向内存节点的pglist_data实例 */
+	struct per_cpu_pageset __percpu *pageset;  /* 每处理器页集合 */
+	…
+	unsigned long     zone_start_pfn;         /* 当前区域的起始物理页号 */
+
+	unsigned long     managed_pages;          /* 伙伴分配器管理的物理页的数量 */
+	unsigned long     spanned_pages;          /* 当前区域跨越的总页数，包括空洞 */
+	unsigned long     present_pages;          /* 当前区域存在的物理页的数量，不包括空洞 */
+
+	const char        *name;                  /* 区域名称 */
+	…   
+	struct free_area  free_area[MAX_ORDER];    /* 不同长度的空闲区域 */
+	…
+}
+```
+
+
+#### 3.物理页
+
+&ensp;每个物理页对应一个page结构体，称为页描述符，内存节点的pglist_data实例的成员node_mem_map指向该内存节点包含的所有物理页的页描述符注册的数组。   \
+&ensp;结构体page成员flags布局  \
+| [SECTION] | [NODE] | ZONE | [LAST_CPUPID] | ... | FLAGS |  \
+&ensp;SECTION是稀疏内存模型中的段编号，NODE是节点编号，ZONE是区域类型，FLAGS是标志位    \
+&ensp;头文件`include/linux/mm_types.h`定义了page结构体
+```c
+// include/linux/mm.h
+// 得到物理页所属的内存节点的编号
+static inline int page_to_nid(const struct page *page)
+{
+     return (page->flags >> NODES_PGSHIFT) & NODES_MASK;
+}
+// 得到物理页所属的内存区域的类型
+static inline enum zone_type page_zonenum(const struct page *page)
+{
+     return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
+}
+```
+
+## 3.6 引导内存分配器
+
+&ensp;在内核初始化的过程中需要分配内存，内核提供了临时的引导内存分配器，在页分配器和块分配器初始化完毕后，把空闲的物理页交给页分配器管理，丢弃引导内存分配器，开启配置宏CONFIG_NO_BOOTMEM，`memblock`就会取代bootmem。
+&ensp;
+
+### 3.6.1 bootmem分配器
+
+
+### 3.6.2 memblock分配器
+
+#### 1.数据结构
+
+&ensp;memblock分配器数据结构
+```c
+// include/linux/memblock.h
+struct memblock {
+	bool bottom_up;  /* 表示分配内存的方式 是从下向上的方向？ */
+	phys_addr_t current_limit;  // 可分配内存的最大物理地址
+	struct memblock_type memory;  // 存类型（包括已分配的内存和未分配的内存）
+	struct memblock_type reserved;  // 预留类型（已分配的内存）
+#ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
+	struct memblock_type physmem;  // 物理内存类型
+#endif   
+};
+```
+
+&ensp;内存块类型的数据结构
+```c
+// include/linux/memblock.h
+struct memblock_type {
+	unsigned long cnt;        /* 内存块区域数量 */
+	unsigned long max;        /* 已分配数组的大小 */
+	phys_addr_t total_size;    /* 内存块区域的总长度 所有区域的长度 */
+	struct memblock_region *regions;  // 指向内存块区域数组
+	char *name;  // 存块类型的名称
+};
+```
+&ensp;内存块区域的数据结构
+```c
+// include/linux/memblock.h
+struct memblock_region {
+	phys_addr_t base;  // 起始物理地址
+	phys_addr_t size;  // 长度
+	unsigned long flags;  // 标志 MEMBLOCK_NONE或其他标志
+#ifdef CONFIG_HAVE_MEMBLOCK_NODE_MAP
+	int nid;  // 节点编号
+#endif   
+};
+
+/* memblock标志位的定义. */
+enum {
+	MEMBLOCK_NONE      = 0x0,   /* 无特殊要求 */
+	MEMBLOCK_HOTPLUG   = 0x1,   /* 可热插拔区域 */
+	MEMBLOCK_MIRROR    = 0x2,   /* 镜像区域 */
+	MEMBLOCK_NOMAP     = 0x4,   /* 不添加到内核直接映射 */
+};
+```
+
+#### 2.初始化
+
+&ensp;源文件“mm/memblock.c”定义了全局变量memblock，把成员bottom_up初始化为假，表示从高地址向下分配。   \
+&ensp;ARM64内核初始化memblock分配器的过程是：    \
+&ensp;（1）解析设备树二进制文件中的节点“/memory”，把所有物理内存范围添加到memblock. memory，具体过程参考3.6.3节。    \
+&ensp;（2）在函数arm64_memblock_init中初始化memblock。    \
+&ensp;arm64_memblock_init主要流程：
+> start_kernel() --> setup_arch() --> arm64_memblock_init()
+```c
+// arch/arm64/mm/init.c
+void __init arm64_memblock_init(void)
+{
+	const s64 linear_region_size = -(s64)PAGE_OFFSET;
+
+	fdt_enforce_memory_region();
+
+	memstart_addr = round_down(memblock_start_of_DRAM(),
+					ARM64_MEMSTART_ALIGN);
+
+	memblock_remove(max_t(u64, memstart_addr + linear_region_size,
+			__pa_symbol(_end)), ULLONG_MAX);
+	if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {
+		/* 确保memstart_addr严格对齐 */
+		memstart_addr = round_up(memblock_end_of_DRAM() - linear_region_size,
+						ARM64_MEMSTART_ALIGN);
+		memblock_remove(0, memstart_addr);
+	}
+
+	if (memory_limit != (phys_addr_t)ULLONG_MAX) {
+		memblock_mem_limit_remove_map(memory_limit);
+		memblock_add(__pa_symbol(_text), (u64)(_end - _text));
+	}
+
+	…
+	memblock_reserve(__pa_symbol(_text), _end - _text);
+	…
+
+	early_init_fdt_scan_reserved_mem();
+	…
+}
+```
+
+
+
+
+
+
+
+
 
 
 
