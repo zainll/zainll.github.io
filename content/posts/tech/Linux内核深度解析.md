@@ -3780,7 +3780,27 @@ struct free_area {
 
 ### 3.7.4　每处理器页集合
 
+&ensp;内核针对分配单页做了性能优化，为了减少处理器之间的锁竞争，在内存区域增加 1个每处理器页集合。
+```c
+include/linux/mmzone.h
+struct zone {
+     …
+     struct per_cpu_pageset __percpu *pageset;  /* 在每个处理器上有一个页集合 */
+     …
+} ____cacheline_internodealigned_in_smp;
 
+struct per_cpu_pageset {
+     struct per_cpu_pages pcp;
+     …
+};
+
+struct per_cpu_pages {
+     int count;      /* 链表里面页的数量 */
+     int high;       /* 如果页的数量达到高水线，需要返还给伙伴分配器 */
+     int batch;      /* 批量添加或删除的页数量 */
+     struct list_head lists[MIGRATE_PCPTYPES]; /* 每种迁移类型一个页链表 */
+};
+```
 
 
 
