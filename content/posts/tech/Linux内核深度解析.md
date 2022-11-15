@@ -3867,6 +3867,10 @@ get_zeroed_page(gfp_mask)
 
 ### 3.7.6　释放页
 
+&ensp;页分配器提供了以下释放页的接口       \
+&ensp;（1）void __free_pages(struct page *page, unsigned int order)，第一个参数是第一个物理页的page实例的地址，第二个参数是阶数   \
+&ensp;（2）void free_pages(unsigned long addr, unsigned int order)，第一个参数是第一个物理页的起始内核虚拟地址，第二个参数是阶数    \
+
 
 
 
