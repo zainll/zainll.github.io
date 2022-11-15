@@ -3845,6 +3845,15 @@ get_zeroed_page(gfp_mask)
 
 
 #### 3．复合页
+&ensp;如果设置了标志位__GFP_COMP并且分配了一个阶数大于0的页块，页分配器会把页块组成复合页（compound page）。复合页最常见的用处是创建巨型页。  \
+&ensp;复合页的第一页叫首页（head page），其他页都叫尾页（tail page）
+
+<center>复合页的结构</center>
+
+![20221116001100](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221116001100.png)
+
+
+
 
 
 #### 4．对高阶原子分配的优化处理
