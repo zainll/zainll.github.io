@@ -3806,9 +3806,41 @@ struct per_cpu_pages {
 
 ### 3.7.5　分配页
 #### 1．分配接口
-
+&ensp;页分配器分配页接口
+```c
+// 求分配一个阶数为order的页块，返回一个page实例
+alloc_pages(gfp_mask, order)
+// 在阶数为0情况下的简化形式，只分配一页
+alloc_page(gfp_mask)
+// 只能从低端内存区域分配页，并且返回虚拟地址
+__get_free_pages(gfp_mask, order)
+// 在阶数为0情况下的简化形式，只分配一页
+__get_free_page(gfp_mask)
+// 参数gfp_mask设置了标志位__GFP_ZERO且阶数为0情况下的简化形式，只分配一页，并且用零初始化
+get_zeroed_page(gfp_mask)
+```
 
 #### 2．分配标志位
+&ensp;分配页的函数都带一个分配标志位参数，分配标志位分为以下5类
+&ensp;(1)区域修饰符
+
+
+
+&ensp;(2)页移动性和位置提示
+
+
+
+
+&ensp;(3)水线修饰符
+
+
+
+&ensp;(4)回收修饰符
+
+
+
+
+&ensp;(5)行动修饰符
 
 
 
