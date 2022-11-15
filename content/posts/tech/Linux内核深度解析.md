@@ -3731,15 +3731,85 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
 
 #### 1.数据结构
 
+&ensp;分区的伙伴分配器专注于某个内存节点的某个区域。内存区域的结构体成员free_area用来维护空闲页块，数组下标对应页块的阶数。结构体free_area的成员free_list是空闲页块的链表nr_free是空闲页块的数量。内存区域的结构体成员managed_pages是伙伴分配器管理的物理页的数量，不包括引导内存分配器分配的物理页
+
+```c
+include/linux/mmzone.h
+struct zone {
+    …
+    /* 不同长度的空闲区域 */
+    struct free_area   free_area[MAX_ORDER];  // MAX_ORDER是最大阶数
+    …
+    unsigned long      managed_pages;
+    …
+} ____cacheline_internodealigned_in_smp;
+
+struct free_area {
+     struct list_head  free_list[MIGRATE_TYPES];
+     unsigned long     nr_free;
+};
+
+// include/linux/mmzone.h
+/* 空闲内存管理-分区的伙伴分配器 */
+#ifndef CONFIG_FORCE_MAX_ZONEORDER
+#define MAX_ORDER   11
+#else
+#define MAX_ORDER   CONFIG_FORCE_MAX_ZONEORDER
+#endif
+```
+
+
+
+
+#### 2．根据分配标志得到首选区域类型
+
+
+#### 3. 备用区域列表
+
+
+
+#### 4．区域水线
+
+
+#### 5．防止过度借用
+
+
+### 3.7.3　根据可移动性分组
+
+
+
+### 3.7.4　每处理器页集合
 
 
 
 
 
+### 3.7.5　分配页
+#### 1．分配接口
+
+
+#### 2．分配标志位
+
+
+
+#### 3．复合页
+
+
+#### 4．对高阶原子分配的优化处理
+
+
+
+#### 5．核心函数的实现
 
 
 
 
+### 3.7.6　释放页
+
+
+
+
+## 3.8　块分配器
 
 
 
