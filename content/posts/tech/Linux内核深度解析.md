@@ -3542,12 +3542,13 @@ enum {
 void __init arm64_memblock_init(void)
 {
 	const s64 linear_region_size = -(s64)PAGE_OFFSET;
-
+	// 解析设备树二进制文件中节点“/chosen”的属性“linux,usable-memory-range”，
+	// 得到可用内存的范围，把超出这个范围的物理内存范围从memblock.memory中删除。
 	fdt_enforce_memory_region();
-
+	// 局变量memstart_addr记录内存的起始物理地址
 	memstart_addr = round_down(memblock_start_of_DRAM(),
 					ARM64_MEMSTART_ALIGN);
-
+	// 把线性映射区域不能覆盖的物理内存范围从memblock.memory中删除
 	memblock_remove(max_t(u64, memstart_addr + linear_region_size,
 			__pa_symbol(_end)), ULLONG_MAX);
 	if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {
@@ -3563,19 +3564,162 @@ void __init arm64_memblock_init(void)
 	}
 
 	…
+	// 把内核镜像占用的物理内存范围添加到memblock.reserved
 	memblock_reserve(__pa_symbol(_text), _end - _text);
 	…
-
+	// 从设备树二进制文件中的内存保留区域和节点“/reserved-memory”
+	// 读取保留的物理内存范围，添加到memblock.reserved中
 	early_init_fdt_scan_reserved_mem();
 	…
 }
 ```
+#### 3.编程接口
+&ensp;memblock分配器接口
+```c
+// 添加新的内存块区域到memblock.memory中
+memblock_add
+// 删除内存块区域
+memblock_remove
+// 分配内存
+memblock_alloc
+// 释放内存
+memblock_free
+```
+
+#### 4.算法
+&ensp;memblock分配器把所有内存添加到memblock.memory中，把分配出去的内存块添加到memblock.reserved中   \
+&ensp;函数memblock_alloc负责分配内存，主要为函数memblock_alloc_range_nid  \
+&ensp;(1)memblock_find_in_range_node函数memblock_find_in_range_node   \
+&ensp;(2)memblock_reserve函数把分配出去的内存块区域添加到memblock.reserved中  \
+
+### 3.6.3 物理内存信息
+
+&ensp;内核初始化的过程中，引导内存分配器负责分配内存。ARM64架构使用扁平设备树（Flattened Device Tree，FDT）描述板卡的硬件信息。驱动开发者编写设备树源文件（Device Tree Source，DTS），存放在目录“arch/arm64/boot/dts”下，然后使用设备树编译器（Device Tree Compiler，DTC）把设备树源文件转换成设备树二进制文件（Device Tree Blob，DTB），接着把设备树二进制文件写到存储设备上。设备启动时，引导程序把设备树二进制文件从存储设备读到内存中，引导内核的时候把设备树二进制文件的起始地址传给内核，内核解析设备树二进制文件后得到硬件信息   \
+
+&ensp; 设备树源文件`.dts`,描述物理内存布局
+```c
+/ {  // “/”根节点
+    #address-cells = <2>;   // 地址的单元数量
+    #size-cells = <2>;  // 一个长度的单元数量
+    memory@80000000 {  // 描述物理内存布局
+       device_type = "memory";  // 设备类型
+	   // 物理内存范围
+       reg = <0x00000000 0x80000000 0 0x80000000>,
+             <0x00000008 0x80000000 0 0x80000000>;
+    };
+};
+```
+
+&ensp;内核在初始化的时候调用函数early_init_dt_scan_nodes以解析设备树二进制文件，从而得到物理内存信息   \
+> start_kernel() --> setup_arch() --> setup_machine_fdt() --> early_init_dt_scan_nodes()
+```c
+// drivers/of/fdt.c
+void __init early_init_dt_scan_nodes(void)
+{
+	…
+	/* 初始化size-cells和address-cells信息 */
+	// early_init_dt_scan_root，解析根节点的属性“#address-cells”得到地址的单元数量，
+	// 保存在全局变量dt_root_addr_cells中；解析根节点的属性“#size-cells”得到
+	// 长度的单元数量，保存在全局变量dt_root_size_cells中
+	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+
+	/* 调用函数early_init_dt_add_memory_arch设置内存 */
+	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
+}
+```
+&ensp;early_init_dt_scan_memory解析memory节点
+```c
+// drivers/of/fdt.c
+int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
+                      int depth, void *data)
+{
+	// 解析节点的属性“device_type”
+	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
+	const __be32 *reg, *endp;
+	int l;
+	…
+
+	/* 只扫描 "memory" 节点 */
+	if (type == NULL) {
+		/* 如果没有属性“device_type”，判断节点名称是不是“memory@0”*/
+		if (!IS_ENABLED(CONFIG_PPC32) || depth != 1 || strcmp(uname, "memory@0") != 0)
+			return 0;
+	} else if (strcmp(type, "memory") != 0) // 描述物理内存信息
+		return 0;
+
+	reg = of_get_flat_dt_prop(node, "linux,usable-memory", &l);
+	if (reg == NULL)
+		reg = of_get_flat_dt_prop(node, "reg", &l);
+	if (reg == NULL)
+		return 0;
+
+	endp = reg + (l / sizeof(__be32));
+	…
+
+	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
+		u64 base, size;
+
+		base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+		size = dt_mem_next_cell(dt_root_size_cells, &reg);
+
+		if (size == 0)
+			continue;
+		…
+		early_init_dt_add_memory_arch(base, size);
+		…
+	}
+
+	return 0;
+}
+```
+&ensp;解析出每块内存的起始地址和大小后，调用函数early_init_dt_add_memory_arch
+```c
+// drivers/of/fdt.c
+void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+{
+    const u64 phys_offset = MIN_MEMBLOCK_ADDR;
+
+    if (!PAGE_ALIGNED(base)) {
+         if (size < PAGE_SIZE - (base & ~PAGE_MASK)) {
+              pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
+                  base, base + size);
+              return;
+         }
+         size -= PAGE_SIZE - (base & ~PAGE_MASK);
+         base = PAGE_ALIGN(base);
+    }
+    size &= PAGE_MASK;
+
+    if (base > MAX_MEMBLOCK_ADDR) {
+         pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
+                  base, base + size);
+         return;
+    }
+
+    if (base + size - 1 > MAX_MEMBLOCK_ADDR) {
+         pr_warning("Ignoring memory range 0x%llx - 0x%llx\n",
+                  ((u64)MAX_MEMBLOCK_ADDR) + 1, base + size);
+         size = MAX_MEMBLOCK_ADDR - base + 1;
+    }
+
+    if (base + size < phys_offset) {
+         pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
+                base, base + size);
+         return;
+    }
+    if (base < phys_offset) {
+         pr_warning("Ignoring memory range 0x%llx - 0x%llx\n",
+                base, phys_offset);
+         size -= phys_offset - base;
+         base = phys_offset;
+    }
+	// 把物理内存范围添加到memblock.memory
+    memblock_add(base, size);
+}
+```
 
 
-
-
-
-
+## 3.7 伙伴分配器
 
 
 
