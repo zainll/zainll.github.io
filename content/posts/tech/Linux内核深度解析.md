@@ -4250,6 +4250,29 @@ void kmem_cache_destroy(struct kmem_cache *s);
 
 
 
+## 3.20 连续内存分配器
+
+
+
+
+
+
+
+
+
+## 3.21 userfaultfd
+
+
+
+
+## 3.22 内存错误检测工具KASAN
+
+
+
+
+
+
+
 
 
 
