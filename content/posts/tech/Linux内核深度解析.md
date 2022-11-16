@@ -3876,6 +3876,138 @@ get_zeroed_page(gfp_mask)
 
 ## 3.8　块分配器
 
+&ensp;Linux内核提供了块分配器，处理小块内存分配问题，最早为SLAB分配器。大量物理内存的大型计算机上SLUB分配器，小内存的嵌入式设备上SLOB   \
+
+### 3.8.1 编程接口
+
+&ensp;3种块分配器提供了统一的编程接口，块分配器在初始化的时候创建了一些通用的内存缓存，从普通区域分配页的内存缓存的名称是`kmalloc-<size>`，DMA区域分配页的内存缓存的名称是`dma-kmalloc-<size>`，执行命令`cat /proc/slabinfo`可以看到这些通用的内存缓存   \
+
+```c
+// 分配内存
+void *kmalloc(size_t size, gfp_t flags);
+
+// 重新分配内存
+void *krealloc(const void *p, size_t new_size, gfp_t flags);
+
+// 释放内存
+void kfree(const void *objp);
+```
+
+
+&ensp;创建专用的内存缓存
+
+```c
+// 创建内存缓存
+struct kmem_cache *kmem_cache_create(const char *name, size_t size, size_t align, unsigned long flags, void (*ctor)(void *));
+
+// 从指定的内存缓存分配对象
+void *kmem_cache_alloc(struct kmem_cache *cachep, gfp_t flags);
+
+// 释放对象
+void kmem_cache_free(struct kmem_cache *cachep, void *objp);
+
+// 销毁内存缓存
+void kmem_cache_destroy(struct kmem_cache *s);
+```
+
+### 3.8.2 SLAB分配器
+
+#### 1.数据结构
+
+<center>内存缓存的数据结构</center>
+
+![20221116233943](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221116233943.png)
+
+&ensp;（1）每个内存缓存对应一个kmem_cache实例    \
+
+
+&ensp;（2）每个内存节点对应一个kmem_cache_node实例
+
+&ensp;page结构体的成员   \
+&ensp;1)flags设置标志位PG_slab，表示页属于SLAB分配器      \
+&ensp;2)s_mem存放slab第一个对象的地址   \
+&ensp;3)active表示已分配对象的数量   \
+&ensp;4)lru作为链表节点加入其中一条slab链表   \
+&ensp;5)slab_cache指向kmem_cache实例   \
+&ensp;6)freelist指向空闲对象链表   \
+
+
+&ensp;（3）kmem_cache实例的成员cpu_slab指向array_cache实例，
+
+
+#### 2.空闲对象链表
+&ensp;每个slab需要一个空闲对象链表，从而把所有空闲对象链接起来，空闲对象链表是用数组实现的，page->freelist指向空闲对象链表
+
+<center>使用对象存放空闲对象链表-初始状态</center>
+
+![20221116234847](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221116234847.png)
+
+
+<center>使用对象存放空闲对象链表-分配最后一个空闲对象</center>
+
+![20221116235027](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221116235027.png)
+
+<center>空闲对象链表在slab外面</center>
+
+![20221116235136](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221116235136.png)
+
+
+
+#### 3.计算slab长度
+&ensp;函数calculate_slab_order负责计算slab长度，从0阶到kmalloc()函数支持的最大阶数（KMALLOC_MAX_ORDER）
+
+
+
+
+
+#### 4.着色
+
+
+
+
+#### 5．每处理器数组缓存
+
+&ensp;内存缓存为每个处理器创建了一个数组缓存（结构体array_cache）。释放对象时，把对象存放到当前处理器对应的数组缓存中
+
+<center>每处理器数组缓冲</center>
+
+![20221116235443](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221116235443.png)
+
+
+#### 6．对NUMA的支持
+<center>SLAB分配器支持NUMA</center>
+
+![20221116235608](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221116235608.png)
+
+
+
+#### 7．内存缓存合并
+
+&ensp;减少内存开销和增加对象的缓存热度，块分配器会合并相似的内存缓存
+
+
+
+#### 8.回收内存
+
+&ensp;所有对象空闲的slab，没有立即释放，而是放在空闲slab链表中。只有内存节点上空闲对象的数量超过限制，才开始回收空闲slab，直到空闲对象的数量小于或等于限制    \
+&ensp;结构体kmem_cache_node的成员slabs_free是空闲slab链表的头节点，成员free_objects是空闲对象的数量，成员free_limit是空闲对象的数量限制    \
+
+<center>回收空闲slab</center>
+
+![20221116235852](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221116235852.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
