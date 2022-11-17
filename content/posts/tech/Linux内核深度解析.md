@@ -4024,6 +4024,8 @@ void kmem_cache_destroy(struct kmem_cache *s);
 
 #### 3．计算slab长度
 
+&ensp;SLUB分配器在创建内存缓存的时候计算了两种slab长度：最优slab和最小slab
+
 
 
 
@@ -4039,6 +4041,17 @@ void kmem_cache_destroy(struct kmem_cache *s);
 
 #### 5．对NUMA的支持
 
+&ensp;（1）内存缓存针对每个内存节点创建一个kmem_cache_node实例   \
+&ensp;（2）分配对象时，如果当前处理器的slab缓存是空的，需要重填当前处理器的slab缓存   \
+
+
+
+#### 6.回收内存
+
+&ensp;对于所有对象空闲的slab，如果内存节点的部分空闲slab的数量大于或等于最小部分空闲slab数量，那么直接释放，否则放在部分空闲slab链表的尾部
+
+
+#### 7.调试
 
 
 
@@ -4047,19 +4060,26 @@ void kmem_cache_destroy(struct kmem_cache *s);
 
 #### 1．数据结构
 
+<center>SLOB分配器内存缓存的数据结构</center>
 
+![20221117223330](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221117223330.png)
 
 
 #### 2．空闲对象链表
 
 
+<center>空闲对象链表的初始状态</center>
 
+![20221117223614](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221117223614.png)
 
+<center>分配一个对象以后的空闲对象链表</center>
+
+![20221117223707](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221117223707.png)
 
 
 #### 3．分配对象
 
-
+&ensp;分配对象时，根据对象长度选择不同的策略
 
 
 
@@ -4070,13 +4090,65 @@ void kmem_cache_destroy(struct kmem_cache *s);
 
 ### 3.9.1　编程接口
 
+&ensp;不连续页分配器提供了以下编程接口
+```c
+// vmalloc函数：分配不连续的物理页并且把物理页映射到连续的虚拟地址空间
+void *vmalloc(unsigned long size);
+
+// vfree函数：释放vmalloc分配的物理页和虚拟地址空间
+void vfree(const void *addr);
+
+// vmap函数：把已经分配的不连续物理页映射到连续的虚拟地址空间
+// pages是page指针数组，count是page指针数组大小，flags标志位，prot页保护位
+void *vmap(struct page **pages, unsigned int count, unsigned long flags, pgprot_t prot);
+
+// vunmap函数：释放使用vmap分配的虚拟地址空间
+void vunmap(const void *addr);
+
+// kvmalloc函数：先尝试使用kmalloc分配内存块，如果失败，那么使用vmalloc函数分配不连续的物理页
+void *kvmalloc(size_t size, gfp_t flags);
+
+// kvfree函数：如果内存块是使用vmalloc分配的，那么使用vfree释放，否则使用kfree释放
+void kvfree(const void *addr);
+```
+
+
+
+
 
 
 ### 3.9.2　数据结构
 
 
+<center>不连续页分配器的数据结构</center>
+
+![2022-11-17_22-53_1](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/2022-11-17_22-53_1.png)
+
+<center>使用vmap函数分配虚拟内存区域</center>
+
+![20221117225854](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221117225854.png)
+
 
 ### 3.9.3　技术原理
+
+&ensp;vmalloc虚拟地址空间的范围是[VMALLOC_START, VMALLOC_END)
+```c
+// arch/arm64/include/asm/pgtable.h
+#define VMALLOC_START        (MODULES_END)
+#define VMALLOC_END       (PAGE_OFFSET - PUD_SIZE - VMEMMAP_SIZE - SZ_64K)
+```
+&ensp;MODULES_END是内核模块区域的结束地址，PAGE_OFFSET是线性映射区域的起始地址，PUD_SIZE是一个页上层目录表项映射的地址空间长度，VMEMMAP_SIZE是vmemmap区域的长度。    \
+&ensp;vmalloc虚拟地址空间的起始地址等于内核模块区域的结束地址。   \
+&ensp;vmalloc虚拟地址空间的结束地址等于（线性映射区域的起始地址−一个页上层目录表项映射的地址空间长度−vmemmap区域的长度−64KB）   \
+&ensp;函数vmalloc的执行过程分为3步       \
+&ensp;（1）分配虚拟内存区域          \
+&emsp;分配vm_struct实例和vmap_area实例    \
+&ensp;（2） 分配物理页        \
+&emsp;vm_struct实例的成员nr_pages存放页数n；分配page指针数组   \
+&ensp;（3）在内核的页表中把虚拟页映射到物理页    \
+&emsp;内核的页表就是0号内核线程的页表。0号内核线程的进程描述符是全局变量init_task，成员active_mm指向全局变量init_mm，init_mm的成员pgd指向页全局目录swapper_pg_dir
+
+
 
 
 
