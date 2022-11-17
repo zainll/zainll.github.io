@@ -4154,28 +4154,101 @@ void kvfree(const void *addr);
 
 ## 3.10　每处理器内存分配器
 
+&ensp;多处理器系统中，每处理器变量为每个处理器生成一个变量的副本
+
+
 
 ### 3.10.1　编程接口
 
+&ensp;每处理器变量分为静态和动态两种
+#### 1.静态每处理器变量
 
+&ensp;宏“DEFINE_PER_CPU(type, name)”定义普通的静态每处理器变量，使用宏“DECLARE_PER_CPU(type, name)”声明普通的静态每处理器变量
+```c
+// 宏“DEFINE_PER_CPU(type, name)”展开
+// 静态每处理器变量存放在“.data..percpu”
+__attribute__((section(".data..percpu")))  __typeof__(type)  name
+```
+
+#### 2．动态每处理器变量
+
+&ensp;为动态每处理器变量分配内存的函数
+```c
+// __alloc_percpu_gfp为动态每处理器变量分配内存
+void __percpu *__alloc_percpu_gfp(size_t size, size_t align, gfp_t gfp);
+// 宏alloc_percpu_gfp(type, gfp)是函数__alloc_percpu_gfp的简化形式
+
+// 宏alloc_percpu_gfp(type, gfp)是函数__alloc_percpu_gfp的简化形式
+void __percpu *__alloc_percpu(size_t size, size_t align);
+
+// free_percpu释放动态每处理器变量的内存
+void free_percpu(void __percpu *__pdata);
+
+```
+
+#### 3．访问每处理器变量
+&ensp;宏“this_cpu_ptr(ptr)”用来得到当前处理器的变量副本的地址，宏“get_cpu_var(var)”用来得到当前处理器的变量副本的值
+```c
+// 宏this_cpu_ptr(ptr)展开
+unsigned long __ptr;
+
+__ptr = (unsigned long) (ptr);
+(typeof(ptr)) (__ptr + per_cpu_offset(raw_smp_processor_id()));
+```
+&ensp;宏“per_cpu_ptr(ptr, cpu)”用来得到指定处理器的变量副本的地址，宏“per_cpu(var, cpu)”用来得到指定处理器的变量副本的值。     \
+&ensp;宏“get_cpu_ptr(var)”禁止内核抢占并且返回当前处理器的变量副本的地址，宏“put_cpu_ptr(var)”开启内核抢占，这两个宏成对使用    \
+&ensp;宏“get_cpu_var(var)”禁止内核抢占并且返回当前处理器的变量副本的值，宏“put_cpu_var(var)”开启内核抢占，这两个宏成对使用    \
 
 ### 3.10.2　技术原理
 
+&ensp;每处理器区域是按块（chunk）分配的    \
+&ensp;分配块的方式有两种:   \
+&ensp;(1)分配块的方式有两种   \
+&ensp;(2)分配块的方式有两种   \
 
 
+<center>基于vmalloc区域的每处理器内存分配器</center>
+
+![20221118000310](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221118000310.png)
+每个块对应一个pcpu_chunk实例
+
+
+&ensp;
+
+
+![20221118000525](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221118000525.png)
+<center>基于内核内存的每处理器内存分配器</center>
 
 ## 3.11　页表
 
 
 ### 3.11.1　统一的页表框架
 
+&ensp;页表用来把虚拟页映射到物理页，并且存放页的保护位，即访问权限     \
+&ensp;Linux 4.11版本以前，Linux内核把页表分为4级    \
+&ensp;(1)页全局目录(Page Global Directory PGD)   \
+&ensp;(2)页上层目录(Page Upper DIrectory PUD)    \
+&ensp;(3)页中间目录(Page Middle Directory PMD)   \
+&ensp;(4)直接页表(Page Table PT)      \
+&ensp;4.11版本把页表扩展到五级，在页全局目录和页上层目录之间增加了页四级目录(Page 4th Directory，P4D)    \
+
+&ensp;内核也有一个页表，0号内核线程的进程描述符init_task的成员active_mm指向内存描述符init_mm，内存描述符init_mm的成员pgd指向内核的页全局目录swapper_pg_dir   \
+&ensp;虚拟地址被分解为6个部分：页全局目录索引、页四级目录索引、页上层目录索引、页中间目录索引、直接页表索引和页内偏移   \
 
 
 ### 3.11.2　ARM64处理器的页表
 
+&ensp;ARM64处理器把页表称为转换表(translation table)，最多4级。ARM64处理器支持3 种页长度：4KB、16KB和64KB。   、
+&ensp;页长度是4KB：使用4级转换表，转换表和内核的页表术语的对应关系是：0级转换表对应页全局目录，1级转换表对应页上层目录，2级转换表对应页中间目录，3级转换表对应直接页表  \
 
 
 ## 3.12　页表缓存
+&ensp;处理器的内存管理单元（Memory Management Unit，MMU）负责把虚拟地址转换成物理地址。
+&ensp;TLB（Translation Lookaside Buffer）的高速缓存，TLB直译为转换后备缓冲区，意译为页表缓存，缓存最近使用过的页表项。两级页表缓存：第一级TLB分为指令TLB和数据TLB，好处是取指令和取数据可以并行执行；第二级TLB是统一TLB（Unified TLB），即指令和数据共用的TLB
+
+
+
+
 
 
 ### 3.12.1　TLB表项格式
