@@ -4253,7 +4253,75 @@ __ptr = (unsigned long) (ptr);
 
 ### 3.12.1　TLB表项格式
 
+&ensp;RM64处理器的每条TLB表项不仅包含虚拟地址和物理地址，也包含属性：内存类型、缓存策略、访问权限、地址空间标识符（Address Space Identifier，ASID）和虚拟机标识符（Virtual Machine Identifier，VMID）    \
 
+&ensp;页表改变以后冲刷TLB的函数
+
+```c
+// 使所有TLB表项失效
+void flush_tlb_all(void);
+
+// 使指定用户地址空间的某个范围的TLB表项失效
+// 参数vma是虚拟内存区域，start是起始地址，end是结束地址（不包括）
+void flush_tlb_range(struct vm_area_struct *vma, unsigned long start, unsigned long end);
+
+// 使指定用户地址空间里面的指定虚拟页的TLB表项失效
+// 参数vma是虚拟内存区域，uaddr是一个虚拟页中的任意虚拟地址
+void flush_tlb_page(struct vm_area_struct *vma, unsigned long uaddr);
+
+// 使内核的某个虚拟地址范围的TLB表项失效
+// 参数start是起始地址，end是结束地址（不包括）
+void flush_tlb_kernel_range(unsigned long start, unsigned long end);
+
+// 修改页表项以后把页表项设置到页表缓存
+// 由软件管理页表缓存的处理器必须实现该函数，例如MIPS处理器
+// ARM64处理器的内存管理单元可以访问内存中的页表，把页表项复制到页表缓存，所以ARM64架构的函数update_mmu_cache什么都不用做
+void update_mmu_cache(struct vm_area_struct *vma, unsigned long address, pte_t *ptep);
+
+// 内核把进程从一个处理器迁移到另一个处理器以后，调用该函数以更新页表缓存或上下文特定信息
+void tlb_migrate_finish(struct mm_struct *mm);
+
+```
+
+&ensp;ARM64架构没有提供写TLB的指令。   \
+&ensp;ARM64架构提供了一条TLB失效指令
+```c
+TLBI <type><level>{IS} {, <Xt>}
+```
+&ensp;ARM64内核flush_tlb_all函数
+```c
+// arch/arm64/include/asm/tlbflush.h
+static inline void flush_tlb_all(void)
+{	
+	// dsb数据同步屏障
+    dsb(ishst);  // ishst中的ish表示共享域是内部共享
+    __tlbi(vmalle1is);  // 使所有核上匹配当前VMID、阶段1和异常级别1的所有TLB表项失效
+    dsb(ish);  // ish表示数据同步屏障指令对所有核起作用
+    isb();  // 指令同步屏障
+}
+
+// 宏展开
+static inline void flush_tlb_all(void)
+{
+	asm volatile("dsb ishst" : : : "memory");
+	asm ("tlbi vmalle1is" : :);
+	asm volatile("dsb ish" : : : "memory");
+	asm volatile("isb" : : : "memory");
+}
+```
+
+&ensp;ARM64内核实现了函数local_flush_tlb_all，用来使当前核的所有TLB表项失效
+```c
+// arch/arm64/include/asm/tlbflush.h
+static inline void local_flush_tlb_all(void)
+{
+     dsb(nshst);
+     __tlbi(vmalle1);
+     dsb(nsh);
+     isb();
+}
+
+```
 
 ### 3.12.2　TLB管理
 
