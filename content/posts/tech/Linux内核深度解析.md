@@ -4392,13 +4392,75 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
 		cpu_switch_mm(mm->pgd, mm);
 }
 ```
+&ensp;函数new_context负责分配ASID
+```c
+// arch/arm64/mm/context.c
+static u64 new_context(struct mm_struct *mm, unsigned int cpu)
+{
+	static u32 cur_idx = 1;
+	u64 asid = atomic64_read(&mm->context.id);
+	u64 generation = atomic64_read(&asid_generation);
+
+	if (asid != 0) {
+			u64 newasid = generation | (asid & ~ASID_MASK);
+
+		if (check_update_reserved_asid(asid, newasid))
+			return newasid;
+
+		asid &= ~ASID_MASK;
+		if (!__test_and_set_bit(asid, asid_map))
+			return newasid;
+	}
+
+	asid = find_next_zero_bit(asid_map, NUM_USER_ASIDS, cur_idx);
+	if (asid != NUM_USER_ASIDS)
+		goto set_asid;
+
+	generation = atomic64_add_return_relaxed(ASID_FIRST_VERSION,
+							&asid_generation);
+	flush_context(cpu);
+
+	asid = find_next_zero_bit(asid_map, NUM_USER_ASIDS, 1);
+
+	set_asid:
+	__set_bit(asid, asid_map);
+	cur_idx = asid;
+	return asid | generation;
+}
+```
+&ensp;函数flush_context负责重新初始化ASID分配状态
+```c
+// arch/arm64/mm/context.c
+static void flush_context(unsigned int cpu)
+{
+	int i;
+	u64 asid;
+
+	bitmap_clear(asid_map, 0, NUM_USER_ASIDS);
+	…
+	smp_wmb();
+
+	for_each_possible_cpu(i) {
+		asid = atomic64_xchg_relaxed(&per_cpu(active_asids, i), 0);
+		if (asid == 0)
+			asid = per_cpu(reserved_asids, i);
+		__set_bit(asid & ~ASID_MASK, asid_map);
+		per_cpu(reserved_asids, i) = asid;
+	}
+
+	cpumask_setall(&tlb_flush_pending);
+}
+```
+
 
 
 
 ### 3.12.4　虚拟机标识符
 
-
-
+&ensp;虚拟机里面运行的客户操作系统的虚拟地址转换成物理地址分两个阶段：  <br>
+&emsp;第 1 阶段把虚拟地址转换成中间物理地址  <br>
+&emsp;第 2 阶段把中间物理地址转换成物理地址  <br>
+&ensp;第 1 阶段转换由客户操作系统的内核控制，和非虚拟化的转换过程相同。第 2 阶段转换由虚拟机监控器控制，虚拟机监控器为每个虚拟机维护一个转换表，分配一个虚拟机标识符(Virtual Machine Identifier，VMID)，寄存器VTTBR_EL2(虚拟化转换表基准寄存器，Virtualization Translation Table Base Register)存放当前虚拟机的阶段2转换表的物理地址
 
 
 ## 3.13　巨型页
