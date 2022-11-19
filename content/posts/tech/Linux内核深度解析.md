@@ -4253,7 +4253,10 @@ __ptr = (unsigned long) (ptr);
 
 ### 3.12.1　TLB表项格式
 
-&ensp;RM64处理器的每条TLB表项不仅包含虚拟地址和物理地址，也包含属性：内存类型、缓存策略、访问权限、地址空间标识符（Address Space Identifier，ASID）和虚拟机标识符（Virtual Machine Identifier，VMID）    \
+&ensp;ARM64处理器的每条TLB表项不仅包含虚拟地址和物理地址，也包含属性：内存类型、缓存策略、访问权限、地址空间标识符（Address Space Identifier，ASID）和虚拟机标识符（Virtual Machine Identifier，VMID）。地址空间标识符区分不同进程的页表项，虚拟机标识符区分不同虚拟机的页表项   \
+
+### 3.12.2　TLB管理
+
 
 &ensp;页表改变以后冲刷TLB的函数
 
@@ -4303,9 +4306,15 @@ static inline void flush_tlb_all(void)
 // 宏展开
 static inline void flush_tlb_all(void)
 {
+	// dsb确保屏障前面的存储指令执行完
+	// ishst中的ish表示共享域是内部共享
+	// st表示存储（store），ishst表示数据同步屏障指令对所有核的存储指令起作用
 	asm volatile("dsb ishst" : : : "memory");
+	// 使所有核上匹配当前VMID、阶段1和异常级别1的所有TLB表项失效
 	asm ("tlbi vmalle1is" : :);
+	// 确保前面的TLB失效指令执行完。ish表示数据同步屏障指令对所有核起作用
 	asm volatile("dsb ish" : : : "memory");
+	// isb是指令同步屏障,冲刷处理器的流水线，重新读取屏障指令后面的所有指令
 	asm volatile("isb" : : : "memory");
 }
 ```
@@ -4316,19 +4325,73 @@ static inline void flush_tlb_all(void)
 static inline void local_flush_tlb_all(void)
 {
      dsb(nshst);
-     __tlbi(vmalle1);
-     dsb(nsh);
+     __tlbi(vmalle1);  // 仅仅使当前核的TLB表项失效
+     dsb(nsh);  // nsh是非共享,数据同步屏障指令仅仅在当前核起作用
      isb();
 }
 
 ```
 
-### 3.12.2　TLB管理
-
 
 
 ### 3.12.3　地址空间标识符
 
+&ensp;ARM64处理器的页表缓存使用非全局(not global，nG)位区分内核和进程的页表项(nG位为0表示内核的页表项)，使用地址空间标识符(Address Space Identifier，ASID)区分不同进程的页表项   <br>
+&ensp;ARM64处理器的ASID长度8位或者16位，寄存器ID_AA64MMFR0_EL1段ASIDBits存放处理器支持的ASID长度。16位ASID使用寄存器TCR_EL1的AS(ASID Size)位控制实际使用的ASID长度，AS 0为8位ASID，AS 1为16位ASID   <br>
+&ensp;寄存器TCR_EL1的A1位决定使用哪个寄存器存放当前进程的ASID,寄存器TTBR0_EL1 用户0或TTBR1_EL1内核？存放当前进程ASID      <br>
+&ensp;内存描述符的成员context存放架构特定的内存管理上下文，数据类型是结构体mm_context_t，ARM64架构定义的结构体     <br>
+```c
+// arch/arm64/include/asm/mmu.h
+typedef struct {
+	atomic64_t   id;  // 成员id存放内核给进程分配的软件ASID
+	…
+} mm_context_t;
+```
+&ensp;全局变量asid_bits保存ASID长度，全局变量asid_generation的高56位保存全局ASID版本号，位图asid_map记录哪些ASID被分配     <br>
+&ensp;当全局ASID版本号加1时，每个处理器需要清空页表缓存，位图tlb_flush_pending保存需要清空页表缓存的处理器集合       <br>
+```c
+// arch/arm64/mm/context.c
+static u32 asid_bits;
+static atomic64_t asid_generation;
+static unsigned long *asid_map;
+static DEFINE_PER_CPU(atomic64_t, active_asids);
+static DEFINE_PER_CPU(u64, reserved_asids);
+static cpumask_t tlb_flush_pending;
+
+```
+&ensp;进程被调度时，函数check_and_switch_context负责检查是否需要给进程重新分配ASID     <br>
+> __schedule() -> context_switch() -> switch_mm_irqs_off() -> switch_mm() -> check_and_switch_context()
+```c
+// arch/arm64/mm/context.c
+void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
+{
+	unsigned long flags;
+	u64 asid;
+
+	asid = atomic64_read(&mm->context.id);
+
+	if (!((asid ^ atomic64_read(&asid_generation)) >> asid_bits)
+		&& atomic64_xchg_relaxed(&per_cpu(active_asids, cpu), asid))
+		goto switch_mm_fastpath;
+
+	raw_spin_lock_irqsave(&cpu_asid_lock, flags);
+	asid = atomic64_read(&mm->context.id);
+	if ((asid ^ atomic64_read(&asid_generation)) >> asid_bits) {
+		asid = new_context(mm, cpu);
+		atomic64_set(&mm->context.id, asid);
+	}
+
+	if (cpumask_test_and_clear_cpu(cpu, &tlb_flush_pending))
+		local_flush_tlb_all();
+
+	atomic64_set(&per_cpu(active_asids, cpu), asid);
+	raw_spin_unlock_irqrestore(&cpu_asid_lock, flags);
+
+	switch_mm_fastpath:
+	if (!system_uses_ttbr0_pan())
+		cpu_switch_mm(mm->pgd, mm);
+}
+```
 
 
 
