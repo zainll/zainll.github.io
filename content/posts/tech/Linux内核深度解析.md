@@ -4465,20 +4465,115 @@ static void flush_context(unsigned int cpu)
 
 ## 3.13　巨型页
 
-### 3.13.1　处理器对巨型页的支持
 
+
+&ensp;使用长度为2MB甚至更大的巨型页，可以大幅减少TLB未命中和缺页异常的数量，大幅提高应用程序的性能   <br>
+&ensp;(1)使用hugetlbfs伪文件系统实现巨型页   <br>
+&ensp;(2)透明巨型页    <br>
+
+
+### 3.13.1　处理器对巨型页的支持
+&ensp;ARM64处理器支持巨型页的方式有两种  <br>
+&ensp;(1)通过块描述符支持  <br>
+&ensp;(2)通过页/块描述符的连续位支持   <br>
+
+![20221119224359](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221119224359.png)
+<center>页长度为4KB时通过块描述符支持巨型页</center>
+
+![20221119224113](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221119224113.png)
+<center>页长度为4KB时通过页/块描述符的连续位支持巨型页</center>
 
 
 ### 3.13.2　标准巨型页
+&ensp;编译内核时需要打开配置宏CONFIG_HUGETLBFS和CONFIG_HUGETLB_PAGE  <br>
+&ensp;文件“/proc/sys/vm/nr_hugepages”指定巨型页池中永久巨型页的数量  <br>
 
-
+-------------------- 待补充 -----------------------
 
 ### 3.13.3　透明巨型页
 
+&ensp;(1)分配透明巨型页   <br>
+&ensp;函数handle_mm_fault是页错误异常处理程序的核心函数，如果触发异常的虚拟内存区域使用普通页或透明巨型页，把主要工作委托给函数__handle_mm_fault
+![20221119224843](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221119224843.png)
+<center>透明巨型页的页错误异常处理</center>
+
+&ensp;函数create_huge_pmd负责分配页中间目录级别的巨型页
+![20221119225521](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221119225521.png)
+
+
+
 
 ## 3.14　页错误异常处理
+&ensp;虚拟页没有映射到物理页，或者没有访问权限，处理器将生成页错误异常  <br>
+&ensp;缺页异常,虚拟页没有映射到物理页   <br>
+&emsp;(1)访问用户栈的时候，超出了当前用户栈的范围，需要扩大用户栈  <br>
+&ensp;(2)进程申请虚拟内存区域的时候，通常没有分配物理页，进程第一次访问的时候触发页错误异常  <br>
+&ensp;(3)内存不足的时候，内核把进程的匿名页换出到交换区   <br>
+&ensp;(4)一个文件页被映射到进程的虚拟地址空间，内存不足的时候  <br>
+&ensp;(5)程序错误，访问没有分配给进程的虚拟内存区域  <br>
+
+&ensp;没有访问权限，两种情况  <br>
+&ensp;(1)写时复制(Copy on Write，CoW)    页错误异常处理程序成功地把虚拟页映射到物理页  <br>
+&ensp;(2)程序错误，发送段违法(SIGSEGV)信号以杀死进程  <br>
+
+
 
 ### 3.14.1　处理器架构特定部分
+
+#### 1.生成页错误异常
+
+&ensp;ARM64处理器在取指令或数据，需把虚拟地址转换成物理地址，分两种情况  <br>
+&ensp;(1)虚拟地址的高16位不是全1或全0，是非法地址，生成页错误异常   <br>
+&ensp;(2)虚拟地址的高16位是全1或全0，内存管理单元根据关键字{地址空间标识符，虚拟地址}查找TLB   <br>
+
+> 寄存器TTBR1_EL1存放内核的页全局目录的物理地址，寄存器TTBR0_EL1存放进程的页全局目录的物理地址  <br>
+
+&ensp;命中了TLB表项，从TLB表项读取访问权限，检查访问权限，如果没有访问权限，生成页错误异常   <br>
+&ensp;没有命中TLB表项，内存管理单元将会查询内存中的页表，称为转换表遍历（translation table walk），分两种情况   <br>
+&ensp;（1）虚拟地址的高16位全部是1，是内核虚拟地址，查询内核的页表，从寄存器TTBR1_EL1取内核的页全局目录的物理地址  <br>
+&ensp;（2）虚拟地址的高16位全部是0，用户虚拟地址，查询进程的页表，从寄存器TTBR0_EL1取进程的页全局目录的物理地址  <br>
+
+
+#### 2.处理页错误异常
+&ensp;ARM64架构的内核异常向量表，起始地址是vectors（源文件arch/arm64/ kernel/entry.S），每个异常向量的长度是128字节，在Linux内核中每个异常向量只有一条指令：跳转到对应的处理程序。异常向量表的虚拟地址存放在异常级别1的向量基准地址寄存器(Vector Base Address Register for Exception Level 1，VBAR_EL1)中
+
+
+![20221119231907](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221119231907.png)
+<center>ARM64处理器处理页错误异常</center>
+
+&ensp;(1)异常类型是异常级别1生成的同步异常，异常向量的偏移是0x200，异常向量跳转到函数el1_sync  <br>
+&ensp;(2)异常类型是64位用户程序在异常级别0生成的同步异常，异常向量的偏移是0x400，异常向量跳转到函数el0_sync <br>
+&ensp;(3)异常类型是32位用户程序在异常级别0生成的同步异常，异常向量的偏移是0x600，异常向量跳转到函数el0_sync_compat   <br>
+
+&ensp;函数el0_sync根据异常级别1的异常症状寄存器的异常类别字段处理  <br>
+&ensp;(1)异常类别是异常级别0生成的数据中止(data abort)，即在异常级别0访问数据时生成页错误异常，调用函数el0_da   <br>
+&ensp;(2)异常类别是异常级别0生成的指令中止(instruction abort)，即在异常级别0取指令时生成页错误异常，调用函数el0_ia  <br>
+&ensp;ARM64处理器，异常级别1的异常症状寄存器(ESR_EL1，Exception Syndrome Register for Exception Level 1)用来存放异常的症状信息   <br>
+&emsp;EC：异常类别(Exception Class)，指示引起异常的原因   <br>
+&emsp;ISS：指令特定症状  <br>
+
+&ensp;（1）do_mem_abort函数
+&emsp;do_mem_abort函数根据异常症状寄存器的指令特定症状字段的指令错误状态码，调用数组fault_info中处理函数   <Br>
+&emsp;指令错误状态码和处理函数的对应关系 
+
+<table>
+	<tr>
+	    <th>指令错误状态码</th>
+	    <th>说　　明</th>
+	    <th>处 理 函 数</th>
+	</tr >
+	<tr >
+	    <td>4KB</td>
+	    <td>39</td>
+	    <td>39</td>
+	</tr>
+</table>
+
+
+
+
+
+
 
 
 ### 3.14.2　用户空间页错误异常
