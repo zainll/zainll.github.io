@@ -4815,6 +4815,205 @@ static int __do_page_fault(struct mm_struct *mm, unsigned long addr,
 
 ### 3.14.2　用户空间页错误异常
 
+&ensp;函数handle_mm_fault处理用户空间的页错误异常，两种情况：  <br>
+&emsp;(1)进程在用户模式下访问用户虚拟地址，生成页错误异常   <br>
+&emsp;(2)进程在内核模式下访问用户虚拟地址，生成页错误异常。进程通过系统调用进入内核模式，系统调用传入用户空间的缓冲区，进程在内核模式下访问用户空间的缓冲区    <br>
+```c
+// mm/memory.c
+int handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+         unsigned int flags)
+{
+    …
+    if (unlikely(is_vm_hugetlb_page(vma))) 
+         ret = hugetlb_fault(vma->vm_mm, vma, address, flags);
+    else
+         ret = __handle_mm_fault(vma, address, flags);
+    …
+}
+
+```
+
+![20221122001007](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221122001007.png)
+
+&ensp;巨型页函数hugetlb_fault，普通页__handle_mm_fault
+```c
+// mm/memory.c
+static int __handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+      unsigned int flags)
+{
+	struct vm_fault vmf = {
+		.vma = vma,
+		.address = address & PAGE_MASK,
+		.flags = flags,
+		.pgoff = linear_page_index(vma, address),
+		.gfp_mask = __get_fault_gfp_mask(vma),
+	};
+	struct mm_struct *mm = vma->vm_mm;
+	pgd_t *pgd;
+	p4d_t *p4d;
+	int ret;
+	// 在页全局目录中查找虚拟地址对应的表项
+	pgd = pgd_offset(mm, address);
+	p4d = p4d_alloc(mm, pgd, address);  // 在页四级目录中查找虚拟地址对应的表项
+	if (!p4d)
+		return VM_FAULT_OOM;
+	// 在页上层目录中查找虚拟地址对应的表项
+	vmf.pud = pud_alloc(mm, p4d, address);
+	if (!vmf.pud)
+		return VM_FAULT_OOM;
+	…
+	// 在页中间目录中查找虚拟地址对应的表项
+	vmf.pmd = pmd_alloc(mm, vmf.pud, address);
+	if (!vmf.pmd)
+		return VM_FAULT_OOM;
+	…
+	// 到达直接页表
+	return handle_pte_fault(&vmf);
+}
+```
+
+
+![20221122001438](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221122001438.png)
+
+
+```c
+// mm/memory.c
+static int handle_pte_fault(struct vm_fault *vmf)
+{
+	pte_t entry;
+	// 直接页表中查找虚拟地址对应的表项
+	if (unlikely(pmd_none(*vmf->pmd))) {
+		vmf->pte = NULL;
+	} else {
+		…
+		vmf->pte = pte_offset_map(vmf->pmd, vmf->address);
+		vmf->orig_pte = *vmf->pte;
+
+		barrier();
+		if (pte_none(vmf->orig_pte)) {
+			pte_unmap(vmf->pte);
+			vmf->pte = NULL;
+		}
+	}
+	// 页表项不存在
+	if (!vmf->pte) {
+		if (vma_is_anonymous(vmf->vma))
+			return do_anonymous_page(vmf); 
+		else
+			return do_fault(vmf);
+	}
+	// 页表项存在，但是页不在物理内存
+	if (!pte_present(vmf->orig_pte))
+		return do_swap_page(vmf);
+
+	…
+	vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);  // 获取页表锁的地址
+	spin_lock(vmf->ptl);  // 锁住页表
+	entry = vmf->orig_pte;
+	if (unlikely(!pte_same(*vmf->pte, entry)))  // 重新读取页表项的值
+		goto unlock;
+	if (vmf->flags & FAULT_FLAG_WRITE) {
+		if (!pte_write(entry))
+			return do_wp_page(vmf);   // 执行写时复制
+		entry = pte_mkdirty(entry); // 页表项有写权限
+	}
+	entry = pte_mkyoung(entry);  // 设置页表项的访问标志位
+	if (ptep_set_access_flags(vmf->vma, vmf->address, vmf->pte, entry,
+				vmf->flags & FAULT_FLAG_WRITE)) { // 设置页表项
+		update_mmu_cache(vmf->vma, vmf->address, vmf->pte); // 更新处理器的内存管理单元的页表缓存
+	} else {
+		if (vmf->flags & FAULT_FLAG_WRITE)
+			flush_tlb_fix_spurious_fault(vmf->vma, vmf->address);
+	}
+	unlock: // 释放页表的锁
+	pte_unmap_unlock(vmf->pte, vmf->ptl);
+	return 0;
+}
+```
+
+
+#### 1．匿名页的缺页异常
+
+&ensp;函数do_anonymous_page处理私有匿名页的缺页异常
+
+![20221122002143](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221122002143.png)
+
+```c
+// mm/memory.c
+static int do_anonymous_page(struct vm_fault *vmf)
+{
+	struct vm_area_struct *vma = vmf->vma;
+	…
+	struct page *page;
+	pte_t entry;
+
+	/* 没有“->vm_ops”的文件映射？ */
+	if (vma->vm_flags & VM_SHARED)
+		return VM_FAULT_SIGBUS;
+	// 直接页表不存在，分配页表
+	if (pte_alloc(vma->vm_mm, vmf->pmd, vmf->address))
+		return VM_FAULT_OOM;
+
+	…
+	/* 如果是读操作，映射到零页 */
+	if (!(vmf->flags & FAULT_FLAG_WRITE) &&
+			!mm_forbids_zeropage(vma->vm_mm)) {
+		entry = pte_mkspecial(pfn_pte(my_zero_pfn(vmf->address),
+							vma->vm_page_prot));
+		vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+				vmf->address, &vmf->ptl);
+		if (!pte_none(*vmf->pte))
+			goto unlock;
+		…
+		goto setpte;
+	}
+
+	/* 分配我们自己的私有页 */
+	if (unlikely(anon_vma_prepare(vma)))
+		goto oom;
+	page = alloc_zeroed_user_highpage_movable(vma, vmf->address);
+	if (!page)
+		goto oom;
+
+	…
+	__SetPageUptodate(page);
+
+	entry = mk_pte(page, vma->vm_page_prot);
+	if (vma->vm_flags & VM_WRITE)
+		entry = pte_mkwrite(pte_mkdirty(entry));
+
+	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
+			&vmf->ptl);
+	if (!pte_none(*vmf->pte))
+		goto release;
+
+	…
+	inc_mm_counter_fast(vma->vm_mm, MM_ANONPAGES);
+	page_add_new_anon_rmap(page, vma, vmf->address, false);
+	…
+	lru_cache_add_active_or_unevictable(page, vma);
+	setpte:
+	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, entry);
+
+	/* 不需要从页表缓存删除页表项，因为以前虚拟页没有映射到物理页 */
+	update_mmu_cache(vma, vmf->address, vmf->pte);
+	unlock:
+	pte_unmap_unlock(vmf->pte, vmf->ptl);
+	return 0;
+	release:
+	…
+	put_page(page);
+	goto unlock;
+	oom_free_page:
+	put_page(page);
+	oom:
+	return VM_FAULT_OOM;
+}
+```
+
+
+
+#### 2．文件页的缺页异常
 
 
 
