@@ -4629,6 +4629,187 @@ static void flush_context(unsigned int cpu)
 &ensp;**（2）do_translation_fault函数**
 &ensp;do_translation_fault处理在0级、1级或2级转换表中匹配的表项是无效描述符 
 
+![20221121233805](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221121233805.png)
+```c
+// arch/arm64/mm/fault.c
+// addr触发异常的虚拟地址 esr异常症状状态寄存器值 regs指向内核栈中保存的被打断的进程的寄存器集合
+static int __kprobes do_translation_fault(unsigned long addr,
+                        unsigned int esr, struct pt_regs *regs)
+{
+	if (addr < TASK_SIZE)  
+		return do_page_fault(addr, esr, regs); // 虚拟地址是用户虚拟地址
+	// 异常虚拟地址是内核虚拟地址或不规范地址
+	do_bad_area(addr, esr, regs); 
+	return 0;
+}
+```
+&ensp;do_bad_area
+```c
+// arch/arm64/mm/fault.c
+static void do_bad_area(unsigned long addr, unsigned int esr, struct pt_regs *regs)
+{
+	struct task_struct *tsk = current;
+	struct mm_struct *mm = tsk->active_mm;
+	const struct fault_info *inf;
+
+	if (user_mode(regs)) {
+		inf = esr_to_fault_info(esr);  // 异常是在用户模式
+		__do_user_fault(tsk, addr, esr, inf->sig, inf->code, regs);  // 发送信号以杀死进程
+	} else
+		__do_kernel_fault(mm, addr, esr, regs);   // 异常是在内核模式下生成
+}
+```
+
+&ensp;**（3）函数do_page_fault**
+
+<center>函数do_page_fault的执行流</center>
+
+![20221121234626](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221121234626.png)
+
+```c
+// arch/arm64/mm/fault.c   linux4.x
+static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+                   struct pt_regs *regs)
+{
+	struct task_struct *tsk;
+	struct mm_struct *mm;
+	int fault, sig, code;
+	unsigned long vm_flags = VM_READ | VM_WRITE;
+	unsigned int mm_flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
+
+	…
+	tsk = current;
+	mm  = tsk->mm;
+	// 禁止执行页错误异常处理程序，或者处于原子上下文，或者当前进程是内核线程
+	if (faulthandler_disabled() || !mm)
+		goto no_context;
+
+	if (user_mode(regs))
+		mm_flags |= FAULT_FLAG_USER;
+
+	if (is_el0_instruction_abort(esr)) {
+		vm_flags = VM_EXEC;
+	} else if ((esr & ESR_ELx_WNR) && !(esr & ESR_ELx_CM)) {
+		vm_flags = VM_WRITE;
+		mm_flags |= FAULT_FLAG_WRITE;
+	}
+
+	if (addr < USER_DS && is_permission_fault(esr, regs, addr)) {
+		/* 如果从异常级别0进入，regs->orig_addr_limit可能是0 */
+		if (regs->orig_addr_limit == KERNEL_DS)
+			die("Accessing user space memory with fs=KERNEL_DS", regs, esr);
+
+		if (is_el1_instruction_abort(esr))
+			die("Attempting to execute userspace memory", regs, esr);
+
+		if (!search_exception_tables(regs->pc))
+			die("Accessing user space memory outside uaccess.h routines", regs, esr);
+	}
+
+	if (!down_read_trylock(&mm->mmap_sem)) {
+		if (!user_mode(regs) && !search_exception_tables(regs->pc))
+			goto no_context;
+	retry:
+		down_read(&mm->mmap_sem);
+	} else {
+		might_sleep();
+		…
+	}
+
+	fault = __do_page_fault(mm, addr, mm_flags, vm_flags, tsk);
+
+	if ((fault & VM_FAULT_RETRY) && fatal_signal_pending(current))
+		return 0;
+
+	…
+	if (mm_flags & FAULT_FLAG_ALLOW_RETRY) {
+		if (fault & VM_FAULT_MAJOR) {
+			tsk->maj_flt++;
+			…
+		} else {
+			tsk->min_flt++;
+			…
+		}
+		if (fault & VM_FAULT_RETRY) {
+			mm_flags &= ~FAULT_FLAG_ALLOW_RETRY;
+			mm_flags |= FAULT_FLAG_TRIED;
+			goto retry;
+		}
+	}
+
+	up_read(&mm->mmap_sem);
+
+	if (likely(!(fault & (VM_FAULT_ERROR | VM_FAULT_BADMAP |
+				VM_FAULT_BADACCESS))))
+		return 0;
+
+	if (!user_mode(regs))
+		goto no_context;
+
+	if (fault & VM_FAULT_OOM) {
+		pagefault_out_of_memory();
+		return 0;
+	}
+
+	if (fault & VM_FAULT_SIGBUS) {
+		sig = SIGBUS;
+		code = BUS_ADRERR;
+	} else {
+		sig = SIGSEGV;
+		code = fault == VM_FAULT_BADACCESS ?
+			SEGV_ACCERR : SEGV_MAPERR;
+	}
+
+	__do_user_fault(tsk, addr, esr, sig, code, regs);
+	return 0;
+
+	no_context:
+	__do_kernel_fault(mm, addr, esr, regs);
+	return 0;
+}
+```
+&ensp;原子上下文：执行硬中断、执行软中断、禁止硬中断、禁止软中断和禁止内核抢占这五种情况不允许睡眠，称为原子上下文  <br>
+
+
+![20221122000428](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221122000428.png)
+<center>函数__do_page_fault的执行流程</center>
+
+```c
+// arch/arm64/mm/fault.c
+static int __do_page_fault(struct mm_struct *mm, unsigned long addr,
+             unsigned int mm_flags, unsigned long vm_flags,
+             struct task_struct *tsk)
+{
+	struct vm_area_struct *vma;
+	int fault;
+
+	vma = find_vma(mm, addr);
+	fault = VM_FAULT_BADMAP;
+	if (unlikely(!vma))
+		goto out;
+	if (unlikely(vma->vm_start > addr))
+		goto check_stack;
+
+	good_area:
+	if (!(vma->vm_flags & vm_flags)) {
+		fault = VM_FAULT_BADACCESS;
+		goto out;
+	}
+
+	return handle_mm_fault(vma, addr & PAGE_MASK, mm_flags);
+
+	check_stack:
+	if (vma->vm_flags & VM_GROWSDOWN && !expand_stack(vma, addr))
+		goto good_area;
+	out:
+	return fault;
+}
+```
+
+
+
+
+
 
 
 
