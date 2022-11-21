@@ -4563,9 +4563,64 @@ static void flush_context(unsigned int cpu)
 	    <th>处 理 函 数</th>
 	</tr >
 	<tr >
-	    <td>4KB</td>
-	    <td>39</td>
-	    <td>39</td>
+	    <td>4</td>
+	    <td>0级转换错误</td>
+	    <td>do_translation_fault</td>
+	</tr>
+	<tr >
+	    <td>5</td>
+	    <td>1级转换错误</td>
+	    <td>do_translation_fault</td>
+	</tr>
+	<tr >
+	    <td>6</td>
+	    <td>2级转换错误</td>
+	    <td>do_translation_fault</td>
+	</tr>
+	<tr >
+	    <td>7</td>
+	    <td>3级转换错误</td>
+	    <td>do_page_fault</td>
+	</tr>
+	<tr >
+	    <td>9</td>
+	    <td>1级访问标志错误</td>
+	    <td>do_page_fault</td>
+	</tr>
+	<tr >
+	    <td>10</td>
+	    <td>2级访问标志错误</td>
+	    <td>do_page_fault</td>
+	</tr>
+	<tr >
+	    <td>11</td>
+	    <td>3级访问标志错误</td>
+	    <td>do_page_fault</td>
+	</tr>
+	<tr >
+	    <td>13</td>
+	    <td>1级权限错误</td>
+	    <td>do_page_fault</td>
+	</tr>
+	<tr >
+	    <td>14</td>
+	    <td>2级权限错误</td>
+	    <td>do_page_fault</td>
+	</tr>
+	<tr >
+	    <td>15</td>
+	    <td>3级权限错误</td>
+	    <td>do_page_fault</td>
+	</tr>
+	<tr >
+	    <td>33</td>
+	    <td>对齐错误</td>
+	    <td>do_alignment_fault</td>
+	</tr>
+	<tr >
+	    <td>其他</td>
+	    <td>其他错误</td>
+	    <td>do_bad</td>
 	</tr>
 </table>
 
