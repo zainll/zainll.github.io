@@ -5015,6 +5015,115 @@ static int do_anonymous_page(struct vm_fault *vmf)
 
 #### 2．文件页的缺页异常
 
+&ensp;触发文件页的缺页异常:  <br>
+&ensp;(1)启动程序时，第一次访问的时候触发文件页的缺页异常  <br>
+&ensp;(2)进程使用mmap创建文件映射，第一次访问的时候触发文件页的缺页异常   <br>
+
+&ensp;函数do_fault处理文件页和共享匿名页的缺页异常
+![20221122002649](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221122002649.png)
+
+```c
+// mm/memory.c
+static int do_fault(struct vm_fault *vmf)
+{
+	struct vm_area_struct *vma = vmf->vma;
+	int ret;
+
+	/* 这个vm_area_struct结构体在执行mmap()的时候没有完全填充，或者缺少标志位VM_DONTEXPAND。 */
+	if (!vma->vm_ops->fault)
+		ret = VM_FAULT_SIGBUS;
+	else if (!(vmf->flags & FAULT_FLAG_WRITE))  // 缺页异常是由读文件页触发
+		ret = do_read_fault(vmf);  // 处理读文件页错误
+	else if (!(vma->vm_flags & VM_SHARED))  // 缺页异常是由写私有文件页触发
+		ret = do_cow_fault(vmf);  // 写私有文件页错误, 执行写时复制
+	else  // 缺页异常是由写共享文件页触发
+		ret = do_shared_fault(vmf);  // 处理写共享文件页错误
+
+	…
+	return ret;
+}
+```
+
+&ensp;（1）处理读文件页错误  <br>
+
+
+![20221122003030](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221122003030.png)
+
+```c
+// mm/memory.c
+static int do_read_fault(struct vm_fault *vmf)
+{
+	struct vm_area_struct *vma = vmf->vma;
+	int ret = 0;
+	// 全局变量fault_around_bytes控制总长度，默认值是64KB。如果页长度是4KB，就一次读取16页
+	if (vma->vm_ops->map_pages && fault_around_bytes >> PAGE_SHIFT > 1) {
+		ret = do_fault_around(vmf);
+		if (ret)
+			return ret;
+	}
+	// 文件页读到文件的页缓存中
+	ret = __do_fault(vmf);
+	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+		return ret;
+	// 虚拟页映射到文件的页缓存中的物理页
+	ret |= finish_fault(vmf);
+	unlock_page(vmf->page);
+	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+		put_page(vmf->page);
+	return ret;
+}
+```
+
+
+&ensp;函数finish_fault负责设置页表项，把主要工作委托给函数alloc_set_pte
+
+![20221122003336](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221122003336.png)
+<center>函数finish_fault的执行流程</center>
+
+
+```c
+// mm/memory.c
+int alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
+      struct page *page)
+{
+	struct vm_area_struct *vma = vmf->vma;
+	bool write = vmf->flags & FAULT_FLAG_WRITE;
+	pte_t entry;
+	int ret;
+
+	…
+	if (!vmf->pte) {  // 直接页表不存在，分配直接页表
+		ret = pte_alloc_one_map(vmf);
+		if (ret)
+			return ret;
+	}
+
+	/* 锁住页表后重新检查 */
+	if (unlikely(!pte_none(*vmf->pte)))
+		return VM_FAULT_NOPAGE;
+	// 直接页表不存在，那么分配直接页表
+	flush_icache_page(vma, page);
+	entry = mk_pte(page, vma->vm_page_prot);  // 使用页帧号和访问权限生成页表项的值
+	if (write)  // 写访问，设置页表项的脏标志位和写权限位
+		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+	/* 写时复制的页 */
+	if (write && !(vma->vm_flags & VM_SHARED)) {
+		inc_mm_counter_fast(vma->vm_mm, MM_ANONPAGES);
+		page_add_new_anon_rmap(page, vma, vmf->address, false);
+		…
+		lru_cache_add_active_or_unevictable(page, vma);
+	} else {
+		inc_mm_counter_fast(vma->vm_mm, mm_counter_file(page));
+		page_add_file_rmap(page, false);
+	}
+	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, entry);
+
+	/* 不需要使无效：一个不存在的页不会被缓存 */
+	update_mmu_cache(vma, vmf->address, vmf->pte);
+
+	return 0;
+}
+```
 
 
 ### 3.14.3　内核模式页错误异常
