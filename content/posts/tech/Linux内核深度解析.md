@@ -4552,7 +4552,7 @@ static void flush_context(unsigned int cpu)
 &emsp;EC：异常类别(Exception Class)，指示引起异常的原因   <br>
 &emsp;ISS：指令特定症状  <br>
 
-&ensp;（1）do_mem_abort函数
+&ensp;**（1）do_mem_abort函数**
 &emsp;do_mem_abort函数根据异常症状寄存器的指令特定症状字段的指令错误状态码，调用数组fault_info中处理函数   <Br>
 &emsp;指令错误状态码和处理函数的对应关系 
 
@@ -4626,7 +4626,8 @@ static void flush_context(unsigned int cpu)
 
 
 
-
+&ensp;**（2）do_translation_fault函数**
+&ensp;do_translation_fault处理在0级、1级或2级转换表中匹配的表项是无效描述符 
 
 
 
