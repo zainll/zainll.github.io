@@ -5126,6 +5126,92 @@ int alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
 ```
 
 
+![20221123012105](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221123012105.png)
+
+```c
+// mm/memory.c
+static int do_cow_fault(struct vm_fault *vmf)
+{
+	struct vm_area_struct *vma = vmf->vma;
+	int ret;
+	
+	if (unlikely(anon_vma_prepare(vma)))
+		return VM_FAULT_OOM;
+	// 关联一个anon_vma实例到虚拟内存区域
+	vmf->cow_page = alloc_page_vma(GFP_HIGHUSER_MOVABLE, vma, vmf->address);
+	if (!vmf->cow_page)
+		return VM_FAULT_OOM;
+	
+	…
+	ret = __do_fault(vmf);  // 把文件页读到文件的页缓存
+	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+		goto uncharge_out;
+	if (ret & VM_FAULT_DONE_COW)
+		return ret;
+	// 把文件的页缓存中物理页的数据复制到副本物理页
+	copy_user_highpage(vmf->cow_page, vmf->page, vmf->address, vma);
+	__SetPageUptodate(vmf->cow_page);  // 设置副本页描述符的标志位PG_uptodate，表示物理页包含有效的数据
+	// 设置页表项，把虚拟页映射到副本物理页
+	ret |= finish_fault(vmf);
+	unlock_page(vmf->page);
+	put_page(vmf->page);
+	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+		goto uncharge_out;
+	return ret;
+	uncharge_out:
+	…
+	put_page(vmf->cow_page);
+	return ret;
+}
+```
+
+
+![20221123012433](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221123012433.png)
+
+```c
+// mm/memory.c
+static int do_shared_fault(struct vm_fault *vmf)
+{
+	struct vm_area_struct *vma = vmf->vma;
+	int ret, tmp;
+	// 把文件页读到文件的页缓存中
+	ret = __do_fault(vmf);
+	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+		return ret;
+
+	if (vma->vm_ops->page_mkwrite) {
+		unlock_page(vmf->page);
+		tmp = do_page_mkwrite(vmf);
+		if (unlikely(!tmp ||
+					(tmp & (VM_FAULT_ERROR | VM_FAULT_NOPAGE)))) {
+			put_page(vmf->page);
+			return tmp;
+		}
+	}
+	// 设置页表项，把虚拟页映射到文件的页缓存中的物理页
+	ret |= finish_fault(vmf);
+	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE |
+						VM_FAULT_RETRY))) {
+		unlock_page(vmf->page);
+		put_page(vmf->page);
+		return ret;
+	}
+	// 设置页的脏标志位，表示页的数据被修改
+	fault_dirty_shared_page(vma, vmf->page);
+	return ret;
+}
+```
+#### 3．写时复制
+
+&ensp;两种情况会执行写时复制(Copy on Write，CoW)   <br>
+&emsp;(1)进程分叉生成子进程的时候，为了避免复制物理页，子进程和父进程以只读方式共享所有私有的匿名页和文件页  <br>
+&ensp;(2)进程创建私有的文件映射，然后读访问，触发页错误异常   <br>
+&emsp;函数do_wp_page处理写时复制
+
+
+
+![20221123012905](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221123012905.png)
+
 ### 3.14.3　内核模式页错误异常
 
 
