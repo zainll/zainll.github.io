@@ -5212,35 +5212,321 @@ static int do_shared_fault(struct vm_fault *vmf)
 
 ![20221123012905](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221123012905.png)
 
+
+&ensp;函数wp_page_copy执行写时复制
+
+
+![20221123234243](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221123234243.png)
+
+```c
+// mm/memory.c
+static int wp_page_copy(struct vm_fault *vmf)
+{
+	struct vm_area_struct *vma = vmf->vma;
+	struct mm_struct *mm = vma->vm_mm;
+	struct page *old_page = vmf->page;
+	struct page *new_page = NULL;
+	pte_t entry;
+	int page_copied = 0;
+	const unsigned long mmun_start = vmf->address & PAGE_MASK;
+	const unsigned long mmun_end = mmun_start + PAGE_SIZE;
+	struct mem_cgroup *memcg;
+	// 关联一个anon_vma实例到虚拟内存区域
+	if (unlikely(anon_vma_prepare(vma)))
+		goto oom;
+	
+	if (is_zero_pfn(pte_pfn(vmf->orig_pte))) {
+		// 是零页，分配一个物理页，然后用零初始化
+		new_page = alloc_zeroed_user_highpage_movable(vma,vmf->address);
+		if (!new_page)
+			goto oom;
+	} else {
+		// 不是零页，分配一个物理页，然后把数据复制到新的物理页
+		new_page = alloc_page_vma(GFP_HIGHUSER_MOVABLE, vma,
+					vmf->address);
+		if (!new_page)
+			goto oom;
+		cow_user_page(new_page, old_page, vmf->address, vma);
+	}
+	
+	…
+	// 不是零页，那么分配一个物理页，然后把数据复制到新的物理页
+	__SetPageUptodate(new_page); // 
+	
+	mmu_notifier_invalidate_range_start(mm, mmun_start, mmun_end);
+	
+	vmf->pte = pte_offset_map_lock(mm, vmf->pmd, vmf->address, &vmf->ptl);  // 锁住页表
+	if (likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+		…
+		flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));  // 从缓存中冲刷页
+		// 使用新的物理页和访问权限生成页表项的值
+		entry = mk_pte(new_page, vma->vm_page_prot);
+		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+		// 把页表项清除，并且冲刷页表缓存
+		ptep_clear_flush_notify(vma, vmf->address, vmf->pte);
+		// 建立新物理页到虚拟页的反向映射
+		page_add_new_anon_rmap(new_page, vma, vmf->address, false);
+		…
+		// 把物理页添加到活动LRU链表或不可回收LRU链表中，页回收算法需要从LRU链表中选择需要回收的物理页
+		lru_cache_add_active_or_unevictable(new_page, vma);
+		// 修改页表项
+		set_pte_at_notify(mm, vmf->address, vmf->pte, entry);
+		// 更新页表缓存
+		update_mmu_cache(vma, vmf->address, vmf->pte);
+		if (old_page) { // 删除旧物理页到虚拟页的反向映射
+			page_remove_rmap(old_page, false);
+		}
+	
+		/* 释放旧的物理页 */
+		new_page = old_page;
+		page_copied = 1;
+	} else {
+		…
+	}
+	
+	if (new_page)
+		put_page(new_page);
+	// 释放页表的锁
+	pte_unmap_unlock(vmf->pte, vmf->ptl);
+	mmu_notifier_invalidate_range_end(mm, mmun_start, mmun_end);
+	if (old_page) {
+		if (page_copied && (vma->vm_flags & VM_LOCKED)) {
+			lock_page(old_page);
+			if (PageMlocked(old_page))
+					munlock_vma_page(old_page);
+			unlock_page(old_page);
+		}
+		put_page(old_page);
+	}
+	return page_copied ? VM_FAULT_WRITE : 0;
+	oom_free_new:
+	put_page(new_page);
+	oom:
+	if (old_page)
+		put_page(old_page);
+	return VM_FAULT_OOM;
+}
+
+
+
+```
+
 ### 3.14.3　内核模式页错误异常
+
+&ensp;内核使用线性映射区域的虚拟地址，在内存管理子系统初始化的时把虚拟地址映射到物理地址，运行过程中使用vmalloc()函数从vmalloc区域分配虚拟内存区域，vmalloc()函数会分配并且映射到物理页    <br>
+&ensp;有些系统调用会传入用户空间的缓冲区，内核必须使用头文件“uaccess.h”定义的专用函数访问用户空间的缓冲区，专用函数在异常表中添加了可能触发异常的指令地址和异常修正程序的地址。如果访问用户空间的缓冲区时生成页错误异常，页错误异常处理程序发现用户虚拟地址没有被分配给进程，就在异常表中查找指令地址对应的异常修正程序，如果找到了，使用异常修正程序修正异常，避免内核崩溃  <br>
+
+&ensp;在内核模式下执行时触发页错误异常，ARM64架构内核的处理流程，3种处理方式  <br>
+
+![20221123235909](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221123235909.png)
+
+&ensp;(1)不允许内核执行用户空间治疗，内核模式执行用户态指令，内核崩溃   <br>
+&ensp;(2)内核模式下访问用户虚拟地址，先使用函数__do_page_fault处理，处理失败使用__do_kernel_fault处理   <br>
+&ensp;(3)其他情况 __do_kernel_fault处理  <br>
+
+
+#### 1.函数__do_kernel_fault
+
+&ensp;访问数据生成的异常，函数__do_kernel_fault尝试在异常表中查找异常修正程序  <br>
+&ensp;找到异常修正程序，把保存在内核栈中的异常链接寄存器(ELR_EL1，Exception Link Register for Exception Level 1)的值修改为异常修正程序的虚拟地址。当异常处理程序返回的时候，处理器把程序计数器设置成异常链接寄存器的值，执行异常修正程序 <br>
+&ensp;如果没有找到异常修正程序，内核崩溃   <br>
+&ensp;函数__do_kernel_fault
+```c
+// arch/arm64/mm/fault.c
+static void __do_kernel_fault(struct mm_struct *mm, unsigned long addr,
+               unsigned int esr, struct pt_regs *regs)
+{
+	const char *msg;
+	// 如果异常是由访问数据生成的，那么在异常表中查找异常修复程序
+	if (!is_el1_instruction_abort(esr) && fixup_exception(regs))
+		return;
+	// 清除任何可能阻止在终端打印信息的自旋锁
+	bust_spinlocks(1);
+	
+	if (is_permission_fault(esr, regs, addr)) {
+		if (esr & ESR_ELx_WNR)
+			msg = "write to read-only memory";
+		else
+			msg = "read from unreadable memory";
+	} else if (addr < PAGE_SIZE) {
+		msg = "NULL pointer dereference";
+	} else {
+		msg = "paging request";
+	}
+	// 打印触发页错误异常的原因
+	pr_alert("Unable to handle kernel %s at virtual address %08lx\n", msg,
+		addr);
+	// 打印页表信息
+	show_pte(mm, addr);
+	die("Oops", regs, esr);  // 调用函数die()以打印寄存器信息
+	bust_spinlocks(0);  // 停止清除任何可能阻止打印信息的自旋锁
+	do_exit(SIGKILL);  // 终止当前进程
+}
+```
+
+&ensp;函数fixup_exception根据指令地址在异常表中查找，然后把保存在内核栈中的异常链接寄存器的值修改为异常修正程序的虚拟地址
+```c
+// arch/arm64/mm/extable.c
+int fixup_exception(struct pt_regs *regs)
+{
+    const struct exception_table_entry *fixup;
+
+    fixup = search_exception_tables(instruction_pointer(regs));
+    if (fixup)
+          regs->pc = (unsigned long)&fixup->fixup + fixup->fixup;
+
+    return fixup != NULL;
+}
+```
+&ensp;异常表项中存储的指令地址是相对地址：fixup->insn =（指令的虚拟地址 − &fixup->insn） <br>
+&ensp;异常表项中存储的异常修正程序的地址是相对地址：fixup->fixup =（异常修正程序的虚拟地址 − &fixup->fixup）  <br>
+&ensp;regs->pc是保存在内核栈中的异常链接寄存器的值  <br>
+
+&ensp;函数search_exception_tables根据指令地址在异常表中查找表项
+```c
+// kernel/extable.c
+const struct exception_table_entry *search_exception_tables(unsigned long addr)
+{
+	const struct exception_table_entry *e;
+	// 在内核的异常表中查找
+	e = search_extable(__start___ex_table, __stop___ex_table-1, addr); 
+	if (!e)  // 在内核的异常表中没有找到，根据触发异常的指令的虚拟地址找到内核模块，
+		e = search_module_extables(addr);  // 在内核模块的异常表中查找
+	return e;
+}
+```
+
+
+
+
+#### 2.异常表
+
+&ensp;进程在内核模式下运行的时候，访问用户虚拟地址时，应用程序通常是不可信任的，不能保证传入的用户虚拟地址是合法的，采取措施保护内核。使用异常表，每条表项有两个字段  <br>
+&emsp;(1)触发异常的指令的虚拟地址   <br>
+&emsp;(2)异常修正程序的起始虚拟地址   <br>
+
+&ensp;异常表项定义
+```c
+// arch/arm64/include/asm/extable.h
+struct exception_table_entry
+{
+     int insn, fixup;
+};
+```
+
+&ensp;内核有一张异常表，全局变量__start___ex_table存放异常表的起始地址，__stop___ex_table存放异常表的结束地址  <br>
+&ensp;进程在内核模式下访问用户虚拟地址的时候，只允许使用头文件“uaccess.h”声明的函数，以函数get_user为例，函数get_user从用户空间读取C语言标准类型的数据，ARM64架构实现  <br>
+```c
+// arch/arm64/include/asm/uaccess.h
+#define get_user(x, ptr)                              \
+({                                                    \
+    __typeof__(*(ptr)) __user *__p = (ptr);            \
+    might_fault();                                    \
+    access_ok(VERIFY_READ, __p, sizeof(*__p)) ?        \
+        __get_user((x), __p) :                         \
+        ((x) = 0, -EFAULT);                           \
+})
+```
+
+&ensp;在64位内核中长整数的长度是8字节，把“__get_user((x), __p)”展开
+```c
+asm volatile(                              \
+"1: ldr %x1, [%2]\n",                      \
+"2:\n"                                     \
+"    .section .fixup, \"ax\"\n"            \
+"    .align    2\n"                        \
+"3:  mov    %w0, %3\n"                     \
+"    mov    %1, #0\n"                      \
+"    b    2b\n"                            \
+"    .previous\n"                          \
+"    .pushsection    __ex_table, \"a\"\n"   \
+"    .align    3\n"                        \
+"    .long    (1b  - .), (3b - .)\n"       \
+"    .popsection\n"
+: "+r" (err), "=&r" (x)                    \
+: "r" (__p), "i" (-EFAULT))
+```
+
+
+&ensp;链接脚本
+```c
+// arch/arm64/kernel/vmlinux.lds.S
+    …
+    . = ALIGN(SEGMENT_ALIGN);
+    _etext = .;          /* 代码段的结束地址 */
+
+    RO_DATA(PAGE_SIZE)   /* 从这里到 */
+    EXCEPTION_TABLE(8)   /* __init_begin将被标记为只读和不可执行 */
+    NOTES
+    …
+// 宏EXCEPTION_TABLE的定义
+// include/asm-generic/vmlinux.lds.h
+// 异常表
+#define EXCEPTION_TABLE(align)                         \
+    . = ALIGN(align);                                  \
+    __ex_table : AT(ADDR(__ex_table) - LOAD_OFFSET) {    \
+        VMLINUX_SYMBOL(__start___ex_table) = .;          \
+        KEEP(*(__ex_table))                             \
+        VMLINUX_SYMBOL(__stop___ex_table) = .;           \
+    }
+```
+
+&ensp;内核的全局变量__start___ex_table存放异常表节（__ex_table）的起始地址，__stop___ex_table存放异常表节的结束地址  <br>
 
 
 
 
 ## 3.15　反碎片技术
 
+&ensp;反碎片技术  <br>
+&emsp;(1)2.6.23版本引入了虚拟可移动区域  <br>
+&emsp;(2)3.5版本内存碎片整理技术   <br>
+&emsp;(3).6.24版本引入了根据可移动性分组的技术  <br>
+&emsp;(4).6.35版本引入了内存碎片整理技术   <br>
 
 
 ### 3.15.1　虚拟可移动区域
 
-
+&ensp;可移动区域(ZONE_MOVABLE)是一个伪内存区域：把物理内存分为两个区域，一个区域用于分配不可移动的页，另一个区域用于分配可移动的页
 
 
 ### 3.15.2　内存碎片整理
+
+&ensp;内存碎片整理(memory compaction，意译为“内存碎片整理”)：从内存区域的底部扫描已分配的可移动页，从内存区域的顶部扫描空闲页，把底部的可移动页移到顶部的空闲页，在底部形成连续的空闲页   <br>
+
+#### 1.使用方法
+&ensp;内存碎片整理功能，必须开启配置文件“mm/Kconfig”定义的配置宏CONFIG_COMPACTION，默认开启
+
 
 
 
 
 ## 3.16　页回收
 
+&ensp;申请分配页的时候，页分配器首先尝试使用低水线分配页。如果使用低水线分配失败，说明内存轻微不足，页分配器将会唤醒内存节点的页回收内核线程，异步回收页，然后尝试使用最低水线分配页。如果使用最低水线分配失败，说明内存严重不足，页分配器将会直接回收页  <br>
+
+
+
+&ensp;内核使用LRU（Least Recently Used，最近最少使用）算法选择最近最少使用的物理页
+
 
 ### 3.16.1　数据结构
 
+#### 1．LRU链表
+&ensp;页回收算法使用LRU算法选择回收的页。每个内存节点的pglist_data实例有一个成员lruvec，称为LRU向量，LRU向量包含5条LRU链表  <br>
+
+![20221124004231](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221124004231.png)
 
 
+待补充
+
+### 3.16.2　发起页回收
+
+&ensp;申请分配页的时候，页分配器首先尝试使用低水线分配页。如果使用低水线分配失败，说明内存轻微不足，页分配器将会唤醒所有符合分配条件的内存节点的页回收线程，异步回收页，然后尝试使用最低水线分配页。如果分配失败，说明内存严重不足，页分配器将会直接回收页。如果直接回收页失败，那么判断是否应该重新尝试回收页    <br>
 
 
-### 
+![20221124004637](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221124004637.png)
+
 
 
 ### 3.16.3　计算扫描的页数
@@ -5268,7 +5554,16 @@ static int do_shared_fault(struct vm_fault *vmf)
 
 ## 3.17　内存耗尽杀手
 
+&ensp;当内存严重不足的时候，页分配器在多次尝试直接页回收失败以后，就会调用内存耗尽杀手（OOM killer，OOM是“Out of Memory”的缩写），选择进程杀死，释放内存
 
+<div align=center>
+
+    {{<mermaid>}}
+	flowchart LR
+		a-->b & c--> d
+	{{</meraid>}}
+
+</div>
 
 ### 3.17.1　使用方法
 
