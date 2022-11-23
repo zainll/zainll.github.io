@@ -5558,10 +5558,9 @@ asm volatile(                              \
 
 <div align=center>
 
-    {{<mermaid>}}
-	flowchart LR
-		a-->b & c--> d
-	{{</meraid>}}
+ flowchart LR
+    __alloc_pages_showpath[Hard edge] -->|Link text| __alloc_pages_may_oom(Round edge)
+    __alloc_pages_may_oom --> out_of_memeory{Decision}
 
 </div>
 
