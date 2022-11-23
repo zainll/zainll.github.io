@@ -5575,7 +5575,7 @@ asm volatile(                              \
 
 ## 3.18　内存资源控制器
 
-
+&ensp;控制组(cgroup)的内存资源控制器用来控制一组进程的内存使用量，启用内存资源控制器的控制组简称内存控制组（memcg）。控制组把各种资源控制器称为子系统，内存资源控制器也称为内存子系统
 
 
 
@@ -5593,18 +5593,55 @@ asm volatile(                              \
 
 ## 3.19　处理器缓存
 
+&ensp;处理器和内存之间增加了缓存。缓存和内存的区别   <br>
+&emsp;(1)缓存是静态随机访问存储器(Static Random Access Memory，SRAM)   <br>
+&emsp;(2)内存是动态随机访问存储器(Dynamic Random Access Memory，DRAM)  <br>
+
+&ensp;一级缓存分为一级指令缓存(i-cache，instruction cache)和一级数据数据(d-cache，data cache)。二级缓存是指令和数据共享的统一缓存(unified cache)  <br>
 
 ### 3.19.1　缓存结构
 
+&ensp;32KB四路组相连缓存(32KB 4-way set associative cache)  <br>
+&ensp;缓存的结构  <br>
+
+![20221124010057](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221124010057.png)
+
+&ensp;缓存由多个容量相同的子缓存并联组成，每个子缓存称为路(Way)，四路表示4个子缓存并联
 
 
 
 
+&ensp;ARM64处理器的指令缓存有3种类型  <br>
+&emsp;(1)PIPT缓存 ： 物理地址生成索引和标签的缓存<br>
+&emsp;(2)VPIPT（VMID-aware PIPT）缓存  <br>
+&emsp;(3)VIPT：虚拟地址生成索引、从物理地址生成标签<br>
 
 
 ### 3.19.2　缓存策略
 
+&ensp;缓存分配有两种策略  <br>
+&emsp;(1)写分配(write allocation)  <br>
+&emsp;(2)读分配(read allocation)  <br>
+&ensp;缓存更新有两种策略  <br>
+&emsp;(1)写回(write back)  <br>
+&emsp;(2)写透(write-through)  <br>
 
+### 3.19.3 缓存维护
+
+
+
+
+#### 3.ARM64处理器缓存维护
+
+&ensp;ARM64处理器支持3种缓存操作。  <br>
+&emsp;（1）使缓存行失效（invalidate）：清除缓存行的有效位。  <br>
+&emsp;（2）清理（clean）缓存行：首先把标记为脏的缓存行里面的数据写到下一级缓存或内存，然后清除缓存行的有效位。只适用于使用写回策略的数据缓存。  <br>
+&emsp;（3）清零（zero）：把缓存里面的一个内存块清零，不需要先从内存读数据到缓存中。只适用于数据缓存   <br>
+
+
+### 3.19.4　SMP缓存一致性
+
+&ensp;原生的MESI协议有4种状态。MESI是4种状态的首字母缩写，缓存行的4种状态
 
 
 
