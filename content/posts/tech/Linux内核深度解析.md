@@ -5557,11 +5557,11 @@ asm volatile(                              \
 &ensp;当内存严重不足的时候，页分配器在多次尝试直接页回收失败以后，就会调用内存耗尽杀手（OOM killer，OOM是“Out of Memory”的缩写），选择进程杀死，释放内存
 
 <div align=center>
-
+{{<mermaid>}}
  flowchart LR
     __alloc_pages_showpath[Hard edge] -->|Link text| __alloc_pages_may_oom(Round edge)
     __alloc_pages_may_oom --> out_of_memeory{Decision}
-
+{{</mermaid>}}
 </div>
 
 ### 3.17.1　使用方法
@@ -5647,7 +5647,7 @@ asm volatile(                              \
 
 ## 3.20 连续内存分配器
 
-
+&ensp;连续内存分配器（Contiguous Memory Allocator，CMA）
 
 
 
