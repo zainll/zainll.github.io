@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>git on zain&#39;s Blog</title>
+    <link>https://liuz0123.gitee.io/zain/tags/git/</link>
+    <description>Recent content in git on zain&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 05 Sep 2022 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>git</title>
+      <link>https://liuz0123.gitee.io/zain/posts/blog/git/</link>
+      <pubDate>Mon, 05 Sep 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/blog/git/</guid>
+      <description>git操作 # 下载代码，ssh或https 一种方式出错换用另一种 git clone # 创建分支 git checkout -b br_master # 提交 git status git add . git commit # 合并到前一个commit git commit --amend # 拉</description>
+    </item>
+    
+  </channel>
+</rss>

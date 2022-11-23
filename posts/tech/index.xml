@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>👨🏻‍💻 技术 on zain&#39;s Blog</title>
+    <link>https://liuz0123.gitee.io/zain/posts/tech/</link>
+    <description>Recent content in 👨🏻‍💻 技术 on zain&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 02 Nov 2022 00:22:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/posts/tech/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>docker</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/docker/</link>
+      <pubDate>Wed, 02 Nov 2022 00:22:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/docker/</guid>
+      <description>Ubuntu22.04 中使用docker容器，在容器内运行qemu可行否？ Docker默认禁用ptrace？ https://www.mocusez.site/posts/1912.html</description>
+    </item>
+    
+    <item>
+      <title>树莓派</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/%E6%A0%91%E8%8E%93%E6%B4%BE/</link>
+      <pubDate>Sat, 15 Oct 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/%E6%A0%91%E8%8E%93%E6%B4%BE/</guid>
+      <description>https://cloud.tencent.com/developer/article/1863949 系统信息 AIDA64 https://www.aida64.com/</description>
+    </item>
+    
+    <item>
+      <title>Linux内核深度解析</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Wed, 05 Oct 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</guid>
+      <description>内容提纲 内核的引导过程U-Boot 内核管理和调度进程 内核管理虚拟内存和物理内存 内核处理异常和中断的技术原理，以及系统调用的实现方式 保护临界区</description>
+    </item>
+    
+    <item>
+      <title>logging</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/logging/</link>
+      <pubDate>Mon, 05 Sep 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/logging/</guid>
+      <description>python logging # logging.yaml： version: 1 disable_existing_loggers: False formatters: simple: format: &amp;#39;%(asctime)s %(levelname)s %(message)s&amp;#39; upgrade: format: &amp;#34;%(asctime)s -Loc %(filename)s -Pid %(process)d -%(name)s -%(levelname)s - %(message)s&amp;#34; handlers: console: class: logging.StreamHandler level: DEBUG formatter: simple stream: ext://sys.stdout all_file_handler: class: logging.handlers.RotatingFileHandler level: DEBUG formatter: upgrade filename: ./logs/all_log.log maxBytes: 10485760 # 10MB backupCount: 50 #保留50个lo</description>
+    </item>
+    
+    <item>
+      <title>MIT 6.S081操作系统</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/mit-6.s081%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Fri, 05 Aug 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/mit-6.s081%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</guid>
+      <description>Lec18 OS organization 18.1 Monolithic kernel 宏内核：Linux，Unix 微内核：mac 宏内核 微内核 优点 可移植 虚拟地址空间 共享资源 通用性 缺点 Bug和安全漏洞 XV6编译 XV6代</description>
+    </item>
+    
+    <item>
+      <title>ARM64体系结构编程与实践</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/arm64%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E7%BC%96%E7%A8%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Tue, 12 Jul 2022 00:21:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/arm64%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E7%BC%96%E7%A8%8B%E4%B8%8E%E5%AE%9E%E8%B7%B5/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>benchmark</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</link>
+      <pubDate>Mon, 27 Jun 2022 00:21:08 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</guid>
+      <description>openbenchmark openssl speed openssl speed --multi 1 openssl speed --multi 1 aes-128-cbc # 编译 https://www.jianshu.com/p/499c4603cfd5 https://blog.csdn.net/CHYabc123456hh/article/details/125794350 perf sudo apt install linux-tools-common sudo apt install linux-tools-generic sudo apt install linux-cloud-tools-generic perf --version https://blog.csdn.net/qq_44158431/article/details/125199825 https://www.cnblogs.com/limstorm/p/16334539.html</description>
+    </item>
+    
+    <item>
+      <title>深入理解计算机系统</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Sun, 05 Jun 2022 00:21:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/</guid>
+      <description>&lt;p&gt;[toc]&lt;/p&gt;
+&lt;h1 id=&#34;深入理解计算机系统&#34;&gt;深入理解计算机系统&lt;/h1&gt;
+&lt;h2 id=&#34;第1章-计算机系统&#34;&gt;第1章 计算机系统&lt;/h2&gt;</description>
+    </item>
+    
+    <item>
+      <title>cmake</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/cmake/</link>
+      <pubDate>Tue, 17 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/cmake/</guid>
+      <description>&lt;h2 id=&#34;1cmake简述&#34;&gt;1.cmake简述&lt;/h2&gt;
+&lt;p&gt; CMake是跨平台编译管理工具,为第三方依赖和引入,创建编译系统,程序测试及安装.Cmake工具使用CMakeLists.txt文件,跨平台执行相同编译命令,生成对应平台的可执行程序或者链接库.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>DynamoRIO</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</link>
+      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</guid>
+      <description>&lt;h2 id=&#34;编译&#34;&gt;编译&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;注意wsl中需要root用户编译
+&lt;a href=&#34;https://dynamorio.org/page_building.html&#34;&gt;https://dynamorio.org/page_building.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_TOOLCHAIN_FILE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/mnt/e/code/dynamorio/make/toolchain-android&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;arm64.cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DANDROID_TOOLCHAIN&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/android_toolchain_using &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DDR_COPY_TO_DEVICE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_BUILD_TYPE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Debug &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_TESTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_SAMPLES&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_CLIENTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;../dynamorio
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cmake &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DDR_COPY_TO_DEVICE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DCMAKE_BUILD_TYPE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;Debug &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_TESTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;OFF &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_SAMPLES&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;-DBUILD_CLIENTS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ON &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;../dynamorio
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    
+    <item>
+      <title>leetcode基础题目</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/leetcode%E5%9F%BA%E7%A1%80%E9%A2%98%E7%9B%AE/</link>
+      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/leetcode%E5%9F%BA%E7%A1%80%E9%A2%98%E7%9B%AE/</guid>
+      <description>总结 leetcode基础题目 经典题目： 3.无重复字符的最长子串 4. 6. 7. 8. 9. 11. 12. 13. 21. 24. 28. 38. 53. 66. 82. 94. 104. 108. 109. 110. 112. 121. 136. 142. 160. 169. 173. 189. 201. 203. 206. 217. 226. 231. 234. 367. 389. 442. 476.</description>
+    </item>
+    
+    <item>
+      <title>Linux Read Tool</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/linuxreadtool/</link>
+      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/linuxreadtool/</guid>
+      <description>Linux Kernel阅读工具 需要多久才能看完linux内核源码？ Linux内核代码下载 Linux kernel官网 https://www.kernel.org/ 解压 linux-5.19.10.tar.xz tar -xvf linux-5.19.10.tar.xz https://blog.csdn.net/m0_49328056/article/details/121669035 linux内核线上阅读 li</description>
+    </item>
+    
+    <item>
+      <title>Tech</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/tech/</link>
+      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/tech/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
