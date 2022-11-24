@@ -5837,6 +5837,37 @@ b  el1_sync
 ```
 
 
+&ensp;启动过程中，0号处理器称为引导处理器，其他处理器称为从处理器。引导处理器在函数__primary_switched()中把寄存器VBAR_EL1设置为异常级别1的异常向量表的起始虚拟地址  <br>
+```c
+_head()  ->  stext()  ->  __primary_switch()  ->  __primary_switched()
+
+// arch/arm64/kernel/head.S
+__primary_switched:
+   …
+   adr_l x8, vectors
+   msr   vbar_el1, x8        // 把寄存器VBAR_EL1设置为异常向量表的起始虚拟地址
+   isb
+   …
+   b  start_kernel
+ENDPROC(__primary_switched)
+```
+
+&ensp;从处理器在函数__secondary_switched()中把寄存器VBAR_EL1设置为异常级别1的异常向量表的起始虚拟地址
+
+```c
+secondary_entry()  ->  secondary_startup()  ->  __secondary_switched()
+
+// arch/arm64/kernel/head.S
+__secondary_switched:
+    adr_l    x5, vectors
+    msr    vbar_el1, x5
+    isb
+    …
+    b  secondary_start_kernel
+ENDPROC(__secondary_switched)
+
+```
+
 
 
 
