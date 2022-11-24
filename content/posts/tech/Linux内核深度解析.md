@@ -5788,7 +5788,53 @@ asm volatile(                              \
 </table>
 
 
+&ensp;ARM64架构内核定义的异常级别1的异常向量表  <br>
+```c
+// ach/arm64/kernel/entry.S
+      .align    11
+ENTRY(vectors)
+   ventry el1_sync_invalid    // 异常级别1生成的同步异常，使用栈指针寄存器SP_EL0
+   ventry el1_irq_invalid     // 异常级别1生成的中断，使用栈指针寄存器SP_EL0
+   ventry el1_fiq_invalid     // 异常级别1生成的快速中断，使用栈指针寄存器SP_EL0
+   ventry el1_error_invalid   // 异常级别1生成的系统错误，使用栈指针寄存器SP_EL0
 
+   ventry el1_sync            // 异常级别1生成的同步异常，使用栈指针寄存器SP_EL1
+   ventry el1_irq             // 异常级别1生成的中断，使用栈指针寄存器SP_EL1
+   ventry el1_fiq_invalid     // 异常级别1生成的快速中断，使用栈指针寄存器SP_EL1
+   ventry el1_error_invalid   // 异常级别1生成的系统错误，使用栈指针寄存器SP_EL1
+
+   ventry    el0_sync         // 64位应用程序在异常级别0生成的同步异常
+   ventry    el0_irq          // 64位应用程序在异常级别0生成的中断
+   ventry    el0_fiq_invalid  // 64位应用程序在异常级别0生成的快速中断
+   ventry    el0_error_invalid// 64位应用程序在异常级别0生成的系统错误
+
+#ifdef CONFIG_COMPAT          /* 表示支持执行32位程序 */
+   ventry    el0_sync_compat  // 32位应用程序在异常级别0生成的同步异常
+   ventry    el0_irq_compat   // 32位应用程序在异常级别0生成的中断
+   ventry    el0_fiq_invalid_compat // 32位应用程序在异常级别0生成的快速中断
+   ventry    el0_error_invalid_compat// 32位应用程序在异常级别0生成的系统错误
+#else
+   ventry    el0_sync_invalid // 32位应用程序在异常级别0生成的同步异常
+   ventry    el0_irq_invalid  // 32位应用程序在异常级别0生成的中断
+   ventry    el0_fiq_invalid  // 32位应用程序在异常级别0生成的快速中断
+   ventry    el0_error_invalid// 32位应用程序在异常级别0生成的系统错误
+#endif
+END(vectors)
+```
+
+&ensp;ventry是一个宏，参数是跳转标号，即异常处理程序的标号  
+```c
+// arch/arm64/include/asm/assembler.h
+     .macro    ventry    label
+    .align 7
+    b    \label
+    .endm
+
+// ventry el1_sync展开
+.align 7
+b  el1_sync
+
+```
 
 
 
