@@ -5673,6 +5673,126 @@ asm volatile(                              \
 # 第4章 中断、异常和系统调用
 
 
+## 4.1 ARM64异常处理
+### 4.1.1 异常级别
+&ensp;ARM64处理器4个异常级别：0~3
+
+![20221124233511](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221124233511.png)
+<center>ARM64处理器的异常级别</center>
+
+&ensp;虚拟机里面运行一个操作系统，运行虚拟机的操作系统称为宿主操作系统(host OS)，虚拟机里面的操作系统称为客户操作系统(guest OS)   <br>
+&ensp;开源虚拟机管理软件是QEMU，QEMU支持基于内核的虚拟机(Kernel-based Virtual Machine，KVM)。KVM直接在处理器上执行客户操作系统，虚拟机的执行速度很快。KVM是内核的一个模块，把内核变成虚拟机监控程序。  <br>
+&ensp;ARM64架构引入了虚拟化宿主扩展，在异常级别2执行宿主操作系统的内核，从QEMU切换到客户操作系统的时候，KVM不再需要从异常级别1切换到异常级别2。  <br>
+
+
+![20221124234127](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221124234127.png)
+
+&ensp;ARM64架构的安全扩展定义了两种安全状态：正常世界和安全世界。通过异常级别3的安全监控器切换
+ 
+
+### 4.1.2 异常分类
+
+&ensp;ARM64体系结构中，异常分为同步异常和异步异常   <br>
+&ensp;同步异常包括：
+&emsp;(1)系统调用，异常级别0使用svc(Supervisor Call)指令陷入异常级别1，异常级别1使用hvc(Hypervisor Call)指令陷入异常级别2，异常级别2使用smc(Secure Monitor Call)指令陷入异常级别3  <br>
+&emsp;(2)数据中止，即访问数据时的页错误异常，无映射，无写权限  <br>
+&emsp;(3)指令中止，取指令时的页错误异常，无映射，无执行权限   <br>
+&emsp;(4)栈指针或指令地址没有对齐   <br>
+&emsp;(5)没有定义的指令  <br>
+&emsp;(6)调试异常  <br>
+&ensp;异步异常包括:  <br>
+&emsp;(1)中断(normal priority interrupt，IRQ)，即普通优先级的中断。  <br>
+&emsp;(2)快速中断(fast interrupt FIQ)，高优先级中断  <br>
+&emsp;(3)系统错误(System Error SError)，硬件错误触发的异常  <br>
+
+
+### 4.1.3 异常向量表
+
+&ensp;存储异常处理程序的内存位置称为异常向量，ARM64处理器的异常级别1、2和3，每个异常级别都有自己的异常向量表，异常向量表的起始虚拟地址存放在寄存器VBAR_ELn(向量基准地址寄存器，Vector Based Address Register)中   <br>
+
+
+<table>
+	<tr>
+	    <th>地址</th>
+	    <th>异常类型</th>
+	    <th>含义</th>  
+	</tr >
+	<tr >
+	    <td>VBAR_ELn + 0x000</td>
+	    <td>同步异常</td>
+	    <td rowspan="4">当前异常级别生成的异常，使用异常级别0的栈指针寄存器SP_EL0</td>
+	</tr>
+	<tr >
+	    <td>　 　　　 + 0x080</td>
+	    <td>中断</td>
+	</tr>
+	<tr >
+	    <td>　 　　　 + 0x100</td>
+	    <td>快速中断</td>
+	</tr>
+	<tr >
+	    <td>　 　　　 + 0x180</td>
+	    <td>系统错误</td>
+	</tr>
+	<tr >
+	    <td>　 　　　 + 0x200</td>
+	    <td>同步异常</td>
+	     <td rowspan="4">当前异常级别生成的异常，使用当前异常级别的栈指针寄存器SP_ELn</td>
+	</tr>
+	<tr >
+	    <td>　 　　　 + 0x280</td>
+	    <td>中断</td>
+	</tr>
+		<tr >
+	    <td>　 　　　 + 0x300</td>
+	    <td>快速中断</td>
+	</tr>
+	<tr>
+	    <td>　 　　　 + 0x380</td>
+	    <td>系统错误</td>
+	</tr>
+		<tr>
+	    <td>　 　　　 + 0x400</td>
+	    <td>同步异常</td>
+	    <td rowspan="4">64位应用程序在异常级别（n−1）生成的异常</td>
+	</tr>
+	<tr>
+	    <td>　 　　　 + 0x480</td>
+	    <td>中断</td>
+	</tr>
+		<tr >
+	    <td>　 　　　 + 0x500</td>
+	    <td>快速中断</td>
+	</tr>
+		<tr >
+	    <td>　 　　　 + 0x580</td>
+	    <td>系统错误</td>
+	</tr>
+	<tr>
+	    <td>　 　　　 + 0x600</td>
+	    <td>同步异常</td>
+	    <td rowspan="4">32位应用程序在异常级别（n−1）生成的异常</td>
+	</tr>
+	<tr>
+	    <td>　 　　　 + 0x680</td>
+	    <td>中断</td>
+	</tr>
+	<tr>
+	    <td>　 　　 　+ 0x700</td>
+	    <td>快速中断</td>
+	</tr>
+	<tr>
+	    <td> 　　　 + 0x780</td>
+	    <td>系统错误</td>
+	</tr>
+</table>
+
+
+
+
+
+
+
 
 
 
