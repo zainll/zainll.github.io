@@ -5647,7 +5647,7 @@ asm volatile(                              \
 
 ## 3.20 连续内存分配器
 
-&ensp;连续内存分配器（Contiguous Memory Allocator，CMA）
+&ensp;连续内存分配器（Contiguous Memory Allocator，CMA）:保留一块大的内存区域，当设备驱动不使用的时候，内核的其他模块可以使用
 
 
 
@@ -5656,17 +5656,21 @@ asm volatile(                              \
 
 
 ## 3.21 userfaultfd
-
+&ensp;userfaultfd（用户页错误文件描述符）用来拦截和处理用户空间的页错误异常，内核通过文件描述符将页错误异常的信息传递给用户空间，然后由用户空间决定要往虚拟页写入的数据。传统的页错误异常由内核独自处理，现在改为由内核和用户空间一起控制。  <br>
+&ensp;userfaultfd是为了解决QEMU/KVM虚拟机动态迁移的问题而出现的。所谓动态迁移，就是将虚拟机从一端迁移到另一端，而在迁移的过程中虚拟机能够继续提供服务，有两种实现方案
 
 
 
 ## 3.22 内存错误检测工具KASAN
 
 
+&ensp;内核地址消毒剂（Kernel Address SANitizer，KASAN）是一个动态的内存错误检查工具，为发现“释放后使用”和“越界访问”这两类缺陷提供了快速和综合的解决方案  <br>
+&ensp;KASAN使用编译时插桩（compile-time instrumentation）检查每个内存访问
 
 
 
 
+# 第4章 中断、异常和系统调用
 
 
 
