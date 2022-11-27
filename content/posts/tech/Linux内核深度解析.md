@@ -5872,51 +5872,191 @@ ENDPROC(__secondary_switched)
 ### 4.1.4 异常处理
 
 &ensp;处理器取出异常处理的时候，自动执行的操作  <br>
+&ensp;(1)把当前的处理器状态（Processor State，PSTATE）保存在寄存器SPSR_EL1（保存程序状态寄存器，Saved Program Status Register）中  <br>
+&ensp;(2)把返回地址保存在寄存器ELR_EL1（异常链接寄存器，Exception Link Register）中   <br>
+&emsp;系统调用，那么返回地址是系统调用指令后面的指令  <br>
+&emsp;除系统调用外的同步异常，那么返回地址是生成异常的指令  <br>
+&emsp;异步异常，那么返回地址是没有执行的第一条指令  <br>
+&ensp;(3)把处理器状态的DAIF这4个异常掩码位都设置为1，禁止这4种异常，D是调试掩码位（Debug mask bit），A是系统错误掩码位（SError mask bit），I是中断掩码位（IRQ mask bit），F是快速中断掩码位（FIQ mask bit）  <br>
+&ensp;(4)同步异常或系统错误异常，把生成异常的原因保存在寄存器ESR_EL1（异常症状寄存器，Exception Syndrome Register）中 <br>
+&ensp;(5)同步异常，把错误地址保存在寄存器FAR_EL1（错误地址寄存器，Fault Address Register）中  <br>
+&ensp;(6)处理器处于用户模式（异常级别0），那么把异常级别提升到1  <br>
+&ensp;(7)根据向量基准地址寄存器VBAR_EL1、异常类型和生成异常的异常级别计算出异常向量的虚拟地址，执行异常向量  <br>
+&ensp;对于64位应用程序在用户模式（异常级别0）下生成的同步异常，入口是el0_sync
+```c
+// arch/arm64/kernel/entry.S
+el0_sync:
+	kernel_entry 0  // 把所有通用寄存器的值保存在当前进程的内核栈
+	mrs  x25, esr_el1                 // 读异常症状寄存器
+	lsr  x24, x25, #ESR_ELx_EC_SHIFT  // 异常类别
+	cmp  x24, #ESR_ELx_EC_SVC64       // 64位系统调用
+	b.eq el0_svc  // 系统调用，调用函数el0_svc
+	cmp  x24, #ESR_ELx_EC_DABT_LOW    // 异常级别0的数据中止
+	b.eq el0_da  // 访问数据时的页错误异常，调用函数el0_da
+	cmp  x24, #ESR_ELx_EC_IABT_LOW    // 异常级别0的指令中止
+	b.eq el0_ia  // 取指令时的页错误异常，调用函数el0_ia
+	cmp  x24, #ESR_ELx_EC_FP_ASIMD    // 访问浮点或者高级SIMD
+	b.eq el0_fpsimd_acc  // 访问浮点或高级SIMD，调用函数el0_fpsimd_acc
+	cmp  x24, #ESR_ELx_EC_FP_EXC64    // 浮点或者高级SIMD异常
+	b.eq el0_fpsimd_exc  // 浮点或高级SIMD异常，调用函数el0_fpsimd_exc
+	cmp  x24, #ESR_ELx_EC_SYS64       // 可配置陷入
+	b.eq el0_sys  // 可配置陷入，调用函数el0_sys
+	cmp  x24, #ESR_ELx_EC_SP_ALIGN    // 栈对齐异常
+	b.eq el0_sp_pc
+	cmp  x24, #ESR_ELx_EC_PC_ALIGN    // 指令地址对齐异常
+	b.eq el0_sp_pc
+	cmp  x24, #ESR_ELx_EC_UNKNOWN     // 异常级别0的未知异常
+	b.eq el0_undef
+	cmp  x24, #ESR_ELx_EC_BREAKPT_LOW // 异常级别0的调试异常
+	b.ge el0_dbg
+	b    el0_inv
+```
+
+&ensp;可配置陷入，调用函数el0_sys
+```c
+// arch/arm64/kernel/entry.S
+el1_sync:
+	kernel_entry 1
+	mrs  x1, esr_el1                  // 读异常症状寄存器
+	lsr  x24, x1, #ESR_ELx_EC_SHIFT   // 异常类别
+	cmp  x24, #ESR_ELx_EC_DABT_CUR    // 异常级别1的数据中止
+	b.eq el1_da
+	cmp  x24, #ESR_ELx_EC_IABT_CUR    // 异常级别1的指令中止
+	b.eq el1_ia
+	cmp  x24, #ESR_ELx_EC_SYS64       // 可配置陷入
+	b.eq el1_undef
+	cmp  x24, #ESR_ELx_EC_SP_ALIGN    // 栈对齐异常
+	b.eq el1_sp_pc
+	cmp  x24, #ESR_ELx_EC_PC_ALIGN    // 指令地址对齐异常
+	b.eq el1_sp_pc
+	cmp  x24, #ESR_ELx_EC_UNKNOWN     // 异常级别1的未知异常
+	b.eq el1_undef
+	cmp  x24, #ESR_ELx_EC_BREAKPT_CUR // 异常级别1的调试异常
+	b.ge el1_dbg
+	b    el1_inv
+```
+
+&ensp;以64位应用程序在用户模式（异常级别0）下访问数据时生成的页错误异常为例，处理函数是el0_da
+```c
+// arch/arm64/kernel/entry.S
+el0_da:
+	mrs   x26, far_el1  // 获取数据的虚拟地址，存放在寄存器x26
+	enable_dbg_and_irq   // msr   daifclr, #(8 | 2) 开启调试异常和中断
+	…
+	clear_address_tag x0, x26
+	mov  x1, x25
+	mov  x2, sp
+	bl   do_mem_abort  // 调用C语言函数
+	b    ret_to_user
+
+```
+
+
+&ensp;内核模式（异常级别1）下访问数据时生成的页错误异常为例说明，处理函数是el1_da
+```c
+// arch/arm64/kernel/entry.S
+el1_da:
+	mrs   x3, far_el1
+	enable_dbg
+	tbnz   x23, #7, 1f
+	enable_irq
+1:
+	clear_address_tag x0, x3
+	mov   x2, sp            // 结构体 pt_regs
+	bl   do_mem_abort
+
+	disable_irq
+	kernel_exit 1
+```
+
+&ensp;异常处理程序执行完的时候，调用kernel_exit返回。kernel_exit是一个宏，参数el是返回的异常级别，0表示返回异常级别0，1表示返回异常级别1
+```c
+// arch/arm64/kernel/entry.S
+    .macro  kernel_exit, el
+    …
+    ldp  x21, x22, [sp, #S_PC]    //加载保存的寄存器ELR_EL1和SPSR_EL1的值
+    …
+    .if  \el == 0                 /* 如果返回用户模式（异常级别0）*/
+    ldr  x23, [sp, #S_SP]
+    msr  sp_el0, x23              /* 恢复异常级别0的栈指针寄存器 */
+    …
+    .endif
+
+    msr  elr_el1, x21
+    msr  spsr_el1, x22
+    ldp  x0, x1, [sp, #16 * 0]
+    ldp  x2, x3, [sp, #16 * 1]
+    ldp  x4, x5, [sp, #16 * 2]
+    ldp  x6, x7, [sp, #16 * 3]
+    ldp  x8, x9, [sp, #16 * 4]
+    ldp  x10, x11, [sp, #16 * 5]
+    ldp  x12, x13, [sp, #16 * 6]
+    ldp  x14, x15, [sp, #16 * 7]
+    ldp  x16, x17, [sp, #16 * 8]
+    ldp  x18, x19, [sp, #16 * 9]
+    ldp  x20, x21, [sp, #16 * 10]
+    ldp  x22, x23, [sp, #16 * 11]
+    ldp  x24, x25, [sp, #16 * 12]
+    ldp  x26, x27, [sp, #16 * 13]
+    ldp  x28, x29, [sp, #16 * 14]
+    ldr  lr, [sp, #S_LR]
+    add  sp, sp, #S_FRAME_SIZE
+    eret
+    .endm
+
+```
+
+&ensp;执行指令eret的时候，处理器自动使用寄存器SPSR_EL1保存的值恢复处理器状态，使用寄存器ELR_EL1保存的返回地址恢复程序计数器（Program Counter，PC）
+
+
+
+
+## 4.2 中断
+
+&ensp;中断是外围设备通知处理器的一种机制
+
+
+### 4.2.1　中断控制器
+
+&ensp;ARM标准的中断控制器，称为通用中断控制器（Generic Interrupt Controller，GIC）  <br>
+&ensp;软件 GIC v2控制器有两个主要的功能块   <br>
+&emsp;1）分发器（Distributor）  <br>
+&emsp;2）处理器接口（CPU Interface）   <br>
+
+&ensp;中断有以下4种类型:SGI、PPI、SPI、LPI   <br>
+
+&ensp;边沿触发、电平触发  <br>
+
+&ensp;中断有以下4种状态。  <br>
+&ensp;（1）Inactive：中断源没有发送中断。<br>
+&ensp;（2）Pending：中断源已经发送中断，等待处理器处理。<br>
+&ensp;（3）Active：处理器已经确认中断，正在处理。 <br>
+&ensp;（4）Active and pending：处理器正在处理中断，相同的中断源又发送了一个中断。  <br>
+
+
+
+
+### 4.2.2　中断域
+
+&ensp;每个中断控制器本地的硬件中断号映射到全局唯一的Linux中断号（也称为虚拟中断号），内核定义了中断域irq_domain，每个中断控制器有自己的中断域  <br>
+
+####  1．创建中断域
+
+
+#### 2．创建映射
+
+
+#### 3．查找映射
 
 
 
 
 
 
+### 4.2.3　中断控制器驱动初始化
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#### 1．设备树源文件
 
 
 
