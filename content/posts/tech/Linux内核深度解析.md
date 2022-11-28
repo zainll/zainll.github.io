@@ -6024,6 +6024,10 @@ el1_da:
 &emsp;2）处理器接口（CPU Interface）   <br>
 
 &ensp;中断有以下4种类型:SGI、PPI、SPI、LPI   <br>
+&emsp;SGI  软件生成的中断 0~15  <br>
+&emsp;PPI  私有外设中断 16~31  <br>
+&emsp;SPI  共享外设中断 32~1020   <br>
+&emsp;LPI  局部特点外设中断 
 
 &ensp;边沿触发、电平触发  <br>
 
@@ -6034,31 +6038,623 @@ el1_da:
 &ensp;（4）Active and pending：处理器正在处理中断，相同的中断源又发送了一个中断。  <br>
 
 
+GIC v2控制器描述符
+```c
+// drivers/irqchip/irq-gic.c
+static struct irq_chip gic_chip = {
+      .irq_mask            = gic_mask_irq,
+      .irq_unmask          = gic_unmask_irq,
+      .irq_eoi             = gic_eoi_irq,
+      .irq_set_type        = gic_set_type,
+      .irq_get_irqchip_state = gic_irq_get_irqchip_state,
+      .irq_set_irqchip_state = gic_irq_set_irqchip_state,
+      .flags               = IRQCHIP_SET_TYPE_MASKED |
+                           IRQCHIP_SKIP_SET_WAKE |
+                           IRQCHIP_MASK_ON_SUSPEND,
+};
+```
+
+
+
+
 
 
 ### 4.2.2　中断域
 
 &ensp;每个中断控制器本地的硬件中断号映射到全局唯一的Linux中断号（也称为虚拟中断号），内核定义了中断域irq_domain，每个中断控制器有自己的中断域  <br>
 
+
 ####  1．创建中断域
+&ensp;中断控制器的驱动程序使用分配函数irq_domain_add_*()创建和注册中断域，调用者给分配函数提供irq_domain_ops结构体，分配函数在执行成功的时候返回irq_domain的指针<br>
+&ensp;分配主要为函数__irq_domain_add()。函数__irq_domain_add()的执行过程是：分配一个irq_domain结构体，初始化成员，然后把中断域添加到全局链表irq_domain_list中  <br>
 
 
 #### 2．创建映射
+&ensp;向中断域添加硬件中断号到Linux中断号的映射，内核提供了函数irq_create_mapping
+```c
+unsigned int irq_create_mapping(struct irq_domain *domain, irq_hw_number_t hwirq);
+```
 
 
 #### 3．查找映射
 
 
-
+中断处理程序需要根据硬件中断号查找Linux中断号，内核提供了函数irq_find_mapping：
+```c
+unsigned int irq_find_mapping(struct irq_domain *domain, irq_hw_number_t hwirq);
+```
+输入参数是中断域和硬件中断号，返回Linux中断号
 
 
 
 ### 4.2.3　中断控制器驱动初始化
-
+&ensp;ARM64架构使用扁平设备树（Flattened Device Tree，FDT）描述板卡的硬件信息。编写设备树源文件（Device Tree Source，DTS），存放在目录“arch/arm64/boot/dts”下，然后使用设备树编译器（Device Tree Compiler，DTC）把设备树源文件转换成设备树二进制文件（Device Tree Blob，DTB），最后把设备树二进制文件写到存储设备上
 
 #### 1．设备树源文件
 
 
+#### 3.初始化
+函数irqchip_init --> of_irq_init --> __irqchip_of_table  <br>
+```c
+start_kernel() 
+  -> init_IRQ() 
+    -> irqchip_init()
+	 -> of_irq_init()
+	  -> gic_of_init()
+	    -> __gic_init_bases()
+	  -> __irqchip_of_table()
+
+
+```
+
+
+
+### 4.2.4　Linux中断处理
+
+&ensp;向中断域添加硬件中断号到Linux中断号的映射时，内核分配一个Linux中断号和一个中断描述符irq_desc  <br>
+&ensp;中断描述符有两个层次的中断处理函数
+
+![20221128230127](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221128230127.png)
+
+&ensp;存储Linux中断号到中断描述符的映射关系  <br>
+&emsp;(1)中断编号是稀疏的（即不连续），那么使用基数树（radix tree）存储  <br>
+&emsp;(2)中断编号是连续的，那么使用数组存储
+```c
+// kernel/irq/irqdesc.c
+#ifdef CONFIG_SPARSE_IRQ
+static RADIX_TREE(irq_desc_tree, GFP_KERNEL);
+
+#else
+struct irq_desc irq_desc[NR_IRQS] __cacheline_aligned_in_smp = {
+     [0 ... NR_IRQS-1]  = {
+            .handle_irq = handle_bad_irq,
+            .depth      = 1,
+            .lock       = __RAW_SPIN_LOCK_UNLOCKED(irq_desc->lock),
+     }
+};
+#endif
+```
+
+
+```c
+handle_irq()
+ -> gic_irq_domain_map()
+   // 硬件中断号小于32
+   -> handle_percpu_devid_irq()
+   // 中断号大于或等于32
+   -> handle_fasteoi_irq()
+
+irq_create_mapping() -> irq_domain_associate() -> domain->ops->map()
+// drivers/irqchip/irq-gic.c
+static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+                     irq_hw_number_t hw)
+{
+      struct gic_chip_data *gic = d->host_data;
+
+      if (hw < 32) {
+            irq_set_percpu_devid(irq);
+            irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
+                         handle_percpu_devid_irq, NULL, NULL);
+            irq_set_status_flags(irq, IRQ_NOAUTOEN);
+      } else {
+            irq_domain_set_info(d, irq, hw, &gic->chip, d->host_data,
+                         handle_fasteoi_irq, NULL, NULL);
+            irq_set_probe(irq);
+      }
+      return 0;
+}
+```
+
+![20221128230716](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221128230716.png)
+<center>Linux中断处理流程</center>
+
+```c
+// arch/arm64/kernel/entry.S
+   .align   6
+  el0_irq:
+   kernel_entry 0
+  el0_irq_naked:
+   enable_dbg
+   …
+   irq_handler
+   …
+   b   ret_to_user
+  ENDPROC(el0_irq)
+   
+   .macro   irq_handler
+   ldr_l   x1, handle_arch_irq
+   mov   x0, sp
+   irq_stack_entry
+   blr   x1
+   irq_stack_exit
+   .endm
+
+
+```
+
+
+
+&ensp;函数handle_irq_event，执行设备驱动程序注册的处理函数
+```c
+// handle_irq_event()  ->  handle_irq_event_percpu()  ->  __handle_irq_event_percpu()
+
+kernel/irq/handle.c
+irqreturn_t  __handle_irq_event_percpu(struct irq_desc *desc, unsigned int *flags)
+{
+     irqreturn_t retval = IRQ_NONE;
+     unsigned int irq = desc->irq_data.irq;
+     struct irqaction *action;
+
+     for_each_action_of_desc(desc, action) {
+         irqreturn_t res;
+
+         …
+         res = action->handler(irq, action->dev_id);
+         …
+
+         switch (res) {
+         case IRQ_WAKE_THREAD:
+             …
+             __irq_wake_thread(desc, action);
+             /*继续往下走，把“action->flags”作为生成随机数的一个因子 */
+         case IRQ_HANDLED:
+             *flags |= action->flags;
+             break;
+
+         default:
+             break;
+         }
+         retval |= res;
+     }
+
+     return retval;
+}
+```
+
+### 4.2.5　中断线程化
+&ensp;内核提供的函数request_threaded_irq()用来注册线程化的中断
+```c
+int request_threaded_irq(unsigned int irq, irq_handler_t handler,
+               irq_handler_t thread_fn,
+               unsigned long flags, const char *name, void *dev);
+```
+
+&ensp;每个中断处理描述符（irqaction）对应一个内核线程，成员thread指向内核线程的进程描述符，成员thread_fn指向线程处理函数
+```c
+// include/linux/interrupt.h
+struct irqaction {
+     …
+     irq_handler_t      thread_fn;
+     struct task_struct *thread;
+     …
+} ____cacheline_internodealigned_in_smp;
+```
+
+&ensp;中断处理线程是优先级为50、调度策略是SCHED_FIFO的实时内核线程，名称是“irq/”后面跟着Linux中断号，线程处理函数是irq_thread()
+```c
+request_threaded_irq()  ->  __setup_irq()  ->  setup_irq_thread()
+
+// kernel/irq/manage.c
+static int setup_irq_thread(struct irqaction *new, unsigned int irq, bool secondary)
+{
+     struct task_struct *t;
+     struct sched_param param = {
+          .sched_priority = MAX_USER_RT_PRIO/2,
+     };
+
+     if (!secondary) {
+           t = kthread_create(irq_thread, new, "irq/%d-%s", irq,
+                        new->name);
+     } else {
+           t = kthread_create(irq_thread, new, "irq/%d-s-%s", irq,
+                      new->name);
+           param.sched_priority -= 1;
+     }
+     …
+     sched_setscheduler_nocheck(t, SCHED_FIFO, &param);
+     …
+}
+```
+
+```c
+handle_fasteoi_irq()  ->  handle_irq_event()  ->  handle_irq_event_percpu()  ->  __handle_irq_event_percpu()
+
+// kernel/irq/handle.c
+irqreturn_t  __handle_irq_event_percpu(struct irq_desc *desc, unsigned int *flags)
+{
+     irqreturn_t retval = IRQ_NONE;
+     unsigned int irq = desc->irq_data.irq;
+     struct irqaction *action;
+
+     for_each_action_of_desc(desc, action) {
+          irqreturn_t res;
+
+          …
+          res = action->handler(irq, action->dev_id);
+          …
+
+          switch (res) {
+          case IRQ_WAKE_THREAD:
+               …
+               __irq_wake_thread(desc, action);
+               /*继续往下走，把“action->flags”作为生成随机数的一个因子*/
+          case IRQ_HANDLED:
+               *flags |= action->flags;
+               break;
+
+          default:
+               break;
+          }
+
+          retval |= res;
+     }
+
+     return retval;
+}
+
+```
+
+&ensp;中断处理线程的处理函数是irq_thread()，调用函数irq_thread_fn()，然后函数irq_thread_fn()调用注册的线程处理函数
+```c
+// kernel/irq/manage.c
+static int irq_thread(void *data)
+{
+      struct callback_head on_exit_work;
+      struct irqaction *action = data;
+      struct irq_desc *desc = irq_to_desc(action->irq);
+      irqreturn_t (*handler_fn)(struct irq_desc *desc,
+               struct irqaction *action);
+
+      if (force_irqthreads && test_bit(IRQTF_FORCED_THREAD,
+                         &action->thread_flags))
+          handler_fn = irq_forced_thread_fn;
+      else
+          handler_fn = irq_thread_fn;
+
+      …
+      while (!irq_wait_for_interrupt(action)) {
+          irqreturn_t action_ret;
+
+          …
+          action_ret = handler_fn(desc, action);
+          …
+      }
+
+      …
+      return 0;
+}
+
+static irqreturn_t  irq_thread_fn(struct irq_desc *desc, struct irqaction *action)
+{
+      irqreturn_t ret;
+
+      ret = action->thread_fn(action->irq, action->dev_id);
+      irq_finalize_oneshot(desc, action);
+      return ret;
+}
+
+
+```
+
+
+
+### 4.2.6　禁止/开启中断
+
+&ensp;软件可以禁止中断，使处理器不响应所有中断请求，但是不可屏蔽中断（Non Maskable Interrupt，NMI）是个例外，接口：  <br>
+&emsp;(1)local_irq_disable()   <br>
+&emsp;(2)local_irq_save(flags) 先把中断状态保存在参数flags中，然后禁止中断 <br>
+
+&ensp;开启中断的接口 <br>
+&emsp;(1)local_irq_enable()  <br>
+&emsp;(2)local_irq_restore(flags)  恢复本地处理器的中断状态  <br>
+
+&ensp;ARM64架构禁止中断的函数local_irq_disable()
+
+```c
+local_irq_disable() -> raw_local_irq_disable() -> arch_local_irq_disable()
+
+// arch/arm64/include/asm/irqflags.h
+// 中断掩码位设置成1
+static inline void arch_local_irq_disable(void)
+{
+      asm volatile(
+          "msr       daifset, #2       // arch_local_irq_disable"
+          :
+          :
+          : "memory");
+}
+
+```
+&ensp;ARM64架构开启中断的函数local_irq_enable()
+```c
+local_irq_enable() -> raw_local_irq_enable() -> arch_local_irq_enable()
+
+// arch/arm64/include/asm/irqflags.h
+// 中断掩码位设置成0
+static inline void arch_local_irq_enable(void)
+{
+      asm volatile(
+          "msr       daifclr, #2     // arch_local_irq_enable"
+          :
+          :
+          : "memory");
+}
+```
+
+
+### 4.2.7　禁止/开启单个中断
+
+
+```c
+// 禁止单个中断的函数
+void disable_irq(unsigned int irq);
+// 开启单个中断的函数
+void enable_irq(unsigned int irq);
+```
+
+### 4.2.8　中断亲和性
+&ensp;设置中断亲和性，允许中断控制器把某个中断转发给哪些处理器，有两种配置方法  <br>
+&emsp;(1)写文件“/proc/irq/IRQ#/smp_affinity”，参数是位掩码  <br>
+&emsp;(2)文件“/proc/irq/IRQ#/smp_affinity_list”，参数是处理器列表  <br>
+
+### 4.2.9　处理器间中断
+
+&ensp;多处理器系统中，一个处理器可以向其他处理器发送中断  <br>
+
+&ensp;处理处理器间中断的执行流程
+
+![20221128232922](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221128232922.png)
+<center>处理处理器间中断</center>
+
+
+
+## 4.3　中断下半部
+
+&ensp;中断处理程序分为两部分，上半部（top half，th）在关闭中断的情况下执行，只做对时间非常敏感、与硬件相关或者不能被其他中断打断的工作；下半部（bottom half，bh）在开启中断的情况下执行，可以被其他中断打断  <br>
+&ensp;上半部称为硬中断（hardirq），下半部有3种：软中断（softirq）、小任务（tasklet）和工作队列（workqueue） <br>
+
+### 4.3.1　软中断
+
+&ensp;内核定义了一张软中断向量表，每种软中断有一个唯一的编号，对应一个softirq_action实例，softirq_action实例的成员action是处理函数
+```c
+// kernel/softirq.c
+static struct softirq_action softirq_vec[NR_SOFTIRQS] __cacheline_aligned_in_smp;
+
+// include/linux/interrupt.h
+struct softirq_action
+{
+     void (*action)(struct softirq_action *);
+};
+
+```
+
+
+#### 1．软中断的种类
+
+&ensp;内核定义了10种软中断
+```c
+// include/linux/interrupt.h
+enum
+{
+      HI_SOFTIRQ=0,    // 高优先级的小任务
+      TIMER_SOFTIRQ,   // 定时器软中断
+      NET_TX_SOFTIRQ,  // 网络栈发送报文的软中断
+      NET_RX_SOFTIRQ,  // 网络栈接收报文的软中断
+      BLOCK_SOFTIRQ,   // 块设备软中断
+      IRQ_POLL_SOFTIRQ, // 支持I/O轮询的块设备软中断
+      TASKLET_SOFTIRQ,  // 低优先级的小任务
+      SCHED_SOFTIRQ,    // 调度软中断
+      HRTIMER_SOFTIRQ, /* 没有使用，但是保留，因为有些工具依赖这个编号 */
+      RCU_SOFTIRQ,     /* RCU软中断应该总是最后一个软中断 */
+
+      NR_SOFTIRQS
+};
+
+```
+
+#### 2．注册软中断的处理函数
+
+&ensp;open_softirq()用来注册软中断的处理函数，在软中断向量表中为指定的软中断编号设置处理函数
+```c
+// kernel/softirq.c
+void open_softirq(int nr, void (*action)(struct softirq_action *))
+{
+     softirq_vec[nr].action = action;
+}
+```
+
+#### 3．触发软中断
+函数raise_softirq用来触发软中断，参数是软中断编号。
+```c
+void raise_softirq(unsigned int nr);
+
+raise_softirq() -> raise_softirq_irqoff() -> __raise_softirq_irqoff()
+
+// kernel/softirq.c
+void __raise_softirq_irqoff(unsigned int nr)
+{
+     or_softirq_pending(1UL << nr);
+}
+// 宏or_softirq_pending展开
+irq_stat[smp_processor_id()].__softirq_pending |= (1UL << nr);
+```
+
+#### 4.执行软中断
+
+&ensp;中断处理程序的后半部分，调用函数irq_exit()以退出中断上下文，处理软中断
+```c
+// kernel/softirq.c
+void irq_exit(void)
+{
+     …
+     preempt_count_sub(HARDIRQ_OFFSET);
+     if (!in_interrupt() && local_softirq_pending())
+          invoke_softirq();
+     …
+}
+```
+
+```c
+// kernel/softirq.c
+static inline void invoke_softirq(void)
+{
+	if (ksoftirqd_running())
+		return;
+
+	if (!force_irqthreads) {
+		__do_softirq();
+	} else {
+		wakeup_softirqd();
+	}
+}
+```
+&ensp;函数__do_softirq是执行软中断的核心函数
+```c
+// kernel/softirq.c
+#define MAX_SOFTIRQ_TIME  msecs_to_jiffies(2)
+#define MAX_SOFTIRQ_RESTART 10
+asmlinkage __visible void __softirq_entry __do_softirq(void)
+{
+	unsigned long end = jiffies + MAX_SOFTIRQ_TIME;
+	unsigned long old_flags = current->flags;
+	int max_restart = MAX_SOFTIRQ_RESTART;
+	struct softirq_action *h;
+	bool in_hardirq;
+	__u32 pending;
+	int softirq_bit;
+	
+	…
+	pending = local_softirq_pending();
+	…
+	__local_bh_disable_ip(_RET_IP_, SOFTIRQ_OFFSET);
+	…
+	
+	restart:
+	set_softirq_pending(0);
+	
+	local_irq_enable();
+	
+	h = softirq_vec;
+	
+	while ((softirq_bit = ffs(pending))) {
+		…
+		h += softirq_bit - 1;
+		…
+		h->action(h);
+		…
+		h++;
+		pending >>= softirq_bit;
+	}
+	
+	…
+	local_irq_disable();
+	
+	pending = local_softirq_pending();
+	if (pending) {
+		if (time_before(jiffies, end) && !need_resched() &&
+			--max_restart)
+			goto restart;
+	
+		wakeup_softirqd();
+	}
+	
+	…
+	__local_bh_enable(SOFTIRQ_OFFSET);
+	…
+}
+```
+
+#### 5．抢占计数器
+&ensp;进程的thread_info结构体有一个抢占计数器：int preempt_count，它用来表示当前进程能不能被抢占,可通过抢占计数器判断处在什么场景  <br>
+```c
+// nclude/linux/preempt.h
+#define in_irq()             (hardirq_count())  // 正在执行硬中断
+#define in_softirq()         (softirq_count())  // 禁止软中断和正在执行软中断
+#define in_interrupt()       (irq_count())  // 正在执行不可屏蔽中断
+#define in_serving_softirq() (softirq_count() & SOFTIRQ_OFFSET)  // 正在执行软中断
+#define in_nmi()             (preempt_count() & NMI_MASK)  // 不可屏蔽中断场景
+#define in_task()            (!(preempt_count() & \
+                             (NMI_MASK | HARDIRQ_MASK | SOFTIRQ_OFFSET)))  // 进程上下文
+
+#define hardirq_count() (preempt_count() & HARDIRQ_MASK)
+#define softirq_count() (preempt_count() & SOFTIRQ_MASK)
+#define irq_count()     (preempt_count() & (HARDIRQ_MASK | SOFTIRQ_MASK \
+                    | NMI_MASK))
+```
+
+#### 6．禁止/开启软中断
+
+&ensp;禁止软中断的函数是local_bh_disable()
+```c
+include/linux/bottom_half.h
+static inline void local_bh_disable(void)
+{
+      __local_bh_disable_ip(_THIS_IP_, SOFTIRQ_DISABLE_OFFSET);
+}
+
+static __always_inline void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
+{
+      preempt_count_add(cnt);
+      barrier();
+}
+
+include/linux/preempt.h
+#define SOFTIRQ_DISABLE_OFFSET    (2 * SOFTIRQ_OFFSET)
+
+// 开启软中断
+local_bh_enable()
+```
+
+### 4.3.2 小任务 tasklet
+&ensp;小任务（tasklet）是基于软中断实现
+
+#### 1.数据结构
+
+```c
+// include/linux/interrupt.h
+struct tasklet_struct
+{
+     struct tasklet_struct *next;
+     unsigned long state;
+     atomic_t count;
+     void (*func)(unsigned long);
+     unsigned long data;
+};
+```
+
+#### 2．编程接口
+
+
+
+
+
+
+#### 3．技术原理
+
+
+
+
+### 4.3.3　工作队列
 
 
 
@@ -6066,57 +6662,7 @@ el1_da:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## 4.4　系统调用
 
 
 
