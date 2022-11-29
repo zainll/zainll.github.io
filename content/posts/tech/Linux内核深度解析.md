@@ -6664,6 +6664,432 @@ struct tasklet_struct
 
 ## 4.4　系统调用
 
+&ensp;系统调用是内核给用户程序提供的编程接口。用户程序调用系统调用，通常使用glibc库针对单个系统调用封装的函数。glibc库没有针对某个系统调用封装函数，用户程序可通用的封装函数syscall()  <br>
+```c
+#define _GNU_SOURCE
+#include <unistd.h>
+#include <sys/syscall.h>   /* 定义 SYS_xxx */
+
+long syscall(long number, ...);  // number系统调用号
+// 返回值  0成功，-1错误，错误号在errno
+```
+&ensp;应用程序使用系统调用fork()创建子进程，有两种调用方法
+```c
+ret = fork();
+
+ret = syscall(SYS_fork);
+```
+
+&ensp;ARM64处理器提供的系统调用指令是svc  <br>
+&emsp;(1)64位应用程序使用寄存器x8传递系统调用号  <br>
+&emsp;(2)寄存器x0～x6最多可以传递7个参数  <br>
+&emsp;(3)系统调用执行完的时候，使用寄存器x0存放返回值  <br>
+
+
+### 4.4.1 定义系统调用
+
+&ensp;Linux内核使用宏SYSCALL_DEFINE定义系统调用，创建子进程的系统调用fork <br>
+```c
+// kernel/fork.c
+SYSCALL_DEFINE0(fork)
+{
+#ifdef CONFIG_MMU
+     return _do_fork(SIGCHLD, 0, 0, NULL, NULL, 0);
+#else
+     /* 如果处理器没有内存管理单元，那么不支持 */
+     return -EINVAL;
+#endif
+}
+
+// SYSCALL_DEFINE0(fork) 展开
+asmlinkage long sys_fork(void)
+// asmlinkage 表示C语言函数可以被汇编代码调用
+```
+
+
+&ensp;ARM64架构定义的系统调用表sys_call_table
+```c
+// arch/arm64/kernel/sys.c
+#undef __SYSCALL
+#define __SYSCALL(nr, sym)     [nr] = sym,
+
+void * const sys_call_table[__NR_syscalls] __aligned(4096) = {
+     [0 ... __NR_syscalls - 1] = sys_ni_syscall,
+#include <asm/unistd.h>
+};
+```
+
+ARM64架构，头文件“asm/unistd.h”是“arch/arm64/include/asm/unistd.h”。
+```c
+// arch/arm64/include/asm/unistd.h
+#include <uapi/asm/unistd.h>
+
+// arch/arm64/include/uapi/asm/unistd.h
+#include <asm-generic/unistd.h>
+
+// include/asm-generic/unistd.h
+#include <uapi/asm-generic/unistd.h>
+
+// include/uapi/asm-generic/unistd.h
+#define __NR_io_setup 0                                    /* 系统调用号0 */
+__SC_COMP(__NR_io_setup, sys_io_setup, compat_sys_io_setup) /* [0] = sys_io_setup, */
+…
+#define __NR_fork 1079                /* 系统调用号1079 */
+#ifdef CONFIG_MMU
+__SYSCALL(__NR_fork, sys_fork)        /* [1079] = sys_fork, */
+#else
+__SYSCALL(__NR_fork, sys_ni_syscall)
+#endif /* CONFIG_MMU */
+
+#undef __NR_syscalls
+#define __NR_syscalls (__NR_fork+1)
+```
+
+
+### 4.4.2 执行系统调用
+
+&ensp;ARM64处理器把系统调用划分到同步异常，在异常级别1的异常向量表中，系统调用的入口，64位应用程序执行系统调用指令svc，系统调用入口 el0_sync
+```c
+// arch/arm64/kernel.c
+.align   6
+el0_sync:
+	kernel_entry 0
+	mrs   x25, esr_el1                 // 读异常症状寄存器
+	lsr   x24, x25, #ESR_ELx_EC_SHIFT  // 异常类别
+	cmp   x24, #ESR_ELx_EC_SVC64       // 64位系统调用
+	b.eq el0_svc
+	…
+```
+
+&ensp;el0_svc负责执行系统调用
+```c
+// arch/arm64/kernel.c
+/*
+ * 这些是系统调用处理程序使用的寄存器，
+ * 允许我们理论上最多传递7个参数给一个函数 – x0～x6
+ *
+ * x7保留，用于32位模式的系统调用号
+ */
+sc_nr .req x25           // 系统调用的数量
+scno      .req  x26      // 系统调用号
+stbl      .req  x27      // 系统调用表的地址
+tsk       .req  x28      // 当前进程的thread_info结构体的地址
+.align   6
+el0_svc:
+	adrp    stbl, sys_call_table      // 加载系统调用表的地址
+	uxtw    scno, w8         // 寄存器w8里面的系统调用号
+	mov     sc_nr, #__NR_syscalls
+el0_svc_naked:               // 32位系统调用的入口
+	stp   x0, scno, [sp, #S_ORIG_X0]   // 保存原来的x0和系统调用号
+	enable_dbg_and_irq
+	ct_user_exit 1
+	// ptrace跟踪系统调用，跳转到__sys_trace处理
+	ldr   x16, [tsk, #TSK_TI_FLAGS]   // 检查系统调用钩子 
+	tst   x16, #_TIF_SYSCALL_WORK
+	b.ne      __sys_trace
+	cmp     scno, sc_nr         // 检查系统调用号是否超过上限
+	b.hs      ni_sys
+	ldr   x16, [stbl, scno, lsl #3]   // 系统调用表表项的地址
+	blr   x16                         // 调用sys_*函数
+	b   ret_fast_syscall
+	ni_sys:
+	mov   x0, sp
+	bl   do_ni_syscall
+	b   ret_fast_syscall
+ENDPROC(el0_svc) 
+```
+
+&ensp;ret_fast_syscall从系统调用返回用户空间
+```c
+// arch/arm64/kernel.c
+ ret_fast_syscall:
+	disable_irq
+	str   x0, [sp, #S_X0]   /* DEFINE(S_X0, offsetof(struct pt_regs, regs[0])); */
+	ldr   x1, [tsk, #TSK_TI_FLAGS]
+	and   x2, x1, #_TIF_SYSCALL_WORK
+	cbnz    x2, ret_fast_syscall_trace
+	and   x2, x1, #_TIF_WORK_MASK
+	cbnz    x2, work_pending
+	enable_step_tsk x1, x2
+	kernel_exit 0
+	ret_fast_syscall_trace:
+	enable_irq                       // 开启中断
+	b   __sys_trace_return_skipped    // 我们已经保存了x0
+work_pending:
+	mov   x0, sp                     // 'regs'
+	bl   do_notify_resume
+#ifdef CONFIG_TRACE_IRQFLAGS
+ 	bl   trace_hardirqs_on           // 在用户空间执行时开启中断
+#endif
+	ldr   x1, [tsk, #TSK_TI_FLAGS]   // 重新检查单步执行
+	b   finish_ret_to_user
+ret_to_user:
+ …
+finish_ret_to_user:
+	enable_step_tsk x1, x2
+	kernel_exit 0
+ENDPROC(ret_to_user)
+
+```
+&ensp;work_pending调用函数do_notify_resume
+```c
+// 
+23
+24  ret_to_user:
+25   …
+26  finish_ret_to_user:
+27   enable_step_tsk x1, x2
+28   kernel_exit 0
+29  ENDPROC(ret_to_user)
+第2行代码，禁止中断。
+
+第3行代码，寄存器x0已经存放了处理函数的返回值，把保存在内核栈中的寄存器x0的值更新为返回值。
+
+第4～6行代码，如果使用ptrace跟踪系统调用，跳转到ret_fast_syscall_trace处理。
+
+第7行和第8行代码，如果进程的thread_info.flags设置了需要重新调度（_TIF_NEED_RESCHED）或者有信号需要处理（_TIF_SIGPENDING）等标志位，跳转到work_pending处理。
+
+第9行代码，如果使用系统调用ptrace设置了软件单步执行，那么开启单步执行。
+
+第10行代码，使用保存在内核栈中的寄存器值恢复寄存器，从内核模式返回用户模式。
+
+work_pending调用函数do_notify_resume，函数do_notify_resume的代码如下：
+
+arch/arm64/kernel/signal.c
+asmlinkage void do_notify_resume(struct pt_regs *regs,
+                 unsigned int thread_flags)
+{
+ …
+	do {
+		if (thread_flags & _TIF_NEED_RESCHED) {
+			schedule();
+		} else {
+			local_irq_enable();
+	
+			if (thread_flags & _TIF_UPROBE)
+					uprobe_notify_resume(regs);
+	
+			if (thread_flags & _TIF_SIGPENDING)
+					do_signal(regs);
+	
+			if (thread_flags & _TIF_NOTIFY_RESUME) {
+					clear_thread_flag(TIF_NOTIFY_RESUME);
+					tracehook_notify_resume(regs);
+			}
+	
+			if (thread_flags & _TIF_FOREIGN_FPSTATE)
+					fpsimd_restore_current_state();
+		}
+	
+		local_irq_disable();
+		thread_flags = READ_ONCE(current_thread_info()->flags);
+	} while (thread_flags & _TIF_WORK_MASK);
+}
+```
+
+
+
+# 第5章 内核互斥技术
+
+&ensp;临界区的执行时间比较长或者可能睡眠互斥技术  <br>
+&emsp;(1)信号量  <br>
+&emsp;(2)读写信号量  <br>
+&emsp;(3)互斥锁   <br>
+&emsp;(4)实时互斥锁   <br>
+&ensp;临界区的执行时间很短，并且不会睡眠 互斥技术 <br>
+&emsp;(1)原子变量   <br>
+&emsp;(2)自旋锁   <br>
+&emsp;(3)读写锁   <br>
+&emsp;(4)顺序锁   <br>
+&ensp;进程互斥技术  <br>
+&emsp;(1)禁止内核抢占  <br>
+&emsp;(2)禁止软中断   <br>
+&emsp;(3)禁止硬中断    <br>
+&ensp;免使用锁的互斥技术  <br>
+&emsp;(1)每处理器变量  <br>
+&emsp;(2)每处理器计数器  <br>
+&emsp;(3)内存屏障   <br>
+&emsp;(4)读-复制更新(Read-Copy Update RCU)  <br>
+&emsp;(5)可睡眠RCU  <br>
+
+
+&ensp;内核提供了死锁检测工具lockdep <br>
+
+## 5.1 信号量
+&ensp;信号量允许多个进程同时进入临界区，信号量的计数值设置为1，即二值信号量，这种信号量称为互斥信号量，适合保护比较长的临界区    <br>
+&ensp;内核使用的信号量定义
+```c
+// include/linux/semaphore.h
+struct semaphore {
+     raw_spinlock_t   lock;  // 自旋锁，保护信号量其他成员
+     unsigned int     count;  // 计数值，允许多少个进程进入临界区
+     struct list_head wait_list;  // 等待进入临界区进程链表
+};
+
+```
+&ensp;
+```c
+// 获取信号量
+void down(struct semaphore *sem);
+int down_interruptible(struct semaphore *sem);
+int down_killable(struct semaphore *sem);
+int down_trylock(struct semaphore *sem);
+int down_timeout(struct semaphore *sem, long jiffies);
+// 释放信号量函数
+void up(struct semaphore *sem);
+```
+
+## 5.2 读写信号量
+&ensp;读写信号量,适合在以读为主
+```c
+// include/linux/rwsem.h
+struct rw_semaphore {
+	atomic_long_t count;
+	struct list_head wait_list;
+	raw_spinlock_t wait_lock;
+	struct task_struct *owner;
+	…
+};
+
+```
+
+初始化，使用
+```c
+// 初始化静态读写信号量
+DECLARE_RWSEM(name);
+// 运行时动态初始化读写信号量
+init_rwsem(sem);
+// 申请读锁
+void down_read(struct rw_semaphore *sem)；
+int down_read_trylock(struct rw_semaphore *sem)；
+// 释放读锁
+void up_read(struct rw_semaphore *sem);
+
+// 申请写锁
+void down_write(struct rw_semaphore *sem);
+int down_write_killable(struct rw_semaphore *sem);
+int down_write_trylock(struct rw_semaphore *sem);
+// 写锁降级为读锁
+void downgrade_write(struct rw_semaphore *sem);
+// 释放写锁
+void up_write(struct rw_semaphore *sem);
+```
+
+
+## 5.3 互斥锁
+
+&ensp;互斥锁只允许一个进程进入临界区，适合保护比较长的临界区
+```c
+// include/linux/mutex.h
+struct mutex {
+	atomic_long_t  owner;
+	spinlock_t     wait_lock;
+#ifdef CONFIG_MUTEX_SPIN_ON_OWNER
+	struct optimistic_spin_queue osq; 
+#endif
+	struct list_head wait_list;
+	…
+};
+```
+&ensp;使用互斥锁
+```c
+// 初始化静态互斥锁
+DEFINE_MUTEX(mutexname);
+// 运行时动态初始化互斥锁
+mutex_init(mutex);
+// 申请互斥锁
+void mutex_lock(struct mutex *lock);
+int mutex_lock_interruptible(struct mutex *lock);
+int mutex_lock_killable(struct mutex *lock);
+int mutex_trylock(struct mutex *lock);
+// 释放互斥锁
+void mutex_unlock(struct mutex *lock);
+```
+
+## 5.4 实时互斥锁
+
+&ensp;实时互斥锁是对互斥锁的改进，实现了优先级继承（priority inheritance），解决了优先级反转（priority inversion）问题
+```c
+// include/linux/rtmutex.h
+struct rt_mutex {
+	raw_spinlock_t     wait_lock;
+	struct rb_root     waiters;
+	struct rb_node     *waiters_leftmost;
+	struct task_struct    *owner;
+	…
+};
+```
+
+&ensp;初始化，使用
+```c
+// 初始化静态实时互斥锁
+DEFINE_RT_MUTEX(mutexname);
+// 运行时动态初始化实时互斥锁
+rt_mutex_init(mutex);
+// 申请实时互斥锁
+void rt_mutex_lock(struct rt_mutex *lock);
+int rt_mutex_lock_interruptible(struct rt_mutex *lock);
+int rt_mutex_timed_lock(struct rt_mutex *lock, struct hrtimer_sleeper *timeout);
+int rt_mutex_trylock(struct rt_mutex *lock);
+
+// 释放实时互斥锁
+void rt_mutex_unlock(struct rt_mutex *lock);
+```
+
+
+
+## 5.5 原子变量
+
+&ensp;原子变量用来实现对整数的互斥访问，通常用来实现计数器  <br>
+&ensp;内核定义了3种原子变量
+```c
+// 整数原子变量，数据类型是atomic_t
+// include/linux/types.h
+typedef struct {
+    int counter;
+} atomic_t;
+
+// 长整数原子变量，数据类型是atomic_long_t
+
+// 64位整数原子变量，数据类型是atomic64_t
+
+```
+
+
+
+
+
+
+## 5.6 自旋锁
+
+&ensp;自旋锁用于处理器之间的互斥，适合保护很短的临界区，不允许在临界区睡眠
+
+```c
+// include/linux/spinlock_types.h
+typedef struct spinlock {
+    union {
+        struct raw_spinlock rlock;
+        …
+    };
+} spinlock_t;
+
+typedef struct raw_spinlock {
+    arch_spinlock_t raw_lock;
+    …
+} raw_spinlock_t;
+
+```
+
+
+
+
+## 5.7 读写自旋锁
+
+
+
+
+
+## 5.8 顺序锁
 
 
 
@@ -6675,10 +7101,7 @@ struct tasklet_struct
 
 
 
-
-
-
-
+## 5.9　禁止内核抢占
 
 
 
