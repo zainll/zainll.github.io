@@ -7556,8 +7556,37 @@ fflush
 
 ### 6.1.3　内核空间层面
 
-&ensp;使不同的文件系统实现能够共存，内核实现了一个抽象层，称为虚拟文件系统（Virtual File System，VFS），也称为虚拟文件系统切换（Virtual Filesystem Switch，VFS）   <br>
+&ensp;使不同的文件系统实现能够共存，内核实现了一个抽象层，称为虚拟文件系统(Virtual File System，VFS)，也称为虚拟文件系统切换(Virtual Filesystem Switch，VFS)   <br>
 &ensp;文件系统分为以下4种  <br>
+&emsp;(1)块设备文件系统，Linux原创文件系统：EXT2，EXT3和EXT4  <br>
+&emsp;(2)闪存文件系统，NAND闪存和NOR闪存，常用的闪存文件系统是JFFS2和UBIFS  <br>
+&emsp;(3)内存文件系统，常见内存文件系统tmpfs  <br>
+&emsp;(4)伪文件系统：  <br>
+&ensp;&ensp;1）sockfs，套接字  <br>
+&ensp;&ensp;2) proc 文件系统，挂载在目录 /proc  <br>    
+&ensp;&ensp;3) sysfs 把内核的设备信息导出到用户空间，挂载目录 /sys      <br>                
+&ensp;&ensp;4) hugetlbfs 实现标准巨型页   <br>            
+&ensp;&ensp;5) cgroup文件系统 控制组用来控制一组进程资源， <br>      
+&ensp;&ensp;6) cgroup2文件系统              <br>
+          
+&ensp;libnvdimm子系统提供对3种NVDIMM设备的支持：持久内存（persistent memory，PMEM）模式的NVDIMM设备，块设备（block，BLK）模式的NVDIMM设备，以及同时支持PMEM和BLK两种访问模式的NVDIMM设备  <br>
+
+
+
+
+## 6.2　虚拟文件系统的数据结构
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
