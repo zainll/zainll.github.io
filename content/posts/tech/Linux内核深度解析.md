@@ -6833,29 +6833,7 @@ ENDPROC(ret_to_user)
 ```
 &ensp;work_pending调用函数do_notify_resume
 ```c
-// 
-23
-24  ret_to_user:
-25   …
-26  finish_ret_to_user:
-27   enable_step_tsk x1, x2
-28   kernel_exit 0
-29  ENDPROC(ret_to_user)
-第2行代码，禁止中断。
-
-第3行代码，寄存器x0已经存放了处理函数的返回值，把保存在内核栈中的寄存器x0的值更新为返回值。
-
-第4～6行代码，如果使用ptrace跟踪系统调用，跳转到ret_fast_syscall_trace处理。
-
-第7行和第8行代码，如果进程的thread_info.flags设置了需要重新调度（_TIF_NEED_RESCHED）或者有信号需要处理（_TIF_SIGPENDING）等标志位，跳转到work_pending处理。
-
-第9行代码，如果使用系统调用ptrace设置了软件单步执行，那么开启单步执行。
-
-第10行代码，使用保存在内核栈中的寄存器值恢复寄存器，从内核模式返回用户模式。
-
-work_pending调用函数do_notify_resume，函数do_notify_resume的代码如下：
-
-arch/arm64/kernel/signal.c
+// arch/arm64/kernel/signal.c
 asmlinkage void do_notify_resume(struct pt_regs *regs,
                  unsigned int thread_flags)
 {
@@ -7008,7 +6986,7 @@ void mutex_unlock(struct mutex *lock);
 
 ## 5.4 实时互斥锁
 
-&ensp;实时互斥锁是对互斥锁的改进，实现了优先级继承（priority inheritance），解决了优先级反转（priority inversion）问题
+&ensp;实时互斥锁是对互斥锁的改进，实现了优先级继承(priority inheritance)，解决了优先级反转(priority inversion)问题
 ```c
 // include/linux/rtmutex.h
 struct rt_mutex {
@@ -7054,9 +7032,73 @@ typedef struct {
 // 64位整数原子变量，数据类型是atomic64_t
 
 ```
+&ensp;原子变量使用方法
+```c
+// 初始化静态原子变量
+atomic_t <name> = ATOMINC_INIT(n);
+// 动态初始化原子变量
+atomic_set(v, i);
+// 读取原子变量
+atomic_read(v)
+// 原子变量加i，并返回
+atomic_add_return(i, v)
+// 原子变量v加i
+atomic_add(i, v)
+// 原子变量加1
+atomic_inc(v)
+
+// 原子变量v减i
+atomic_sub(i, v)
+// 原子变量减1
+atomic_dec(v)
+```
 
 
+### ARM64处理器的原子变量实现
 
+&ensp;ARM64处理器原子变量指令支持  <br>
+&emsp;(1)独占加载指令ldxr (load Exclusive Register)  <br>
+&emsp;(2)独占存储指令stxr (Store Exclusive Register) <br>
+```c
+// 独占加载指令加载32位数据
+ldxr <Wt>, [<Xn|SP>{,#0}]
+// 独占存储指令存储32位数据
+stxr <Ws>, <Wt>, [<Xn|SP>{,#0}]
+// 原子加法指令stadd操作32位数据
+stadd <Ws>, [<Xn|SP>]
+```
+&ensp;函数atomic_add(i, v)实现
+```c
+// arch/arm64/include/asm/atomic_ll_sc.h
+static inline void atomic_add(int i, atomic_t *v)
+{
+	unsigned long tmp;
+	int result;   
+
+	asm volatile("// atomic_add \n"                    \
+	"   prfm   pstl1strm, %2\n"                         \
+	"1:   ldxr   %w0, %2\n"                             \
+	"   " add "   %w0, %w0, %w3\n"                      \
+	"   stxr   %w1, %w0, %2\n"                          \
+	"   cbnz   %w1, 1b"                                 \
+	: "=&r" (result), "=&r" (tmp), "+Q" (v->counter)   \
+	: "Ir" (i));
+}
+```
+&ensp;原子加法指令stadd实现的函数atomic_add(i, v)
+```c
+// arch/arm64/include/asm/atomic_lse.h
+static inline void atomic_add(int i, atomic_t *v)
+{
+      register int w0 asm ("w0") = i;
+      register atomic_t *x1 asm ("x1") = v;
+
+      asm volatile(" stadd    %w[i], %[v]\n"     \
+      : [i] "+r" (w0), [v] "+Q" (v->counter)   \
+      : "r" (x1)                               \
+      : );
+}
+```
 
 
 
@@ -7079,66 +7121,235 @@ typedef struct raw_spinlock {
 } raw_spinlock_t;
 
 ```
+&ensp;Linux内核有一个实时内核分支（开启配置宏CONFIG_PREEMPT_RT）来支持硬实时特性，内核主线只支持软实时  <br>
+&ensp;数据类型arch_spinlock_t，ARM64架构的定义
+```c
+// arch/arm64/include/asm/spinlock_types.h
+typedef struct {
+#ifdef __AARCH64EB__     /* 大端字节序（高位存放在低地址） */
+     u16 next;
+     u16 owner;
+#else                    /* 小端字节序（低位存放在低地址） */
+     u16 owner;
+     u16 next;
+#endif
+} __aligned(4) arch_spinlock_t;
+```
+&ensp;自旋锁使用
+```c
+// 初始化自旋锁
+DEFINE_SPINLOCK(x);
+// 运行时初始化自旋锁
+spin_lock_init(x);
+// 申请自旋锁
+void spin_lock(spinlock_t *lock);
+void spin_lock_bh(spinlock_t *lock);
+void spin_lock_irq(spinlock_t *lock);
+spin_lock_irqsave(lock, flags);
+int spin_trylock(spinlock_t *lock);
+// 释放自旋锁
+void spin_unlock(spinlock_t *lock);
+void spin_unlock_bh(spinlock_t *lock);
+void spin_unlock_irq(spinlock_t *lock);
+void spin_unlock_irqrestore(spinlock_t *lock, unsigned long flags);
+```
 
+&ensp;原始自旋锁
+```c
+// 初始化原始自旋锁
+DEFINE_RAW_SPINLOCK(x);
+// 运行时初始化原始自旋锁
+raw_spin_lock_init (x);
+// 申请原始自旋锁
+raw_spin_lock(lock)
+raw_spin_lock_bh(lock)
+raw_spin_lock_irq(lock)
+raw_spin_lock_irqsave(lock, flags)
+raw_spin_trylock(lock)
+// 释放原始自旋锁
+raw_spin_unlock(lock)
+raw_spin_unlock_bh(lock)
+raw_spin_unlock_irq(lock)
+raw_spin_unlock_irqrestore(lock, flags)
+```
+
+&ensp;函数spin_lock()负责申请自旋锁
+```c
+// spin_lock() -> raw_spin_lock() -> _raw_spin_lock() -> __raw_spin_lock()  -> do_raw_spin_lock() -> arch_spin_lock()
+
+arch/arm64/include/asm/spinlock.h
+static inline void arch_spin_lock(arch_spinlock_t *lock)
+{
+	unsigned int tmp;
+	arch_spinlock_t lockval, newval;
+	asm volatile(
+	ARM64_LSE_ATOMIC_INSN(
+	/* LL/SC */
+	"   prfm    pstl1strm, %3\n"
+	"1:   ldaxr   %w0, %3\n"
+	"   add   %w1, %w0, %w5\n"
+	"   stxr   %w2, %w1, %3\n"
+	"   cbnz   %w2, 1b\n",
+	/* 大系统扩展的原子指令 */
+	"   mov   %w2, %w5\n"
+	"   ldadda   %w2, %w0, %3\n"
+	__nops(3)
+	)
+	/* 我们得到锁了吗？*/
+	"   eor   %w1, %w0, %w0, ror #16\n"
+	"   cbz   %w1, 3f\n"
+	"   sevl\n"
+	"2:   wfe\n"
+	"   ldaxrh   %w2, %4\n"
+	"   eor   %w1, %w2, %w0, lsr #16\n"
+	"   cbnz   %w1, 2b\n"
+	/* 得到锁，临界区从这里开始*/
+	"3:"
+	: "=&r" (lockval), "=&r" (newval), "=&r" (tmp), "+Q" (*lock)
+	: "Q" (lock->owner), "I" (1 << TICKET_SHIFT)
+	: "memory");
+}
+```
 
 
 
 ## 5.7 读写自旋锁
 
+&ensp;读写自旋锁(通常简称读写锁)是自旋锁的改进，区分读者和写者，允许多个读者同时进入临界区，读者和写者互斥，写者和写者互斥  <br>
+```c
+// include/linux/rwlock_types.h
+typedef struct {
+     arch_rwlock_t raw_lock;
+     …
+} rwlock_t;
 
+// arch/arm64/include/asm/spinlock_types.h
+typedef struct {
+     volatile unsigned int lock;
+} arch_rwlock_t;
+
+
+```
 
 
 
 ## 5.8 顺序锁
 
+&ensp;顺序锁区分读者和写者
 
 
+### 5.8.1　完整版的顺序锁
+&ensp;顺序锁区分读者和写者
 
+```c
+// include/linux/seqlock.h
+typedef struct {
+    struct seqcount seqcount;  // 序列号
+    spinlock_t lock;  // 自旋锁
+} seqlock_t;
+```
 
-
-
-
+### 5.8.2　只提供序列号的顺序锁
 
 
 
 ## 5.9　禁止内核抢占
 
 
+&ensp;每个进程的thread_info结构体有一个抢占计数器：“int preempt_count”，其中第0～7位是抢占计数，第8～15位是软中断计数，第16～19位是硬中断计数，第20位是不可屏蔽中断计数  <br>
+
+```c
+// 禁止内核抢占的编程接口
+preempt_disable()
+// 开启内核抢占的编程接口
+preempt_enable()
+
+```
+
+&ensp;申请自旋锁的函数包含了禁止内核抢占
+```c
+spin_lock() -> raw_spin_lock() -> _raw_spin_lock() -> __raw_spin_lock()
+
+// include/linux/spinlock_api_smp.h
+static inline void __raw_spin_lock(raw_spinlock_t *lock)
+{
+     preempt_disable();
+     …
+     LOCK_CONTENDED(lock, do_raw_spin_trylock, do_raw_spin_lock);
+}
+```
+
+&ensp;释放自旋锁的函数包含了开启内核抢占
+```c
+spin_unlock() -> raw_spin_unlock() -> _raw_spin_unlock() -> __raw_spin_unlock()
+
+// include/linux/spinlock_api_smp.h
+static inline void __raw_spin_unlock(raw_spinlock_t *lock)
+{
+     …
+     do_raw_spin_unlock(lock);
+     preempt_enable();
+}
+
+```
 
 
 
 ## 5.10　进程和软中断互斥
 
-
+&ensp;每个进程的thread_info结构体有一个抢占计数器“int preempt_count”，其中第8～15位是软中断计数  <br>
+```c
+// 禁止软中断的接口
+local_bh_disable()
+// 开启软中断的接口
+local_bh_enable()
+```
 
 
 
 
 ## 5.11　进程和硬中断互斥
 
+&ensp;进程和硬中断可能访问同一个对象，那么进程和硬中断需要互斥，进程需要禁止硬中断  <br>
+```c
+// 禁止硬中断的接口
+local_irq_disable()
+local_irq_save(flags)
+// 开启硬中断接口
+local_irq_enable()
+local_irq_restore(flags)
 
-
-
-
-
-
+```
 
 ## 5.12　每处理器变量
 
+&ensp;多处理器系统中，每处理器变量为每个处理器生成一个变量的副本 <br>
+&ensp;每处理器变量分为静态和动态两种 <br>
+
+### 5.12.1　静态每处理器变量
 
 
 
+### 5.12.2　动态每处理器变量
 
 
 
-
+### 5.12.3　访问每处理器变量
 
 
 ## 5.13　每处理器计数器
 
+&ensp;原子变量作为计数器
 
-
-
+```c
+// include/linux/percpu_counter.h
+struct percpu_counter {
+	raw_spinlock_t lock;
+	s64 count;
+	…
+	s32 __percpu *counters;
+};
+```
 
 
 
