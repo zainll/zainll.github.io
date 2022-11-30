@@ -5,12 +5,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>读书 | zain&#39;s Blog</title>
+<title>性能工具 | zain&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="豆豆三部曲 《背叛》 《遥远的救世主》 《天幕红尘》 在细雨中呼唤 余华 普通农村少年以旁观者角度叙述自己的童年少年成长，世间人都处于一辆时光列车中，其">
+<meta name="description" content="perf &amp; simpleperf">
 <meta name="author" content="
 &nbsp;Zain">
-<link rel="canonical" href="https://liuz0123.gitee.io/zain/posts/read/read/read/">
+<link rel="canonical" href="https://liuz0123.gitee.io/zain/posts/tech/%E6%80%A7%E8%83%BD%E5%B7%A5%E5%85%B7/">
 <link crossorigin="anonymous" href="/zain/assets/css/stylesheet.6bbe4903eaf247f5c3db656a51fd7b09d982ab42029edfdc123f359e2748dc03.css" integrity="sha256-a75JA&#43;ryR/XD22VqUf17CdmCq0ICnt/cEj81nidI3AM=" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/zain/assets/js/highlight.acb54fd32bbc1982428b8850317e45d076b95012730a5936667e6bc21777692a.js" integrity="sha256-rLVP0yu8GYJCi4hQMX5F0Ha5UBJzClk2Zn5rwhd3aSo="
         onload="hljs.initHighlightingOnLoad();"></script>
@@ -67,16 +67,16 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-<meta property="og:title" content="读书" />
-<meta property="og:description" content="豆豆三部曲 《背叛》 《遥远的救世主》 《天幕红尘》 在细雨中呼唤 余华 普通农村少年以旁观者角度叙述自己的童年少年成长，世间人都处于一辆时光列车中，其" />
+<meta property="og:title" content="性能工具" />
+<meta property="og:description" content="perf &amp; simpleperf" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://liuz0123.gitee.io/zain/posts/read/read/read/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-05-05T00:18:06&#43;08:00" />
-<meta property="article:modified_time" content="2022-05-05T00:18:06&#43;08:00" />
+<meta property="og:url" content="https://liuz0123.gitee.io/zain/posts/tech/%E6%80%A7%E8%83%BD%E5%B7%A5%E5%85%B7/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-10-15T00:17:58&#43;08:00" />
+<meta property="article:modified_time" content="2022-10-15T00:17:58&#43;08:00" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="读书"/>
-<meta name="twitter:description" content="豆豆三部曲 《背叛》 《遥远的救世主》 《天幕红尘》 在细雨中呼唤 余华 普通农村少年以旁观者角度叙述自己的童年少年成长，世间人都处于一辆时光列车中，其"/>
+<meta name="twitter:title" content="性能工具"/>
+<meta name="twitter:description" content="perf &amp; simpleperf"/>
 
 
 <script type="application/ld+json">
@@ -93,14 +93,14 @@ var _hmt = _hmt || [];
     {
       "@type": "ListItem",
       "position":  2 ,
-      "name": "📕 阅文",
-      "item": "https://liuz0123.gitee.io/zain/posts/read/"
+      "name": "👨🏻‍💻 技术",
+      "item": "https://liuz0123.gitee.io/zain/posts/tech/"
     }, 
     {
       "@type": "ListItem",
       "position":  3 ,
-      "name": "读书",
-      "item": "https://liuz0123.gitee.io/zain/posts/read/read/read/"
+      "name": "性能工具",
+      "item": "https://liuz0123.gitee.io/zain/posts/tech/%E6%80%A7%E8%83%BD%E5%B7%A5%E5%85%B7/"
     }
   ]
 }
@@ -109,24 +109,24 @@ var _hmt = _hmt || [];
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "读书",
-  "name": "读书",
-  "description": "豆豆三部曲 《背叛》 《遥远的救世主》 《天幕红尘》 在细雨中呼唤 余华 普通农村少年以旁观者角度叙述自己的童年少年成长，世间人都处于一辆时光列车中，其",
+  "headline": "性能工具",
+  "name": "性能工具",
+  "description": "perf \u0026amp; simpleperf",
   "keywords": [
     ""
   ],
-  "articleBody": "豆豆三部曲 《背叛》 《遥远的救世主》 《天幕红尘》\n在细雨中呼唤 余华 普通农村少年以旁观者角度叙述自己的童年少年成长，世间人都处于一辆时光列车中，其中遇到的人和事，不管他们是好的还是坏的，未来的未知都无可逃避，唯一能做好的就是：好好活着，珍惜眼前的一切，做最好的自己。\n死亡不是失去生命，只是走出了时间\n通往奴役之路 如果我们仅仅只是一部无人性的机器中的一个齿轮，这也许不是好事情；但如果我们再也无法脱离它，被束缚在为我们选定的那些上级的身边，那么情况就不知道要糟糕多少倍。当每个人意识到他的命运的不满，就会同他的这种意识一起成长。\n简单的逻辑学 小毕的故事 一颗种子，但却不必发芽\n",
-  "wordCount" : "281",
+  "articleBody": "perf \u0026 simpleperf ",
+  "wordCount" : "3",
   "inLanguage": "en",
-  "datePublished": "2022-05-05T00:18:06+08:00",
-  "dateModified": "2022-05-05T00:18:06+08:00",
+  "datePublished": "2022-10-15T00:17:58+08:00",
+  "dateModified": "2022-10-15T00:17:58+08:00",
   "author":[{
     "@type": "Person",
     "name": "Zain"
   }],
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://liuz0123.gitee.io/zain/posts/read/read/read/"
+    "@id": "https://liuz0123.gitee.io/zain/posts/tech/%E6%80%A7%E8%83%BD%E5%B7%A5%E5%85%B7/"
   },
   "publisher": {
     "@type": "Organization",
@@ -229,18 +229,18 @@ var _hmt = _hmt || [];
 <article class="post-single">
     <div id="single-content">
         <header class="post-header">
-            <div class="breadcrumbs"><a href="https://liuz0123.gitee.io/zain/">主页</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/posts/read/">📕 阅文</a></div>
+            <div class="breadcrumbs"><a href="https://liuz0123.gitee.io/zain/">主页</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/posts/tech/">👨🏻‍💻 技术</a></div>
             <h1 class="post-title">
-                读书
+                性能工具
             </h1>
-            <div class="post-meta">Create:&nbsp;<span title='2022-05-05 00:18:06 +0800 CST'>2022-05-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-05-05&nbsp;|&nbsp;Words:&nbsp;281&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
+            <div class="post-meta">Create:&nbsp;<span title='2022-10-15 00:17:58 +0800 CST'>2022-10-15</span>&nbsp;|&nbsp;Update:&nbsp;2022-10-15&nbsp;|&nbsp;Words:&nbsp;3&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
 &nbsp;Zain
 
 
 
                 &nbsp;|&nbsp;tags: &nbsp;
                 <ul class="post-tags-meta">
-                    <a href="https://liuz0123.gitee.io/zain/tags/read/">read</a>
+                    <a href="https://liuz0123.gitee.io/zain/tags/tech/">tech</a>
                 </ul>
 
                 
@@ -259,15 +259,7 @@ var _hmt = _hmt || [];
 
         <div class="inner"><ul>
                 <li>
-                    <a href="#%e8%b1%86%e8%b1%86%e4%b8%89%e9%83%a8%e6%9b%b2" aria-label="豆豆三部曲">豆豆三部曲</a></li>
-                <li>
-                    <a href="#%e5%9c%a8%e7%bb%86%e9%9b%a8%e4%b8%ad%e5%91%bc%e5%94%a4-%e4%bd%99%e5%8d%8e" aria-label="在细雨中呼唤 余华">在细雨中呼唤 余华</a></li>
-                <li>
-                    <a href="#%e9%80%9a%e5%be%80%e5%a5%b4%e5%bd%b9%e4%b9%8b%e8%b7%af" aria-label="通往奴役之路">通往奴役之路</a></li>
-                <li>
-                    <a href="#%e7%ae%80%e5%8d%95%e7%9a%84%e9%80%bb%e8%be%91%e5%ad%a6" aria-label="简单的逻辑学">简单的逻辑学</a></li>
-                <li>
-                    <a href="#%e5%b0%8f%e6%af%95%e7%9a%84%e6%95%85%e4%ba%8b" aria-label="小毕的故事">小毕的故事</a>
+                    <a href="#perf--simpleperf" aria-label="perf &amp;amp; simpleperf">perf &amp; simpleperf</a>
                 </li>
             </ul>
         </div>
@@ -334,19 +326,8 @@ var _hmt = _hmt || [];
     }
 </script>
         
-        <div class="post-content"><h2 id="豆豆三部曲">豆豆三部曲<a hidden class="anchor" aria-hidden="true" href="#豆豆三部曲">#</a></h2>
-<p>《背叛》 《遥远的救世主》 《天幕红尘》</p>
-<br>
-<h2 id="在细雨中呼唤-余华">在细雨中呼唤 余华<a hidden class="anchor" aria-hidden="true" href="#在细雨中呼唤-余华">#</a></h2>
-<p>普通农村少年以旁观者角度叙述自己的童年少年成长，世间人都处于一辆时光列车中，其中遇到的人和事，不管他们是好的还是坏的，未来的未知都无可逃避，唯一能做好的就是：好好活着，珍惜眼前的一切，做最好的自己。</p>
-<p>死亡不是失去生命，只是走出了时间</p>
-<h2 id="通往奴役之路">通往奴役之路<a hidden class="anchor" aria-hidden="true" href="#通往奴役之路">#</a></h2>
-<p> 如果我们仅仅只是一部无人性的机器中的一个齿轮，这也许不是好事情；但如果我们再也无法脱离它，被束缚在为我们选定的那些上级的身边，那么情况就不知道要糟糕多少倍。当每个人意识到他的命运的不满，就会同他的这种意识一起成长。</p>
-<h2 id="简单的逻辑学">简单的逻辑学<a hidden class="anchor" aria-hidden="true" href="#简单的逻辑学">#</a></h2>
-<h2 id="小毕的故事">小毕的故事<a hidden class="anchor" aria-hidden="true" href="#小毕的故事">#</a></h2>
-<blockquote>
-<p>一颗种子，但却不必发芽</p>
-</blockquote>
+        <div class="post-content"><h1 id="perf--simpleperf">perf &amp; simpleperf<a hidden class="anchor" aria-hidden="true" href="#perf--simpleperf">#</a></h1>
+<h1 id="heading"><a hidden class="anchor" aria-hidden="true" href="#heading">#</a></h1>
 
 
         </div>
@@ -381,15 +362,15 @@ var _hmt = _hmt || [];
         <footer class="post-footer">
             
 <nav class="paginav">
-  <a class="prev" href="https://liuz0123.gitee.io/zain/posts/read/read/readingplan/">
+  <a class="prev" href="https://liuz0123.gitee.io/zain/posts/blog/vscode_c_project_config/">
     <span class="title">« 上一页</span>
     <br>
-    <span>Reading Plan</span>
+    <span>vscode c/c&#43;&#43;一键创建工程插件</span>
   </a>
-  <a class="next" href="https://liuz0123.gitee.io/zain/posts/read/%E9%97%B2%E8%A8%80%E7%A2%8E%E8%AF%AD/">
+  <a class="next" href="https://liuz0123.gitee.io/zain/posts/tech/%E6%A0%91%E8%8E%93%E6%B4%BE/">
     <span class="title">下一页 »</span>
     <br>
-    <span>闲言碎语</span>
+    <span>树莓派</span>
   </a>
 </nav>
 
