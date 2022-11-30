@@ -7358,14 +7358,56 @@ struct percpu_counter {
 
 ## 5.14　内存屏障
 
+&ensp;内存屏障（memory barrier）是一种保证内存访问顺序的方法，解决内存访问乱序问题  <br>
+&emsp;(1)    <br>
+&emsp;(2)    <br>
+&emsp;(3)    <br>
 
+&ensp;内核支持3种内存屏障  <br>
+&emsp;(1)编译器屏障  <br>
+&emsp;(2)处理器内存屏障  <br>
+&emsp;(3)内存映射I/O (Memory Mapping I/O MMIO)写屏障   <br>
 
+### 5.14.1　编译器屏障
+&ensp;编译器屏障
+```c
+barrier();
 
+/// GCC编译器定义的宏“barrier()
+// include/linux/compiler-gcc.h
+#define barrier() __asm__ __volatile__("": : :"memory")
+```
 
+### 5.14.2　处理器内存屏障
+&ensp;处理器内存屏障用来解决处理器之间的内存访问乱序问题和处理器访问外围设备的乱序问题  <br>
 
-
-
-
+<table>
+	<tr>
+	    <th>内存屏障类型</th>
+	    <th>强制性内存屏障</th>
+	    <th>SMP内存屏障</th>  
+	</tr >
+	<tr >
+	    <td >通用内存屏障</td>
+	    <td>mb()</td>
+	    <td>smp_mb()</td>
+	</tr>
+	<tr >
+	    <td >写内存屏障</td>
+	    <td>wmb()</td>
+	    <td>smp_wmb()</td>
+	</tr>
+	<tr >
+	    <td >读内存屏障</td>
+	    <td>rmb()</td>
+	    <td>smp_rmb()</td>
+	</tr>
+	<tr >
+	    <td >数据依赖屏障</td>
+	    <td>read_barrier_depends()</td>
+	    <td>smp_read_barrier_depends()</td>
+	</tr>
+</table>
 
 ## 5.15　RCU
 
