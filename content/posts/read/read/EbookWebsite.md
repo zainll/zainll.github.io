@@ -80,7 +80,9 @@ https://libgen.rs/
 
 <br>
 
-- zlibrary  PDF     2022.11.04美国邮政检查局查封域名，预期仅能用Tor 访问 .onion域名    \
+- zlibrary  PDF     \
+2022.11.30  telegram机器人可用  1libaray \
+2022.11.04美国邮政检查局查封域名，预期仅能用Tor 访问 .onion域名    \
 https://zh.u1lib.org/   \
 https://en.ru1lib.org/
 
