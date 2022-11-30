@@ -7409,7 +7409,43 @@ barrier();
 	</tr>
 </table>
 
+
+### 5.14.3 MMIO写屏障
+```c
+// 内核为内存映射I/O写操作提供了一个特殊的屏障
+mmiowb();
+```
+
+
+### 5.14.4　隐含内存屏障
+
+&ensp;内核的有些函数隐含内存屏障  <br>
+&ensp;（1）获取和释放函数。  <br>
+&ensp;（2）中断禁止函数。  <br>
+
+
+
+
+
+### 5.14.5　ARM64处理器内存屏障
+
+&ensp;ARM64处理器提供了3种内存屏障  <br>
+&ensp;(1)指令同步屏障(Instruction Synchronization Barrier ISB),指令是isb <br>
+&ensp;(2)数据内存屏障(Data Memory Barrier DMB)，指令是dmb  <br>
+&ensp;(3)数据同步屏障(Data Synchronization Barrier DSb)，指令是dsb  <br>
+
+
+
+
 ## 5.15　RCU
+&ensp;RCU(Read-Copy Update)读-复制更新  <br>
+
+
+
+
+
+
+### 5.15.2　技术原理
 
 
 
@@ -7417,6 +7453,13 @@ barrier();
 ## 5.16　可睡眠RCU
 
 
+
+```c
+
+
+
+
+```
 
 
 
@@ -7429,6 +7472,92 @@ barrier();
 
 
 ## 5.17　死锁检测工具lockdep
+
+&ensp;死锁有以下4种情况  <br>
+&ensp;1）进程重复申请同一个锁，称为AA死锁  <br>
+&ensp;2）进程申请自旋锁时没有禁止硬中断，进程获取自旋锁以后，硬中断抢占，申请同一个自旋锁  <br>
+&ensp;3）两个进程都要获取锁L1和L2，进程1持有锁L1，再去获取锁L2，如果这个时候进程2持有锁L2并且正在尝试获取锁L1，那么进程1和进程2就会死锁，称为AB-BA死锁  <br>
+&ensp;4）在一个处理器上进程1持有锁L1，再去获取锁L2，在另一个处理器上进程2持有锁L2，硬中断抢占进程2以后获取锁L1  <br>
+
+### 5.17.1　使用方法
+
+&ensp;死锁检测工具lockdep的配置宏
+
+
+
+
+
+### 5.17.2　技术原理
+
+
+
+
+
+
+
+# 第6章 文件系统
+
+
+## 6.1　概述
+
+&ensp;Linux系统中，一切皆文件  <br>
+
+
+![20221201002338](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221201002338.png)
+<center>Linux文件系统的架构</center>
+
+
+### 6.1.1　用户空间层面
+
+&ensp;应用程序可以直接使用内核提供的系统调用访问文件
+```c
+// 挂载文件系统
+mount
+// 卸载目录下挂载的文件系统
+umount
+// 打开文件
+open
+// 关闭文件
+close
+// 写文件
+write
+// 设置文件偏移
+lseek
+// 文件修改过的属性和数据立即写到存储设备
+fsync
+```
+
+&ensp;glibc库封装的标准I/O流函数访问文件
+```c
+// 打开流
+fopen
+// 关闭流
+fclose
+// 读流
+fread
+// 写流
+fwrite
+// 设置文件偏移
+fseek
+// 冲刷流
+fflush
+```
+
+
+
+### 6.1.2　硬件层面
+
+&ensp;外部存储设备分为块设备、闪存和NVDIMM设备3类  <br>
+
+
+&ensp;闪存按存储结构分为NAND闪存和NOR闪存  <br>
+
+
+
+### 6.1.3　内核空间层面
+
+&ensp;使不同的文件系统实现能够共存，内核实现了一个抽象层，称为虚拟文件系统（Virtual File System，VFS），也称为虚拟文件系统切换（Virtual Filesystem Switch，VFS）   <br>
+&ensp;文件系统分为以下4种  <br>
 
 
 
