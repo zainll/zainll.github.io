@@ -7562,12 +7562,12 @@ fflush
 &emsp;(2)闪存文件系统，NAND闪存和NOR闪存，常用的闪存文件系统是JFFS2和UBIFS  <br>
 &emsp;(3)内存文件系统，常见内存文件系统tmpfs  <br>
 &emsp;(4)伪文件系统：  <br>
-&ensp;&ensp;1）sockfs，套接字  <br>
-&ensp;&ensp;2) proc 文件系统，挂载在目录 /proc  <br>    
-&ensp;&ensp;3) sysfs 把内核的设备信息导出到用户空间，挂载目录 /sys      <br>                
-&ensp;&ensp;4) hugetlbfs 实现标准巨型页   <br>            
-&ensp;&ensp;5) cgroup文件系统 控制组用来控制一组进程资源， <br>      
-&ensp;&ensp;6) cgroup2文件系统              <br>
+&ensp;&emsp;1）sockfs，套接字  <br>
+&ensp;&emsp;2) proc 文件系统，挂载在目录 /proc  <br>    
+&ensp;&emsp;3) sysfs 把内核的设备信息导出到用户空间，挂载目录 /sys      <br>                
+&ensp;&emsp;4) hugetlbfs 实现标准巨型页   <br>            
+&ensp;&emsp;5) cgroup文件系统 控制组用来控制一组进程资源， <br>      
+&ensp;&emsp;6) cgroup2文件系统              <br>
           
 &ensp;libnvdimm子系统提供对3种NVDIMM设备的支持：持久内存（persistent memory，PMEM）模式的NVDIMM设备，块设备（block，BLK）模式的NVDIMM设备，以及同时支持PMEM和BLK两种访问模式的NVDIMM设备  <br>
 
@@ -7576,17 +7576,561 @@ fflush
 
 ## 6.2　虚拟文件系统的数据结构
 
+&ensp;虚拟文件系统定义了一套统一的数据结构  <br>
+&emsp;(1)超级块。文件系统的第一块是超级块，结构体super_block  <br>
+&emsp;(2)虚拟文件系统在内存中把目录组织为一棵树，挂载文件系统，虚拟文件系统就会创建一个挂载描述符：mount结构体，并且读取文件系统的超级块，在内存中创建超级块的一个副本 <br>
+&emsp;(3)每种文件系统的超级块的格式不同，向虚拟文件系统注册文件系统类型file_system_type  <br>
+&emsp;(4)索引节点。结构体inode  <br>
+&emsp;(5)目录项。目录项。  <br>
+&emsp;(6)进程打开一个文件，虚拟文件系统会创建文件的一个打开实例：file结构体  <br>
+
+
+### 6.2.1 超级块
+
+&ensp;文件系统的第一块是超级块，描述文件系统的总体信息  <br>
+
+```c
+// include/linux/fs.h
+struct super_block {
+	struct list_head  s_list; // 把所有超级块实例链接到全局链表super_blocks
+	dev_t             s_dev;  // 存文件系统所在的块设备
+	unsigned char     s_blocksize_bits;
+	unsigned long     s_blocksize;  // 块长度
+	loff_t            s_maxbytes;  // 文件系统支持的最大文件长度
+	struct file_system_type *s_type;  // 指向文件系统类型
+	const struct super_operations *s_op;  // 指向超级块操作集合
+	…
+	unsigned long     s_flags;  // 标志位
+	unsigned long     s_iflags; /*内部 SB_I_* 标志 */
+	unsigned long     s_magic;  // 文件系统类型的魔幻数
+	struct dentry     *s_root;  // 指向根目录的结构体dentry
+
+	…
+	struct hlist_bl_head s_anon;        
+	struct list_head  s_mounts;    
+	struct block_device *s_bdev;
+	struct backing_dev_info *s_bdi;
+	struct mtd_info   *s_mtd;
+	struct hlist_node s_instances;
+	…
+	void              *s_fs_info;  // 指向具体文件系统的私有信息
+	…
+};
+```
+
+&ensp;超级块操作集合的数据结构是结构体super_operations
+```c
+// include/linux/fs.h
+struct super_operations {
+	struct inode *(*alloc_inode)(struct super_block *sb);
+	void (*destroy_inode)(struct inode *);
+
+	void (*dirty_inode) (struct inode *, int flags);
+	int (*write_inode) (struct inode *, struct writeback_control *wbc);
+	int (*drop_inode) (struct inode *);
+	void (*evict_inode) (struct inode *);
+	void (*put_super) (struct super_block *);
+	int (*sync_fs)(struct super_block *sb, int wait);
+	…
+	int (*statfs) (struct dentry *, struct kstatfs *);
+	int (*remount_fs) (struct super_block *, int *, char *);
+	void (*umount_begin) (struct super_block *);
+	…
+};
+```
+
+
+### 6.2.2　挂载描述符
+&ensp;每次挂载文件系统，虚拟文件系统就会创建一个挂载描述符：mount结构体  <br>
+```c
+// fs/mount.h
+struct mount {
+	struct hlist_node mnt_hash;
+	struct mount *mnt_parent;  // 指向父亲
+	struct dentry *mnt_mountpoint;  // 指向作为挂载点的目录
+	struct vfsmount mnt;
+	union {
+		struct rcu_head mnt_rcu;
+		struct llist_node mnt_llist;
+	};
+#ifdef CONFIG_SMP
+	struct mnt_pcp __percpu *mnt_pcp;
+#else
+	int mnt_count;
+	int mnt_writers;
+#endif
+	struct list_head mnt_mounts;
+	struct list_head mnt_child;    
+	struct list_head mnt_instance;    
+	const char *mnt_devname;    
+	struct list_head mnt_list;
+	…
+	struct mnt_namespace *mnt_ns;    
+	struct mountpoint *mnt_mp;    
+	struct hlist_node mnt_mp_list;    
+	…
+}
+
+struct vfsmount {
+	struct dentry *mnt_root;    
+	struct super_block *mnt_sb;
+	int mnt_flags;
+};
+
+```
+
+
+### 6.2.3　文件系统类型
+&ensp;每种文件系统需要向虚拟文件系统注册文件系统类型file_system_type，并且实现mount方法用来读取和解析超级块。结构体file_system_type  <br>
+```c
+// include/linux/fs.h
+struct file_system_type {
+	const char *name;
+	int fs_flags;
+#define FS_REQUIRES_DEV     1 
+#define FS_BINARY_MOUNTDATA 2
+#define FS_HAS_SUBTYPE      4
+#define FS_USERNS_MOUNT     8
+#define FS_RENAME_DOES_D_MOVE 32768
+	struct dentry *(*mount) (struct file_system_type *, int,
+				const char *, void *);
+	void (*kill_sb) (struct super_block *);
+	struct module *owner;
+	struct file_system_type * next;
+	struct hlist_head fs_supers;
+
+	…
+};
+```
+
+### 6.2.4　索引节点
+&ensp;文件系统中，每个文件对应一个索引节点，索引节点描述两类信息  <br>
+&emsp;(1)文件的数学，称为元数据(metadata)  <br>
+&emsp;(2)文件数据的存储位置  <br>
+
+&ensp;当内核访问存储设备上的一个文件时，会在内存中创建索引节点的一个副本：结构体inode
+```c
+// include/linux/fs.h
+struct inode {
+	umode_t              i_mode;
+	unsigned short       i_opflags;
+	kuid_t               i_uid;
+	kgid_t               i_gid;
+	unsigned int         i_flags;
+
+#ifdef CONFIG_FS_POSIX_ACL
+	struct posix_acl     *i_acl;
+	struct posix_acl     *i_default_acl;
+#endif
+
+	const struct inode_operations     *i_op;
+	struct super_block   *i_sb;
+	struct address_space *i_mapping;
+
+	…
+	unsigned long        i_ino;
+	union {
+		const unsigned int i_nlink;
+		unsigned int __i_nlink;
+	};
+	dev_t               i_rdev;
+	loff_t              i_size;
+	struct timespec          i_atime;
+	struct timespec          i_mtime;
+	struct timespec          i_ctime;
+	spinlock_t          i_lock;      
+	unsigned short      i_bytes;
+	unsigned int        i_blkbits;
+	blkcnt_t            i_blocks;
+
+	…
+	struct hlist_node    i_hash;
+	struct list_head     i_io_list;      
+	…
+	struct list_head     i_lru;           
+	struct list_head     i_sb_list;
+	struct list_head     i_wb_list;      
+	union {
+		struct hlist_head     i_dentry;
+		struct rcu_head       i_rcu;
+	};
+	u64               i_version;
+	atomic_t          i_count;
+		atomic_t          i_dio_count;
+	atomic_t          i_writecount;
+#ifdef CONFIG_IMA
+	atomic_t          i_readcount;
+#endif
+	const struct file_operations     *i_fop;      
+	struct file_lock_context     *i_flctx;
+	struct address_space     i_data;
+	struct list_head     i_devices;
+	union {
+		struct pipe_inode_info     *i_pipe;
+		struct block_device     *i_bdev;
+		struct cdev          *i_cdev;
+		char               *i_link;
+		unsigned          i_dir_seq;
+	};
+
+	…
+	void               *i_private; 
+};
+```
+&ensp;文件几种类型：  <br>
+&emsp;(1)普通文件   <br>
+&emsp;(2)目录，每个目录项存储一个子目录或文件的名称以及对应的索引节点号  <br>
+&emsp;(3)符号链接(软链接)  <br>
+&emsp;(4)字符设备文件  <br>
+&emsp;(5)块设备文件   <br>
+&emsp;(6)命名管道 FIFO  <br>
+&emsp;(7)套接字 socket  <br>
+
+&ensp;内核支持两种链接：  <br>
+&emsp;(1)软链接  <br>
+&emsp;(2)硬链接  <br>
+
+&ensp;索引节点的成员i_op指向索引节点操作集合inode_operations，成员i_fop指向文件操作集合file_operations。两者的区别是：inode_operations用来操作目录和文件属性，file_operations用来访问文件的数据  <br>
+
+&ensp;索引节点操作集合的数据结构是结构体inode_operations
+```c
+// include/linux/fs.h
+struct inode_operations {
+	// 在一个目录下查找文件
+	struct dentry * (*lookup) (struct inode *,struct dentry *, unsigned int);
+	const char * (*get_link) (struct dentry *, struct inode *, struct delayed_call *);
+	int (*permission) (struct inode *, int);
+	struct posix_acl * (*get_acl)(struct inode *, int);
+
+	int (*readlink) (struct dentry *, char __user *,int);
+
+	int (*create) (struct inode *,struct dentry *, umode_t, bool);  // 创建普通文件
+	int (*link) (struct dentry *,struct inode *,struct dentry *);  // 创建硬链接
+	int (*unlink) (struct inode *,struct dentry *);
+	int (*symlink) (struct inode *,struct dentry *,const char *);  // 创建符号链接
+	int (*mkdir) (struct inode *,struct dentry *,umode_t);  // 创建目录
+	int (*rmdir) (struct inode *,struct dentry *);  // 删除目录
+	// 创建字符设备文件、块设备文件、命名管道和套接字
+	int (*mknod) (struct inode *,struct dentry *,umode_t,dev_t);
+	int (*rename) (struct inode *, struct dentry *,
+			struct inode *, struct dentry *, unsigned int);
+	int (*setattr) (struct dentry *, struct iattr *);  // chmod调用设置文件属性
+	int (*getattr) (const struct path *, struct kstat *, u32, unsigned int);  // stat读取文件属性
+	ssize_t (*listxattr) (struct dentry *, char *, size_t);  // 列出文件的所有扩展属性
+	int (*fiemap)(struct inode *, struct fiemap_extent_info *, u64 start,u64 len);
+	int (*update_time)(struct inode *, struct timespec *, int);
+	int (*atomic_open)(struct inode *, struct dentry *,
+				struct file *, unsigned open_flag,
+				umode_t create_mode, int *opened);
+	int (*tmpfile) (struct inode *, struct dentry *, umode_t);
+	int (*set_acl)(struct inode *, struct posix_acl *, int);
+} ____cacheline_aligned;
+```
+
+
+### 6.2.5　目录项
+
+&ensp;内核访问存储设备上的一个目录项时，会在内存中创建目录项的一个副本：结构体dentry
+```c
+// include/linux/dcache.h
+struct dentry {
+	/* RCU查找访问的字段 */
+	unsigned int d_flags;
+	seqcount_t d_seq;
+	struct hlist_bl_node d_hash;
+	struct dentry *d_parent;      
+	struct qstr d_name;  // 存储文件名称
+	struct inode *d_inode;  // 指向文件的索引节点
+	unsigned char d_iname[DNAME_INLINE_LEN];  // 文件名称
+
+	/* 引用查找也访问下面的字段 */
+	struct lockref d_lockref;
+	const struct dentry_operations *d_op;
+	struct super_block *d_sb;
+	unsigned long d_time;
+	void *d_fsdata;
+
+	union {
+		struct list_head d_lru;
+		wait_queue_head_t *d_wait;      
+	};
+	struct list_head d_child;
+	struct list_head d_subdirs;
+	/*
+	* d_alias和d_rcu可以共享内存
+	*/
+	union {
+		struct hlist_node d_alias;
+		struct hlist_bl_node d_in_lookup_hash;
+		struct rcu_head d_rcu;
+	} d_u;
+};
+```
+
+&ensp;目录项操作集合的数据结构是结构体dentry_operations
+```c
+// include/linux/dcache.h
+struct dentry_operations {
+	int (*d_revalidate)(struct dentry *, unsigned int);
+	int (*d_weak_revalidate)(struct dentry *, unsigned int);
+	int (*d_hash)(const struct dentry *, struct qstr *);
+	int (*d_compare)(const struct dentry *,
+			unsigned int, const char *, const struct qstr *);
+	int (*d_delete)(const struct dentry *);
+	int (*d_init)(struct dentry *);
+	void (*d_release)(struct dentry *);
+	void (*d_prune)(struct dentry *);
+	void (*d_iput)(struct dentry *, struct inode *);
+	char *(*d_dname)(struct dentry *, char *, int);
+	struct vfsmount *(*d_automount)(struct path *);
+	int (*d_manage)(const struct path *, bool);
+	struct dentry *(*d_real)(struct dentry *, const struct inode *,
+					unsigned int);
+} ____cacheline_aligned;
+```
+
+
+### 6.2.6　文件的打开实例和打开文件表
+
+&ensp;进程打开一个文件，虚拟文件系统就会创建文件的一个打开实例：file结构体
+```c
+// include/linux/fs.h
+struct file {
+	union {
+		struct llist_node     fu_llist;
+		struct rcu_head       fu_rcuhead;
+	} f_u;
+	struct path          f_path;
+	struct inode         *f_inode;      
+	const struct file_operations     *f_op;
+
+	spinlock_t           f_lock;
+	atomic_long_t        f_count;
+	unsigned int         f_flags;
+	fmode_t              f_mode;
+	struct mutex         f_pos_lock;
+	loff_t               f_pos;
+	struct fown_struct   f_owner;
+	const struct cred    *f_cred;
+	…
+	void                 *private_data;
+	…
+	struct address_space *f_mapping;
+} __attribute__((aligned(4)));
+
+
+// f_path存储文件在目录树中的位置
+struct path {
+	struct vfsmount *mnt;
+	struct dentry *dentry;
+};
+```
+
+&ensp;文件打开实例和索引节点关系
+![20221202003709](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221202003709.png)
+
+&ensp;进程描述符有两个文件系统相关的成员：成员fs指向进程的文件系统信息结构体，主要是进程的根目录和当前工作目录；成员files指向打开文件表
+```c
+// include/linux/sched.h
+struct task_struct {
+     …
+     struct fs_struct          *fs;
+     struct files_struct       *files;
+     …
+};
+
+// include/linux/fs_struct.h
+struct fs_struct {
+	…
+	// root存储进程的根目录 pwd进程当前工作目录
+	struct path   root, pwd;
+};
+```
+
+&ensp;打开文件表称为文件描述符表，结构体files_struct是打开文件表的包装器
+![20221202004049](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221202004049.png)
+
+```c
+// include/linux/fdtable.h
+struct files_struct {
+	atomic_t count;  // 引用计数
+	…
+
+	struct fdtable __rcu *fdt;  // 指向打开文件表
+	struct fdtable fdtab;
+
+	spinlock_t file_lock ____cacheline_aligned_in_smp;
+	unsigned int next_fd;
+	unsigned long close_on_exec_init[1];
+	unsigned long open_fds_init[1];
+	unsigned long full_fds_bits_init[1];
+	struct file __rcu * fd_array[NR_OPEN_DEFAULT];
+};
+```
+
+&ensp;fdt指向新的fdtable结构体，打开文件表的数据结构
+```c
+// include/linux/fdtable.h
+struct fdtable {
+	unsigned int max_fds;
+	struct file __rcu **fd;     
+	unsigned long *close_on_exec;
+	unsigned long *open_fds;
+	unsigned long *full_fds_bits;
+	struct rcu_head rcu;
+};
+```
+
+
+## 6.3　注册文件系统类型
+
+&ensp;每种文件系统需要向虚拟文件系统注册文件系统类型file_system_type，实现mount方法用来读取和解析超级块  <br>
+```c
+// register_filesystem用来注册文件系统类型
+int register_filesystem(struct file_system_type *fs);
+// unregister_filesystem用来注销文件系统类型
+int unregister_filesystem(struct file_system_type *fs);
+```
+&ensp;`cat /proc/filesystems` 查看已经注册的文件系统类型
+
+
+
+## 6.4　挂载文件系统
+&ensp;虚拟文件系统在内存中把目录组织为一棵树  <br>
+&ensp;glibc库封装了挂载文件系统的函数mount
+```c
+int mount(const char *dev_name, const char *dir_name,
+           const char *type, unsigned long flags,
+           const void *data);
+// 内核的系统调用oldumount
+int umount(const char *target); 
+// 内核的系统调用umount
+int umount2(const char *target, int flags);
+```
+
+![20221202005454](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221202005454.png)
+<center>挂载描述符的数据结构</center>
+
+### 6.4.1　系统调用mount
+&ensp;系统调用mount用来挂载文件系统
+```c
+// fs/namespace.c
+SYSCALL_DEFINE5(mount, char __user *, dev_name, char __user *, dir_name,
+          char __user *, type, unsigned long, flags, void __user *, data)
+```
+
+
+![20221202005652](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221202005652.png)
+<center>mount挂载的执行流程</center>
+
+### 6.4.2　绑定挂载
+
+
+```c
+mount --bind olddir newdir
+
+mount --rbind olddir newdir
+```
+
+
+### 6.4.3　挂载命名空间
+
+&ensp;容器是一种轻量级的虚拟化技术，直接使用宿主机的内核，使用命名空间隔离资源，其中挂载命名空间用来隔离挂载点
+
+
+![20221202005901](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221202005901.png)
+<center>进程和挂载命名空间关系</center>
+
+&ensp;两种方法创建新的挂载命名空间  <br>
+&emsp;(1)调用clone创建子进程，指定标准CLONE_NEWNS  <br>
+&emsp;(2)调用unshare(CLONE_NEWNS)置不再和父进程共享挂载命名空间  <br>
+
+
+
+![20221202010109](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221202010109.png)
+
+
+
+#### 1．标准的挂载命名空间
+
+
+#### 2．共享子树
+
+&ensp;共享子树提供了4种挂载类型。  <br>
+&emsp;共享挂载（shared mount） <br>
+&emsp;从属挂载（slave mount）  <br>
+&emsp;私有挂载（private mount）  <br>
+&emsp;不可绑定挂载（unbindable mount）  <br>
+
+
+
+
+### 6.4.4　挂载根文件系统
+
+
+#### 1．根文件系统rootfs
+
+
+
+#### 2．用户指定的根文件系统
 
 
 
 
 
+## 6.5　打开文件
+&ensp;进程读写文件之前需要打开文件，得到文件描述符，然后通过文件描述符读写文件
+
+### 6.5.1 编程接口
+&ensp;内核两个打开文件的系统调用
+```c
+int open(const char *pathname, int flags, mode_t mode);
+
+int openat(int dirfd, const char *pathname, int flags, mode_t mode);
+```
 
 
 
+### 6.5.2　技术原理
+
+&ensp;系统调用open和openat都把主要工作委托给函数do_sys_open，open传入特殊的文件描述符AT_FDCWD
+```c
+// fs/open.c
+SYSCALL_DEFINE3(open, const char __user *, filename, int, flags, umode_t, mode)
+{
+    /* 如果是64位内核，强制设置标志位O_LARGEFILE，表示允许打开长度超过4GB的大文件。*/
+    if (force_o_largefile())
+          flags |= O_LARGEFILE;
+
+    return do_sys_open(AT_FDCWD, filename, flags, mode);
+}
+
+SYSCALL_DEFINE4(openat, int, dfd, const char __user *, filename, int, flags,
+        umode_t, mode)
+{
+    if (force_o_largefile())
+           flags |= O_LARGEFILE;
+
+    return do_sys_open(dfd, filename, flags, mode);
+}
+
+include/uapi/linux/fcntl.h
+#define AT_FDCWD        -100
+```
+
+![20221202010652](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221202010652.png)
 
 
+#### 1．分配文件描述符
 
+&ensp;函数get_unused_fd_flags负责分配文件描述符
+```c
+// fs/file.c
+int get_unused_fd_flags(unsigned flags)
+{
+	return __alloc_fd(current->files, 0, rlimit(RLIMIT_NOFILE), flags);
+}
+```
 
 
 
