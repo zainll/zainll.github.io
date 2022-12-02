@@ -8131,6 +8131,239 @@ int get_unused_fd_flags(unsigned flags)
 	return __alloc_fd(current->files, 0, rlimit(RLIMIT_NOFILE), flags);
 }
 ```
+```c
+// fs/file.c
+int __alloc_fd(struct files_struct *files,
+      unsigned start, unsigned end, unsigned flags)
+{
+	unsigned int fd;
+	int error;
+	struct fdtable *fdt;
+
+	spin_lock(&files->file_lock);
+	repeat:
+	fdt = files_fdtable(files);
+	fd = start;
+	if (fd < files->next_fd)
+		fd = files->next_fd;
+	
+	if (fd < fdt->max_fds)
+		fd = find_next_fd(fdt, fd);
+	
+	error = -EMFILE;
+	if (fd >= end)
+		goto out;
+	
+	error = expand_files(files, fd);
+	if (error < 0)
+		goto out;
+	
+	if (error)
+		goto repeat;
+	
+	if (start <= files->next_fd)
+		files->next_fd = fd + 1;
+	
+	__set_open_fd(fd, fdt);
+	if (flags & O_CLOEXEC)
+		__set_close_on_exec(fd, fdt);
+	else
+		__clear_close_on_exec(fd, fdt);
+	error = fd;
+	…
+	
+out:
+	spin_unlock(&files->file_lock);
+	return error;
+}
+```
+
+
+#### 2．解析文件路径
+
+&ensp;do_filp_open解析文件路径并得到文件的索引节点，创建文件的一个打开实例，把打开实例关联到索引节点
+```c
+// fs/namei.c
+struct file *do_filp_open(int dfd, struct filename *pathname,
+            const struct open_flags *op)
+{
+	struct nameidata nd;
+	int flags = op->lookup_flags;
+	struct file *filp;
+
+	set_nameidata(&nd, dfd, pathname);
+	filp = path_openat(&nd, op, flags | LOOKUP_RCU);
+	if (unlikely(filp == ERR_PTR(-ECHILD)))
+		filp = path_openat(&nd, op, flags);
+	if (unlikely(filp == ERR_PTR(-ESTALE)))
+		filp = path_openat(&nd, op, flags | LOOKUP_REVAL);
+	restore_nameidata();
+	return filp;
+}
+```
+&ensp;结构体nameidata用来向解析函数传递参数，保存解析结果
+```c
+// fs/namei.c
+struct nameidata {
+	struct path  path;
+	struct qstr  last;
+	struct path  root;
+	struct inode *inode; /* path.dentry.d_inode */
+	unsigned int flags;
+	…
+	unsigned depth;
+	…
+	struct saved {
+		struct path link;
+		struct delayed_call done;
+		const char *name;
+		unsigned seq;
+	} *stack, internal[EMBEDDED_LEVELS];
+	struct filename   *name;
+	…
+	int     dfd;
+};
+```
+
+&ensp;函数do_filp_open三次调用函数path_openat以解析文件路径
+```c
+// fs/namei.c
+static struct file *path_openat(struct nameidata *nd,
+           const struct open_flags *op, unsigned flags)
+{
+	const char *s;
+	struct file *file;
+	int opened = 0;
+	int error;
+
+	file = get_empty_filp();
+	if (IS_ERR(file))
+		return file;
+	
+	file->f_flags = op->open_flag;
+	
+	…
+	s = path_init(nd, flags);
+	if (IS_ERR(s)) {
+		put_filp(file);
+		return ERR_CAST(s);
+	}
+	while (!(error = link_path_walk(s, nd)) &&
+		(error = do_last(nd, file, op, &opened)) > 0) {
+		nd->flags &= ～(LOOKUP_OPEN|LOOKUP_CREATE|LOOKUP_EXCL);
+		s = trailing_symlink(nd);
+		if (IS_ERR(s)) {
+			error = PTR_ERR(s);
+			break;
+		}
+	}
+	terminate_walk(nd);
+out2:
+	…
+	return file;
+}
+```
+
+&ensp;函数link_path_walk负责解析文件路径
+
+![20221202230347](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221202230347.png)
+
+&ensp;函数walk_component负责解析文件路径的一个分量
+
+![20221202230448](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221202230448.png)
+
+&ensp;do_last负责解析文件路径的最后一个分量，并且打开文件
+
+![20221202230534](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221202230534.png)
+
+
+## 6.6　关闭文件
+&ensp;进程可以使用系统调用close关闭文件
+```c
+int close(int fd);
+```
+
+![20221202230658](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221202230658.png)
+<center>关闭文件的执行流程</center>
+
+&ensp;延迟工作项delayed_fput_work的处理函数是flush_delayed_fput
+```c
+// fs/file_table.c
+void flush_delayed_fput(void)
+{
+     delayed_fput(NULL);
+}
+
+static void delayed_fput(struct work_struct *unused)
+{
+     struct llist_node *node = llist_del_all(&delayed_fput_list);
+     struct llist_node *next;
+
+     for (; node; node = next) {
+          next = llist_next(node);
+          __fput(llist_entry(node, struct file, f_u.fu_llist));
+     }
+}
+```
+&ensp;遍历链表delayed_fput_list，针对每个file实例，调用函数__fput来加以释放,__fput负责释放file实例
+```c
+// fs/file_table.c
+static void __fput(struct file *file)
+{
+	struct dentry *dentry = file->f_path.dentry;
+	struct vfsmount *mnt = file->f_path.mnt;
+	struct inode *inode = file->f_inode;
+
+	…
+	fsnotify_close(file); // 通告关闭文件事件
+	eventpoll_release(file); // 监听文件系统的事件
+	locks_remove_file(file);  //
+	
+	…
+	if (file->f_op->release) // 释放文件锁
+		file->f_op->release(inode, file);
+	…
+	fops_put(file->f_op); // 把文件操作集合结构体的引用计数减1
+	…
+	// 解除file实例和目录项、挂载描述符以及索引节点的关联
+	file->f_path.dentry = NULL;
+	file->f_path.mnt = NULL;
+	file->f_inode = NULL;
+	file_free(file); // 释放file实例的内存
+	dput(dentry); // 释放目录项
+	mntput(mnt);  // 释放挂载描述符
+}
+```
+
+## 6.7　创建文件
+
+### 6.7.1　使用方法
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
