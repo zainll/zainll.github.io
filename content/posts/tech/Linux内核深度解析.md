@@ -8596,10 +8596,28 @@ void delete_from_page_cache(struct page *page);
 
 ### 6.11.1　编程接口
 
+&ensp;进程读文件的方式有3种  <br>
+&emsp;(1)调用内核提供的读文件的系统调用  <br>
+&emsp;(2)调用glibc库封装的读文件的标准I/O流函数  <br>
+&emsp;(3)创建基于文件的内存映射，把文件的一个区间映射到进程的虚拟地址空间，然后直接读内存  <br>
 
 
+&ensp;内核读文件的系统调用 <br>
+&emsp;(1)系统调用read从文件的当前偏移读文件
+```c
+ssize_t read(int fd, void *buf, size_t count);
+```
+&emsp;(2)系统调用pread64从指定偏移开始读文件
+```c
+ssize_t pread64(int fd, void *buf, size_t count, off_t offset);
+```
 
 
+&ensp;glibc库还封装了一个读文件的标准I/O流函数
+```c
+
+
+```
 
 
 
