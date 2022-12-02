@@ -8615,9 +8615,48 @@ ssize_t pread64(int fd, void *buf, size_t count, off_t offset);
 
 &ensp;glibc库还封装了一个读文件的标准I/O流函数
 ```c
-
-
+size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream);
 ```
+
+### 6.11.2　技术原理
+
+&ensp;读文件系统调用是read
+```c
+// fs/read_write.c
+SYSCALL_DEFINE3(read, unsigned int, fd, char __user *, buf, size_t, count)
+```
+&ensp;系统调用read的执行流程
+![20221203011349](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221203011349.png)
+
+&ensp;EXT4文件系统文件操作集合的read_iter方法
+```c
+// 
+const struct file_operations ext4_file_operations = {
+	…
+	.read_iter   = ext4_file_read_iter,
+	…
+};
+```
+
+&ensp;函数ext4_file_read_iter调用通用的读文件函数generic_file_read_iter
+
+![20221203011558](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221203011558.png)
+
+
+## 6.12　写文件
+
+### 6.12.1　编程接口
+
+&ensp;进程写文件的方式有3种  <br>
+&emsp;(1)调用内核提供的写文件的系统调用  <br>
+&emsp;(2)调用glibc库封装的写文件的标准I/O流函数  <br>
+&emsp;(3)创建基于文件的内存映射，把文件的一个区间映射到进程的虚拟地址空间，然后直接写内存  <br>
+
+
+
+
+
+
 
 
 
