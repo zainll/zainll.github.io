@@ -8339,24 +8339,262 @@ static void __fput(struct file *file)
 
 ### 6.7.1　使用方法
 
+&ensp;创建不同类型的文件，需要使用不同的命令
+&emsp;(1)普通文件：touch FILE  <br>
+&emsp;(2)目录： mkdir DIR  <br>
+&emsp;(3)符号链接：ln -s TRAGET LINK_NAME  或 ln --symbolic TARGET LINK_NAME  <br>
+&emsp;(4)符号或块设备： mknod NAME TYPE  <br>
+&emsp;(5)命令管道：mkpipe NAME  <br>
+&emsp;(6)硬链接: ln TARGET LINK_NAME  <br>
+
+&ensp;内核提供了下面这些创建文件的系统调用  <br>
+&emsp;(1)创建普通文件
+```c
+int creat(const char *pathname, mode_t mode);
+int open(const char *pathname, int flags, mode_t mode);
+int openat(int dirfd, const char *pathname, int flags, mode_t mode);
+```
+
+&emsp;(2)创建目录
+```c
+int mkdir(const char *pathname, mode_t mode);
+int mkdirat(int dirfd, const char *pathname, mode_t mode);
+```
+
+&emsp;(3)创建符号链接
+```c
+int symlink(const char *oldpath, const char *newpath);
+int symlikat(const char *oldpath, int newdirfd, const char *newpath);
+```
+
+&emsp;(4)mknod创建字符设备文件和块设备文件
+```c
+int mknod(const char *pathname, mode_t mode, dev_t dev);
+int mknodat(int dirfd, const char *pathname, mode_t mode, dev_t dev);
+```
+
+&emsp;(5)link创建硬链接
+```c
+int link(const char *oldpath, const char *newpath);
+int linkat(int oldfd, const char *oldpath, int newfd, const char *newpath);
+```
+
+&ensp;glibc库封装了和上面的系统调用同名的库函数，封装创建命名管道的库函数
+```c
+int mkfifo(const char *pathname, mode_t mode);
+```
+
+
+### 6.7.2　技术原理
+
+&ensp;统调用open创建文件和打开文件，仅仅在函数do_last中存在差异。函数do_last负责解析文件路径的最后一个分量，并且打开文件 <br>
+&ensp;函数do_last创建文件的执行流程
+
+![20221202233921](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221202233921.png)
 
 
 
+## 6.8　删除文件
+
+### 6.8.1　使用方法
+
+&ensp;删除文件的命令  <br>
+&emsp;(1)删除任何类型的文件：unlink FILE  <br>
+&emsp;(2)rm FILE，默认不删除目录, -r -R --recutsive  <br>
+&emsp;(3)删除目录  rmdir  DIR  <br>
+
+&ensp;内核提供删除文件的系统调用  <br>
+&emsp;(1)unlink用来删除文件的名称，如果文件的硬链接计数变成0，并且没有进程打开这个文件，那么删除文件
+```c
+int unlink(const char *pathname);
+int unlinkat(int dirfd, const char *pathname, int flags);
+```
+&emsp;(2)删除目录
+```c
+int rmdir(const char *pahtname);
+```
 
 
+### 6.8.2　技术原理
 
 
+&ensp;删除文件需要从父目录的数据中删除文件对应的目录项，把文件的索引节点的硬链接计数减1（一个文件可以有多个名称，Linux把文件名称称为硬链接），如果索引节点的硬链接计数变成0，那么释放索引节点。因为各种文件系统类型的物理结构不同，所以需要提供索引节点操作集合的unlink方法 <br>
+&ensp;系统调用unlink和unlinkat主要工作给函数do_unlinkat
+```c
+// fs/namei.c
+SYSCALL_DEFINE3(unlinkat, int, dfd, const char __user *, pathname, int, flag)
+{
+    if ((flag & ～AT_REMOVEDIR) != 0)
+           return -EINVAL;
+
+    if (flag & AT_REMOVEDIR)
+           return do_rmdir(dfd, pathname);
+
+    return do_unlinkat(dfd, pathname);
+}
+
+SYSCALL_DEFINE1(unlink, const char __user *, pathname)
+{
+    return do_unlinkat(AT_FDCWD, pathname);
+}
+```
+
+&ensp;do_unlinkat的执行流程
+
+![20221203002134](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221203002134.png)
+<center>删除文件的执行流程</center>
 
 
+## 6.9　设置文件权限
+
+### 6.9.1 使用方法
+
+&ensp;设置文件权限的命令
+```c
+chmod [OPTION]... MODE[,MODE]... FILE...
+chmod [OPTION]... OCTAL-MODE FILE...
+```
+
+&ensp;内核设置文件圈系统调用
+```c
+int chmod(const char *path, mode_t mode);
+int fchmod(int fd, mode_t mode);
+int fchmodat(int dfd, const char *filename, mode_t mode);
+```
+
+### 6.9.2　技术原理
+
+&ensp;修改文件权限需要修改文件的索引节点的文件模式字段，文件模式字段包含文件类型和访问权限。因为各种文件系统类型的索引节点不同，所以需要提供索引节点操作集合的setattr方法  <br>
+&ensp;系统调用chmod负责修改文件权限
+```c
+// fs/open.c
+SYSCALL_DEFINE2(chmod, const char __user *, filename, umode_t, mode)
+{
+    return sys_fchmodat(AT_FDCWD, filename, mode);
+}
+
+// 系统调用chmod调用fchmodat
+// fs/open.c
+SYSCALL_DEFINE3(fchmodat, int, dfd, const char __user *, filename, umode_t, mode)
+{
+    struct path path;
+    int error;
+    unsigned int lookup_flags = LOOKUP_FOLLOW;
+retry:
+    error = user_path_at(dfd, filename, lookup_flags, &path);
+    if (!error) {
+          error = chmod_common(&path, mode);
+          path_put(&path);
+          if (retry_estale(error, lookup_flags)) {
+                lookup_flags |= LOOKUP_REVAL;
+                goto retry;
+          }
+    }
+    return error;
+}
+```
+
+&ensp;首先调用函数user_path_at解析文件路径，然后调用函数chmod_common修改文件权限
+
+![20221203002829](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221203002829.png)
+<center>chmod_common的执行流程</center>
 
 
+## 6.10 页缓存
+
+&ensp;文件的页缓存的数据结构
+
+![20221203002946](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221203002946.png)
 
 
+### 6.10.1　地址空间
+
+&ensp;每个文件都有一个地址空间结构体address_space，用来建立数据缓存（在内存中为某种数据创建的缓存）和数据来源（即存储设备）之间的关联
+```c
+// include/linux/fs.h
+struct address_space {
+	struct inode        *host; // 指向索引节点    
+	struct radix_tree_root  page_tree;    
+	spinlock_t          tree_lock; // 保护基数树
+	…
+	const struct address_space_operations *a_ops; // 指向地址空间操作集合    
+	…
+} __attribute__((aligned(sizeof(long))));
+```
+
+&ensp;地址空间操作集合address_space_operations
+```c
+// include/linux/fs.h
+struct address_space_operations {
+	int (*writepage)(struct page *page, struct writeback_control *wbc);
+	int (*readpage)(struct file *, struct page *);
+
+	int (*writepages)(struct address_space *, struct writeback_control *);
+
+	int (*set_page_dirty)(struct page *page);
+
+	int (*readpages)(struct file *filp, struct address_space *mapping,
+			struct list_head *pages, unsigned nr_pages);
+
+	int (*write_begin)(struct file *, struct address_space *mapping,
+				loff_t pos, unsigned len, unsigned flags,
+				struct page **pagep, void **fsdata);
+	int (*write_end)(struct file *, struct address_space *mapping,
+				loff_t pos, unsigned len, unsigned copied,
+				struct page *page, void *fsdata);
+	…
+}
+```
 
 
+### 6.10.2　基数树
+
+&ensp;基数树（radix tree）是n叉树，内核为n提供了两种选择：16或64，默认64
+```c
+// include/linux/radix-tree.h
+#ifndef RADIX_TREE_MAP_SHIFT
+#define RADIX_TREE_MAP_SHIFT (CONFIG_BASE_SMALL ? 4 : 6)
+#endif
+
+#define RADIX_TREE_MAP_SIZE    (1UL << RADIX_TREE_MAP_SHIFT)
+
+init/kconfig
+config BASE_SMALL            /* 表示使用小的内核数据结构，可以减少内存消耗。 */
+	int
+	default 0 if BASE_FULL  /* 如果开启BASE_FULL，那么默认关闭BASE_SMALL。 */
+	default 1 if !BASE_FULL
+
+config BASE_FULL             /* 表示启用全尺寸的内核数据结构，默认启用。 */
+	default y
+	bool "Enable full-sized data structures for core" if EXPERT
+
+```
+
+![20221203003430](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221203003430.png)
 
 
+### 6.10.3　编程接口
 
+&ensp;页缓存的常用操作函数
+```c
+// 根据文件的页索引在页缓存中查找内存页
+struct page *find_get_page(struct address_space *mapping, pgoff_t offset);
+// 据文件的页索引在页缓存中查找内存页，如果没有找到内存页，
+// 那么分配一个内存页，然后添加到页缓存中
+struct page *find_or_create_page(struct address_space *mapping,
+                        pgoff_t offset, gfp_t gfp_mask)
+// 把一个内存页添加到页缓存和LRU链表中
+int add_to_page_cache_lru(struct page *page, struct address_space *mapping,
+                       pgoff_t offset, gfp_t gfp_mask);
+// 从页缓存中删除一个内存页
+void delete_from_page_cache(struct page *page);
+
+```
+
+
+## 6.11　读文件
+
+### 6.11.1　编程接口
 
 
 
