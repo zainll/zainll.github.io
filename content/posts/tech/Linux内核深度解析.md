@@ -8652,6 +8652,77 @@ const struct file_operations ext4_file_operations = {
 &emsp;(2)调用glibc库封装的写文件的标准I/O流函数  <br>
 &emsp;(3)创建基于文件的内存映射，把文件的一个区间映射到进程的虚拟地址空间，然后直接写内存  <br>
 
+&ensp;写文件的系统调用  <br>
+&emsp;(1)函数write从文件的当前偏移写文件，调用进程把要写入的数据存放在一个缓冲区
+```c
+ssize_t write(int fd, const void *buf, size_t count);
+```
+
+&ensp;glibc库封装了一个写文件的标准I/O流函数
+```c
+size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream);
+```
+
+
+### 6.12.2　技术原理
+
+&ensp;写文件的主要步骤  <br>
+&emsp;(1)调用具体文件系统类型提供的文件操作集合的write或write_iter方法来写文件  <br>
+&emsp;(2)write或write_iter方法调用文件的地址空间操作集合的write_begin方法，在页缓存中查找页，如果页不存在，那么分配页；然后把数据从用户缓冲区复制到页缓存的页中；最后调用文件的地址空间操作集合的write_end方法  <br>
+&ensp;写文件系统调用是write
+```c
+fs/read_write.c
+SYSCALL_DEFINE3(write, unsigned int, fd, const char __user *, buf, size_t, count)
+```
+
+![20221203220621](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221203220621.png)
+
+
+&ensp;EXT4文件系统提供了文件操作集合的write_iter方法
+```c
+// fs/ext4/file.c
+const struct file_operations ext4_file_operations = {
+     …
+     .write_iter   = ext4_file_write_iter,
+     …
+};
+```
+&ensp;函数ext4_file_write_iter调用通用的写文件函数__generic_file_write_iter
+
+![20221203221058](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221203221058.png)
+
+
+
+
+## 6.13　文件回写
+
+&ensp;进程写文件时，内核的文件系统模块把数据写到文件的页缓存，没有立即写回到存储设备。文件系统模块会定期把脏页（即数据被修改过的文件页）写回到存储设备，进程也可以调用系统调用把脏页强制写回到存储设备  <br>
+
+### 6.13.1　编程接口
+
+&ensp;内核提供了下面这些把文件同步到存储设备的系统调用  <br>
+&emsp;(1)sync把内存中所有修改过的文件元数据和文件数据写回到存储设备  <br>
+```c
+void sync(void);
+```
+&emsp;(2)syncfs把文件描述符fd引用的文件所属的文件系统写回到存储设备
+```c
+int syncfs(int fd);
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
