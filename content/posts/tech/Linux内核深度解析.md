@@ -8709,19 +8709,199 @@ void sync(void);
 ```c
 int syncfs(int fd);
 ```
+&ensp;(3)fsync把文件描述符fd引用的文件修改过的元数据和数据写回到存储设备
+```c
+int fsync(int fd);
+```
+&ensp;(4)fdatasync把文件描述符fd引用的文件修改过的数据写回到存储设备，还会把检索这些数据需要的元数据写回到存储设备
+```c
+int fdatasync(int fd);
+```
+&ensp;(5)Linux私有的系统调用sync_file_range把文件的一个区间修改过的数据写回到存储设备
+```c
+int sync_file_range(int fd, off64_t offset, off64_t nbytes, unsigned int flags);
+```
+&ensp;glibc库对系统调用封装库函数，封装了一个把数据从用户空间缓冲区写到内核的标准I/O流函数
+```c
+int fflush(FILE *stream);
+```
+
+### 6.13.2 技术原理
+&ensp;文件写回到存储设备的时机   <br>
+&emsp;(1)周期写回   <br>
+&emsp;(2)脏页的数量达到限制的时候，强制回写  <br>
+&emsp;(3)进程调用sync和syncfs等系统调用   <br>
+
+#### 1.数据结构
+&ensp;文件写回数据结构
+
+![20221204003537](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221204003537.png)
+
+&ensp;在挂载存储设备上的文件系统时，具体文件系统类型提供的mount方法从存储设备读取超级块，在内存中创建超级块的副本，把超级块关联到描述存储设备信息的结构体backing_dev_info
+```c
+// include/linux/backing-dev-defs.h
+struct backing_dev_info {
+	struct list_head bdi_list;
+	…
+	struct bdi_writeback wb; 
+	…
+};
+
+// include/linux/backing-dev-defs.h
+struct bdi_writeback {
+	…
+	struct list_head b_dirty;    
+	struct list_head b_io;        
+	…
+	struct delayed_work dwork;    
+	…
+};
+```
+
+
+&ensp;内核创建了一个名为“writeback”的工作队列，专门负责把文件写回到存储设备，称为回写工作队列。全局变量bdi_wq指向回写工作队列
+```c
+// mm/backing-dev.c
+struct workqueue_struct *bdi_wq;
+
+static int __init default_bdi_init(void)
+{
+	…
+	bdi_wq = alloc_workqueue("writeback", WQ_MEM_RECLAIM | WQ_FREEZABLE |
+							WQ_UNBOUND | WQ_SYSFS, 0);
+	…
+}
+subsys_initcall(default_bdi_init);
+```
+&ensp;修改文件的属性，以调用chmod修改文件的访问权限,ext4_setattr的执行过程
+
+![20221204003838](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221204003838.png)
+
+&ensp;系统调用write调用EXT4文件系统提供的文件操作集合的write_iter方法：函数ext4_file_write_iter
+
+![20221204003924](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221204003924.png)
+
+&ensp;函数wb_wakeup_delayed把回写控制块的延迟工作项添加到回写工作队列，超时是周期回写的时间间隔
+```c
+// mm/backing-dev.c
+void wb_wakeup_delayed(struct bdi_writeback *wb)
+{
+	unsigned long timeout;
+
+	timeout = msecs_to_jiffies(dirty_writeback_interval * 10);
+	spin_lock_bh(&wb->work_lock);
+	if (test_bit(WB_registered, &wb->state))
+		queue_delayed_work(bdi_wq, &wb->dwork, timeout);
+	spin_unlock_bh(&wb->work_lock);
+}
+```
+
+
+#### 2．周期回写
+
+&ensp;周期回写的时间间隔是5秒，通过`/proc/sys/vm/dirty_writeback_centisecs`配置
+```c
+// mm/page-writeback.c
+unsigned int dirty_writeback_interval = 5 * 100; /*厘秒*/
+```
+&ensp;一页保持为脏状态的最长时间是30秒，通过`/proc/sys/vm/dirty_expire_centisecs`
+```c
+// mm/page-writeback.c
+unsigned int dirty_expire_interval = 30 * 100; /*厘秒*/
+```
+
+&ensp;周期回写的执行流程
+
+![20221204004301](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221204004301.png)
 
 
 
 
+#### 3．强制回写
+
+&ensp;脏页的数量超过后台回写阈值时，默认的脏页比例是10，`/proc/sys/vm/dirty_background_ratio`，通过`/proc/sys/vm/dirty_background_bytes`修改脏页字节数
+```c
+// mm/page-writeback.c
+int dirty_background_ratio = 10;
+unsigned long dirty_background_bytes;
+```
+
+![20221204005050](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221204005050.png)
 
 
+&ensp;脏页的数量达到进程主动回写阈值后，默认的脏页比例是20，`/proc/sys/vm/dirty_ratio`修改脏页比例，`/proc/sys/vm/dirty_bytes`修改脏页字节数
+```c
+// mm/page-writeback.c
+int vm_dirty_ratio = 20;
+unsigned long vm_dirty_bytes;
+```
+
+&ensp;调用函数balance_dirty_pages_ratelimited控制进程写文件时生成脏页的速度，如果脏页的数量超过（后台回写阈值 + 进程主动回写阈值）/2
+
+![20221204005350](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221204005350.png)
 
 
+#### 4.系统调用sync
+
+&ensp;执行命令sync，函数调用系统调用sync，把内存中所有修改过的文件属性和数据写回到存储设备
+```c
+// fs/sync.c
+SYSCALL_DEFINE0(sync)
+```
+
+![20221204005522](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221204005522.png)
 
 
+## 6.14　DAX
+
+&ensp;内存的块设备，例如NVDIMM设备，不需要把文件从存储设备复制到页缓存。DAX(Direct Access，直接访问)绕过页缓存，直接访问存储设备，对于基于文件的内存映射，直接把存储设备映射到进程的虚拟地址空间
 
 
+### 6.14.1　使用方法
+&ensp;编译内核配置宏 `CONFIG_DAX`、`CONFIG_FS_DAX`
 
+
+### 6.14.2　技术原理
+
+&ensp;EXT4文件系统，文件操作集合的read_iter方法是函数ext4_file_read_iter，执行流程
+
+![20221204005916](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221204005916.png)
+
+
+&ensp;EXT4文件系统，文件操作集合的mmap方法是函数ext4_file_mmap
+```c
+// fs/ext4/file.c
+static int ext4_file_mmap(struct file *file, struct vm_area_struct *vma)
+{
+	struct inode *inode = file->f_mapping->host;
+
+	…
+	if (IS_DAX(file_inode(file))) {
+		vma->vm_ops = &ext4_dax_vm_ops;
+		vma->vm_flags |= VM_MIXEDMAP | VM_HUGEPAGE;
+	} else {
+		vma->vm_ops = &ext4_file_vm_ops;
+	}
+	return 0;
+}
+
+static const struct vm_operations_struct ext4_dax_vm_ops = {
+	.fault        = ext4_dax_fault,
+	.huge_fault   = ext4_dax_huge_fault,
+	.page_mkwrite = ext4_dax_fault,
+	.pfn_mkwrite  = ext4_dax_pfn_mkwrite,
+};
+```
+
+&ensp;EXT4文件系统提供的fault方法是函数ext4_dax_fault
+
+![20221204010054](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221204010054.png)
+
+
+## 6.15　常用的文件系统类型
+
+&ensp;机械硬盘和固态硬盘块设备常用的文件系统是EXT4和btrfs，闪存常用的文件系统是JFFS2和UBIFS   <br>
+&ensp;存储设备的容量比较小，可以使用只读的压缩文件系统squashfs，对程序和数据进行压缩。如果需要支持在文件系统中创建文件和写文件，可以使用overlay文件系统把可写的文件系统叠加在squashfs文件系统的上面
 
 
 
