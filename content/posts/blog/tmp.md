@@ -151,6 +151,16 @@ https://zhuanlan.zhihu.com/p/56538645/
 
 
 
+
+
+
+
+
+
+
+
+
+
 [ARM Architecture Reference Manual Supplement®ARMv8.1, for ARMv8-A architecture profile](https://developer.arm.com/documentation/ddi0557/ab?lang=en)
 
 
@@ -159,6 +169,134 @@ https://zhuanlan.zhihu.com/p/56538645/
 
 
 [ARM® Cortex®-A72 MPCore Processor Revision: r0p3 Technical Reference Manual](https://developer.arm.com/documentation/100095/0003/?lang=en)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 第3章 A64指令集I ———— 加载与存储指令
+
+&ensp;A64指令特点  <br>
+
+
+## 3.1 A64指令集介绍
+
+&ensp;ARMv8体系结构，A64指令集64位指令集，处理64位宽寄存器和数据，并使用64位指针访问内存，A64指令集指令宽度为32位  <br>
+&ensp;A64指集分类：
+- 内存加载和存在指令
+- 多字节内存饺子和存储指令
+- 算数和移位指令
+- 移位操作指令
+- 位操作指令
+- 条件操作指令
+- 跳转指令
+- 独占内存访问
+- 内存屏障指令
+- 异常处理指令
+- 系统寄存器访问指令
+
+## 3.2 A64指令编码
+
+&ensp;A64指令集指令宽度为32位，第24~28位识别指令分类
+
+
+&ensp;op0字段值
+
+<table>
+	<tr>
+	    <th>op0 字段值</th>
+	    <th>说    明</th>
+	</tr>
+	<tr>
+	    <td>0000x</td>
+	    <td>保留</td>
+    </tr>
+    <tr>
+	    <td>0010x</td>
+	    <td>可伸缩矢量扩展(SVE)指令</td>
+    </tr>
+    <tr>
+	    <td>100xx</td>
+	    <td>数据处理指令(立即数)</td>
+    </tr>
+    <tr>
+	    <td>101xx</td>
+	    <td>分支处理指令、异常处理指令及系统寄存器访问指令</td>
+    </tr>
+    <tr>
+	    <td>x1x0x</td>
+	    <td>加载与存储指令</td>
+    </tr>
+    <tr>
+	    <td>x101x</td>
+	    <td>数据处理指令(基于寄存器)</td>
+    </tr>
+    <tr>
+	    <td>x111x</td>
+	    <td>数据处理指令(浮点数与SIMD)</td>
+    </tr>
+</table>
+
+
+&ensp;加载与存储指令分类  <br>
+
+&ensp;为什么指令编码宽度是32位？  <br>
+&ensp;A64指令集基于寄存器加载和存储体系结构设计，数据加载、存储及处理在通用寄存器中。ARM64一共31个通用寄存器X0~X30，因此在指令编码中使用5位宽，可索引32个通用寄存器  <br>
+- 使用寄存器作为基地址，把SP(栈指针)寄存器当做第31个通用寄存器
+- 用作源寄存器操作数时，把XZR当作第31个通用寄存器
+
+
+
+## 3.3 加载与存储指令
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
