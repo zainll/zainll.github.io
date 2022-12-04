@@ -406,11 +406,125 @@ L
 - 支持硬件预取。
 
 
+## 1.5 ARMv9体系结构
+
+&ensp;ARMv9体系结构新加入的特性包括：  <br>
+- 全新的可伸缩矢量扩展（Scalable Vector Extension version 2，SVE2）计算；
+- 机密计算体系结构（Confidential Compute Architecture，CCA），基于硬件提供的安全环境来保护用户敏感数据；
+- 分支记录缓冲区扩展（Branch Record Buffer Extension，BRBE），它以低成本的方式捕获控制路径历史的分支记录缓冲区；
+- 内嵌跟踪扩展（Embedded Trace Extension，ETE）以及跟踪缓冲区扩展（Trace Buffer Extension，TRBE），用于增强对ARMv9处理器内核的调试和跟踪功能；
+- 事务内存扩展（Transactional Memory Extension，TME）
 
 
+# 第2章 搭建树莓派环境
+
+## 2.1 树莓派
+&ensp;树莓派4B 博通BCM2711芯片  <br>
+- CPU内核：4核 A72 1.5GHz
+- L1缓存： 32KB数据缓存，48KB指令缓存
+- L2缓存： 1MB
+- GPU： VideoCoreV1核心，500MHz
+- 内存： LPDDR4 
+  
+&ensp;两种地址模式：
+- 低地址模式
+- 35位全地址模式
 
 
+## 2.2 搭建树莓派环境
 
+### 2.2.2 安装树莓派官方OS
+
+
+&ensp;boot分区包括文件：
+- bootcode.bin：引导程序
+- start4.elf：树莓派4B的GPU固件
+- start.elf： 树莓派3B的GPU固件
+- config.txt：配置文件
+
+
+### 2.2.4 使用GDB和QEMU虚拟机调试BenOS
+
+
+## 2.3 BenOS代码
+
+
+## 2.4 QEMU虚拟机与ARM64
+
+&ensp;QEMU虚拟机与ARM64实验平台，书中Ubuntu20.04  <br>
+&ensp;1)安装工具
+```sh
+sudo apt-get install qemu-system-arm libncurses5-dev gcc-aarch64-linux-gnu build-essential git bison flex libssl-dev
+
+# 查看ARM gcc版本
+aarch64-linux-gnu-gcc -v
+```
+&ensp;2)下载仓库
+```sh
+git clone git@github.com:figozhang/runninglinuxkernel_5.0.git
+```
+&ensp;3)编译内核及创建文件系统 <br>
+&emsp;rootfs_arm64.tar.xz文件基于20.04系统的根文件系统创建
+```sh
+# 编译内核
+cd runninglinuxkernel_5.0
+./run_rlk_arm64.sh build_kernel
+
+# 编译文件系统  生成rootfs_arm64.ext4根文件系统
+cd runninglinuxkernel_5.0
+sudo ./run_rlk_arm64.sh build_rootfs
+```
+
+&ensp;4)运行ARM64版本Linux系统
+```sh
+./run_rlk_arm64.sh run
+# root   123
+# 或
+qemu-system-aarch64 -m 1024 -cpu max,sve=on,sev256=on -M virts
+```
+
+&ensp;5)在线安装软件包  <br>
+
+```sh
+# 查看网络配置
+ifconfig 
+
+```
+
+&ensp;6)主机和QEMU虚拟机共享文件  <br>
+
+```sh
+cp test.c runninglinuxkernel_5.0/kmodules/
+
+# qemu
+cd /mnt
+ls
+
+```
+
+
+# 第3章 A64指令集I ———— 加载与存储指令
+
+&ensp;A64指令特点  <br>
+
+
+## 3.1 A64指令集介绍
+
+&ensp;ARMv8体系结构，A64指令集64位指令集，处理64位宽寄存器和数据，并使用64位指针访问内存，A64指令集指令宽度为32位  <br>
+&ensp;A64指集分类：
+- 内存加载和存在指令
+- 多字节内存饺子和存储指令
+- 算数和移位指令
+- 移位操作指令
+- 位操作指令
+- 条件操作指令
+- 跳转指令
+- 独占内存访问
+- 内存屏障指令
+- 异常处理指令
+- 系统寄存器访问指令
+
+## 3.2 A64指令编码
 
 
 
