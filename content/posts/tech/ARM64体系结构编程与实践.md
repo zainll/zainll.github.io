@@ -640,3 +640,14 @@ ls
 
 
 
+
+[ARM Architecture Reference Manual Supplement®ARMv8.1, for ARMv8-A architecture profile](https://developer.arm.com/documentation/ddi0557/ab?lang=en)
+
+
+[ARM Cortex -A Series®®Version: 1.0 Programmer’s Guide for ARMv8-A](https://developer.arm.com/documentation/den0024/a/?lang=en)
+
+
+
+[ARM® Cortex®-A72 MPCore Processor Revision: r0p3 Technical Reference Manual](https://developer.arm.com/documentation/100095/0003/?lang=en)
+
+

@@ -161,17 +161,6 @@ https://zhuanlan.zhihu.com/p/56538645/
 
 
 
-[ARM Architecture Reference Manual Supplement®ARMv8.1, for ARMv8-A architecture profile](https://developer.arm.com/documentation/ddi0557/ab?lang=en)
-
-
-[ARM Cortex -A Series®®Version: 1.0 Programmer’s Guide for ARMv8-A](https://developer.arm.com/documentation/den0024/a/?lang=en)
-
-
-
-[ARM® Cortex®-A72 MPCore Processor Revision: r0p3 Technical Reference Manual](https://developer.arm.com/documentation/100095/0003/?lang=en)
-
-
-
 
 
 
@@ -208,84 +197,6 @@ https://zhuanlan.zhihu.com/p/56538645/
 
 
 
-
-
-
-
-
-
-
-
-#### 1.指令预取单元
-&ensp;指令预取单元从L1指令高速缓存中获取指令，每个周期向译码单元最多发送3条指令。支持动态和静态分支预测，指令预取单元功能：
-- L1指令高速缓存是一个48 KB大小、3路组相连的高速缓存，每个缓存行的大小为64字节。
-- 支持48个表项的全相连指令TLB，可以支持4 KB、64 KB以及1 MB大小的页面。
-- 带有分支目标缓冲器的2级动态预测器，用于快速生成目标。
-- 支持静态分支预测。
-- 支持间接预测。
-- 返回栈缓冲器。
-
-#### 2.指令译码单元
-&ensp;指令译码单元对A32、T32、A64指令集进行译码   <br>
-&ensp;指令译码单元执行寄存器重命名，消除写后写(WAW)和读后写(WAR)实现乱序执行   <br>
-
-#### 3.指令分派单元
-
-&ensp;指令分派单元控制译码后的指令何时被分派到执行管道及返回的结果何时终止，包括ARM核心通用寄存器、SIMD和浮点寄存器
-
-
-#### 4.加载/存储单元
-
-&ensp;加载/存储单元(LSU)执行加载和存储指令，包括L1数据存储系统
-
-
-#### 5.L1内存子系统
-&ensp;L1内存子系统包括指令内存系统和数据内存系统  <br>
-&ensp;L1指令内存系统包括如下特性  <br>
-- 具有48 KB的指令高速缓存，3路组相连映射。
-- 缓存行的大小为64字节。
-- 支持物理索引物理标记（PIPT）。
-- 高速缓存行的替换算法为LRU（Least Recently Used）算法。
-
-&ensp;L1数据内存系统包括如下特性  <br>
-- 具有32 KB的数据高速缓存，两路组相连映射。
-- 缓存行的大小为64字节。
-- 支持物理索引物理标记。
-- 对于普通内存，支持乱序发射、预测以及非阻塞的加载请求访问；对于设备内存，支持非预测以及非阻塞的加载请求访问。
-- 高速缓存行的替换算法为LRU算法。
-- 支持硬件预取。
-
-
-#### 6.MMU
-&ensp;MMU实现虚拟地址到物理地址转换，AArch64支持4KB、16KB、64KB页面  <br>
-&ensp;MMMU包括：
-- 48表项全相连的L1指令TLB
-- 32表项全相连的L1数据TLB
-- 4路组相连L2 TLB
-  
-&ensp;TLB支持8位或16位ASId，还支持VMID(虚拟化)
-
-
-#### 7.L2内存子系统
-&ensp;L2内存子系统不仅负责处理每个处理器内核的L1指令和数据高速缓存未命中的情况，还通过ACE或者CHI连接到内存系统。其特性  <br>
-- 可配置L2高速缓存的大小，大小可以是512 KB、1 MB、2 MB、4 MB。
-- 缓存行大小为64字节。
-- 支持物理索引物理标记。
-- 具有16路组相连高速缓存。
-- 缓存一致性监听控制单元（Snoop Control Unit，SCU）。
-- 具有可配置的128位宽的ACE或者CHI。
-- 具有可选的128位宽的ACP接口。
-- 支持硬件预取。
-
-
-## 1.5 ARMv9体系结构
-
-&ensp;ARMv9体系结构新加入的特性包括：  <br>
-- 全新的可伸缩矢量扩展（Scalable Vector Extension version 2，SVE2）计算；
-- 机密计算体系结构（Confidential Compute Architecture，CCA），基于硬件提供的安全环境来保护用户敏感数据；
-- 分支记录缓冲区扩展（Branch Record Buffer Extension，BRBE），它以低成本的方式捕获控制路径历史的分支记录缓冲区；
-- 内嵌跟踪扩展（Embedded Trace Extension，ETE）以及跟踪缓冲区扩展（Trace Buffer Extension，TRBE），用于增强对ARMv9处理器内核的调试和跟踪功能；
-- 事务内存扩展（Transactional Memory Extension，TME）
 
 
 
