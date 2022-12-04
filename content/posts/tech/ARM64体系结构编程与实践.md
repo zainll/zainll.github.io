@@ -30,6 +30,7 @@ cover:
 
 
 
+
 # 第1章 ARM64体系结构基础
 
 - ARMv8体系结构处理器包含`31`个通用寄存器
@@ -526,9 +527,45 @@ ls
 
 ## 3.2 A64指令编码
 
+&ensp;A64指令集指令宽度为32位，第24~28位识别指令分类
 
 
+&ensp;op0字段值
 
+<table>
+	<tr>
+	    <th>op0 字段值</th>
+	    <th>说    明</th>
+	</tr>
+	<tr>
+	    <td>0000x</td>
+	    <td>保留</td>
+    </tr>
+    <tr>
+	    <td>0010x</td>
+	    <td>可伸缩矢量扩展(SVE)指令</td>
+    </tr>
+    <tr>
+	    <td>100xx</td>
+	    <td>数据处理指令(立即数)</td>
+    </tr>
+    <tr>
+	    <td>101xx</td>
+	    <td>分支处理指令、异常处理指令及系统寄存器访问指令</td>
+    </tr>
+    <tr>
+	    <td>x1x0x</td>
+	    <td>加载与存储指令</td>
+    </tr>
+    <tr>
+	    <td>x101x</td>
+	    <td>数据处理指令(基于寄存器)</td>
+    </tr>
+    <tr>
+	    <td>x111x</td>
+	    <td>数据处理指令(浮点数与SIMD)</td>
+    </tr>
+</table>
 
 
 
@@ -591,6 +628,31 @@ ls
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 参考文档
+
+[ARM Architecture Reference Manual Supplement®ARMv8.1, for ARMv8-A architecture profile](https://developer.arm.com/documentation/ddi0557/ab?lang=en)
+
+
+[ARM Cortex -A Series®®Version: 1.0 Programmer’s Guide for ARMv8-A](https://developer.arm.com/documentation/den0024/a/?lang=en)
+
+
+
+[ARM® Cortex®-A72 MPCore Processor Revision: r0p3 Technical Reference Manual](https://developer.arm.com/documentation/100095/0003/?lang=en)
 
 
 
