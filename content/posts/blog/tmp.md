@@ -238,7 +238,7 @@ https://zhuanlan.zhihu.com/p/56538645/
 - 缓存行的大小为64字节。
 - 支持物理索引物理标记（PIPT）。
 - 高速缓存行的替换算法为LRU（Least Recently Used）算法。
-L
+
 &ensp;L1数据内存系统包括如下特性  <br>
 - 具有32 KB的数据高速缓存，两路组相连映射。
 - 缓存行的大小为64字节。
