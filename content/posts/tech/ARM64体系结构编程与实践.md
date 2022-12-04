@@ -327,6 +327,10 @@ msr TTBR0_El1, X0   // 把X0寄存器值复制到TTBR0_EL1
 
 
 
+- 基于分支目标缓冲区（BTB）和全局历史缓冲区（GHB）的动态分支预测，返回栈缓冲器以及间接预测器。
+- 支持48个表项的全相连指令TLB，可以支持4 KB、64 KB以及1 MB大小的页面。
+- 支持32个表项的全相连数据TLB，可以支持4 KB、64 KB以及1 MB大小的页面。
+- 每个处理器内核支持4路组相连的L2 TLB。
 
 - 48 KB的L1指令高速缓存以及32 KB的L1数据高速缓存。
 - 可配置大小的L2高速缓存，可以配置为512 KB、1 MB、2 MB以及4 MB大小。
@@ -337,10 +341,6 @@ msr TTBR0_El1, X0   // 把X0寄存器值复制到TTBR0_EL1
 - 支持多电源域（power domain）的电源管理。
 
 ![20221204175403](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221204175403.png)
-
-
-
-
 
 
 
