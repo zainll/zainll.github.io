@@ -171,7 +171,7 @@ https://zhuanlan.zhihu.com/p/56538645/
 
 
 
-返回栈缓冲器以及间接预测器。
+全局ls缓冲区(GHB)的动态分支预测，返回栈缓冲器以及间接预测器。
 
 
 
@@ -184,7 +184,7 @@ https://zhuanlan.zhihu.com/p/56538645/
 
 gitee 关键词
 历史
-
+lishi
 
 
 
