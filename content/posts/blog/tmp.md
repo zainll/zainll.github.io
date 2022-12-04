@@ -182,6 +182,33 @@ https://zhuanlan.zhihu.com/p/56538645/
 
 
 
+## 1.4 Cortex-A7处理器介绍
+
+&ensp;树莓派4B开发板，内置了4个Cortex-A72处理器内核  <br>
+&ensp;Cortex-A72处理器支持特性  <br>
+- 采用ARMv8体系结构规范来设计，兼容ARMv8.0协议。
+- 超标量处理器设计，支持乱序执行的流水线。
+- 基于分支目标缓冲区（BTB）和全局历史缓冲区（GHB）的动态分支预测，返回栈缓冲器以及间接预测器。
+- 支持48个表项的全相连指令TLB，可以支持4 KB、64 KB以及1 MB大小的页面。
+- 支持32个表项的全相连数据TLB，可以支持4 KB、64 KB以及1 MB大小的页面。
+- 每个处理器内核支持4路组相连的L2 TLB。
+- 48 KB的L1指令高速缓存以及32 KB的L1数据高速缓存。
+- 可配置大小的L2高速缓存，可以配置为512 KB、1 MB、2 MB以及4 MB大小。
+- 基于AMBA4总线协议的ACE（AXI Coherency Extension）或者CHI（CoherentHubInterface）。
+- 支持PMUv3体系结构的性能监视单元。
+- 支持多处理器调试的CTI（Cross Trigger Interface）。
+- 支持GIC（可选）。
+- 支持多电源域（power domain）的电源管理。
+
+![20221204175403](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20221204175403.png)
+
+
+
+
+
+
+
+
 
 
 
@@ -205,11 +232,6 @@ https://zhuanlan.zhihu.com/p/56538645/
 #### 3.指令分派单元
 
 &ensp;指令分派单元控制译码后的指令何时被分派到执行管道及返回的结果何时终止，包括ARM核心通用寄存器、SIMD和浮点寄存器
-
-
-
-
-
 
 
 #### 4.加载/存储单元
