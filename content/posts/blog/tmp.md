@@ -192,6 +192,95 @@ https://zhuanlan.zhihu.com/p/56538645/
 
 
 
+# 第2章 搭建树莓派环境
+
+## 2.1 树莓派
+&ensp;树莓派4B 博通BCM2711芯片  <br>
+- CPU内核：4核 A72 1.5GHz
+- L1缓存： 32KB数据缓存，48KB指令缓存
+- L2缓存： 1MB
+- GPU： VideoCoreV1核心，500MHz
+- 内存： LPDDR4 
+  
+&ensp;两种地址模式：
+- 低地址模式
+- 35位全地址模式
+
+
+## 2.2 搭建树莓派环境
+
+### 2.2.2 安装树莓派官方OS
+
+
+&ensp;boot分区包括文件：
+- bootcode.bin：引导程序
+- start4.elf：树莓派4B的GPU固件
+- start.elf： 树莓派3B的GPU固件
+- config.txt：配置文件
+
+
+### 2.2.4 使用GDB和QEMU虚拟机调试BenOS
+
+
+## 2.3 BenOS代码
+
+
+## 2.4 QEMU虚拟机与ARM64
+
+&ensp;QEMU虚拟机与ARM64实验平台，书中Ubuntu20.04  <br>
+&ensp;1)安装工具
+```sh
+sudo apt-get install qemu-system-arm libncurses5-dev gcc-aarch64-linux-gnu build-essential git bison flex libssl-dev
+
+# 查看ARM gcc版本
+aarch64-linux-gnu-gcc -v
+```
+&ensp;2)下载仓库
+```sh
+git clone git@github.com:figozhang/runninglinuxkernel_5.0.git
+```
+&ensp;3)编译内核及创建文件系统 <br>
+&emsp;rootfs_arm64.tar.xz文件基于20.04系统的根文件系统创建
+```sh
+# 编译内核
+cd runninglinuxkernel_5.0
+./run_rlk_arm64.sh build_kernel
+
+# 编译文件系统  生成rootfs_arm64.ext4根文件系统
+cd runninglinuxkernel_5.0
+sudo ./run_rlk_arm64.sh build_rootfs
+```
+
+&ensp;4)运行ARM64版本Linux系统
+```sh
+./run_rlk_arm64.sh run
+# root   123
+# 或
+qemu-system-aarch64 -m 1024 -cpu max,sve=on,sev256=on -M virts
+```
+
+&ensp;5)在线安装软件包  <br>
+
+```sh
+# 查看网络配置
+ifconfig 
+
+```
+
+&ensp;6)主机和QEMU虚拟机共享文件  <br>
+
+```sh
+cp test.c runninglinuxkernel_5.0/kmodules/
+
+# qemu
+cd /mnt
+ls
+
+```
+
+
+
+
 
 
 
