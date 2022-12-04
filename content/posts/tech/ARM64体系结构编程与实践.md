@@ -343,6 +343,181 @@ msr TTBR0_El1, X0   // 把X0寄存器值复制到TTBR0_EL1
 
 
 
+# 第2章 搭建树莓派环境
+
+## 2.1 树莓派
+&ensp;树莓派4B 博通BCM2711芯片  <br>
+- CPU内核：4核 A72 1.5GHz
+- L1缓存： 32KB数据缓存，48KB指令缓存
+- L2缓存： 1MB
+- GPU： VideoCoreV1核心，500MHz
+- 内存： LPDDR4 
+  
+&ensp;两种地址模式：
+- 低地址模式
+- 35位全地址模式
+
+
+## 2.2 搭建树莓派环境
+
+### 2.2.2 安装树莓派官方OS
+
+
+&ensp;boot分区包括文件：
+- bootcode.bin：引导程序
+- start4.elf：树莓派4B的GPU固件
+- start.elf： 树莓派3B的GPU固件
+- config.txt：配置文件
+
+
+### 2.2.4 使用GDB和QEMU虚拟机调试BenOS
+
+
+## 2.3 BenOS代码
+
+
+## 2.4 QEMU虚拟机与ARM64
+
+&ensp;QEMU虚拟机与ARM64实验平台，书中Ubuntu20.04  <br>
+&ensp;1)安装工具
+```sh
+sudo apt-get install qemu-system-arm libncurses5-dev gcc-aarch64-linux-gnu build-essential git bison flex libssl-dev
+
+# 查看ARM gcc版本
+aarch64-linux-gnu-gcc -v
+```
+&ensp;2)下载仓库
+```sh
+git clone git@github.com:figozhang/runninglinuxkernel_5.0.git
+```
+&ensp;3)编译内核及创建文件系统 <br>
+&emsp;rootfs_arm64.tar.xz文件基于20.04系统的根文件系统创建
+```sh
+# 编译内核
+cd runninglinuxkernel_5.0
+./run_rlk_arm64.sh build_kernel
+
+# 编译文件系统  生成rootfs_arm64.ext4根文件系统
+cd runninglinuxkernel_5.0
+sudo ./run_rlk_arm64.sh build_rootfs
+```
+
+&ensp;4)运行ARM64版本Linux系统
+```sh
+./run_rlk_arm64.sh run
+# root   123
+# 或
+qemu-system-aarch64 -m 1024 -cpu max,sve=on,sev256=on -M virts
+```
+
+&ensp;5)在线安装软件包  <br>
+
+```sh
+# 查看网络配置
+ifconfig 
+
+```
+
+&ensp;6)主机和QEMU虚拟机共享文件  <br>
+
+```sh
+cp test.c runninglinuxkernel_5.0/kmodules/
+
+# qemu
+cd /mnt
+ls
+
+```
+
+
+
+
+
+
+
+
+
+# 第3章 A64指令集I ———— 加载与存储指令
+
+&ensp;A64指令特点  <br>
+
+
+## 3.1 A64指令集介绍
+
+&ensp;ARMv8体系结构，A64指令集64位指令集，处理64位宽寄存器和数据，并使用64位指针访问内存，A64指令集指令宽度为32位  <br>
+&ensp;A64指集分类：
+- 内存加载和存在指令
+- 多字节内存饺子和存储指令
+- 算数和移位指令
+- 移位操作指令
+- 位操作指令
+- 条件操作指令
+- 跳转指令
+- 独占内存访问
+- 内存屏障指令
+- 异常处理指令
+- 系统寄存器访问指令
+
+## 3.2 A64指令编码
+
+&ensp;A64指令集指令宽度为32位，第24~28位识别指令分类
+
+
+&ensp;op0字段值
+
+<table>
+	<tr>
+	    <th>op0 字段值</th>
+	    <th>说    明</th>
+	</tr>
+	<tr>
+	    <td>0000x</td>
+	    <td>保留</td>
+    </tr>
+    <tr>
+	    <td>0010x</td>
+	    <td>可伸缩矢量扩展(SVE)指令</td>
+    </tr>
+    <tr>
+	    <td>100xx</td>
+	    <td>数据处理指令(立即数)</td>
+    </tr>
+    <tr>
+	    <td>101xx</td>
+	    <td>分支处理指令、异常处理指令及系统寄存器访问指令</td>
+    </tr>
+    <tr>
+	    <td>x1x0x</td>
+	    <td>加载与存储指令</td>
+    </tr>
+    <tr>
+	    <td>x101x</td>
+	    <td>数据处理指令(基于寄存器)</td>
+    </tr>
+    <tr>
+	    <td>x111x</td>
+	    <td>数据处理指令(浮点数与SIMD)</td>
+    </tr>
+</table>
+
+
+&ensp;加载与存储指令分类  <br>
+
+&ensp;为什么指令编码宽度是32位？  <br>
+&ensp;A64指令集基于寄存器加载和存储体系结构设计，数据加载、存储及处理在通用寄存器中。ARM64一共31个通用寄存器X0~X30，因此在指令编码中使用5位宽，可索引32个通用寄存器  <br>
+- 使用寄存器作为基地址，把SP(栈指针)寄存器当做第31个通用寄存器
+- 用作源寄存器操作数时，把XZR当作第31个通用寄存器
+
+
+
+## 3.3 加载与存储指令
+
+
+
+
+
+
+
 
 
 
