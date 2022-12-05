@@ -891,7 +891,7 @@ CMP <Xn|SP>, <R><m>{, <extend> {#<amount>}}
 &ensp;CMN指令将一个数与另一个数相反数进行比较
 ```c
 CMN <Xn|SP>, #<imm>{, <shift>}
-
+CMN <XN|SP>, 
 
 ```
 
