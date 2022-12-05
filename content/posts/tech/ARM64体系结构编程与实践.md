@@ -632,6 +632,355 @@ STR 源寄存器,  <存储器地址>    // 把源寄存器数据存储到存储�
 
 ### 3.3.1 基于基地址寻址模式
 
+&ensp;基地址模式寄存器值表示地址，基地址加偏移量模式基地址加上可正可负偏移  <br>
+
+#### 1.基地模式
+&ensp;指令以Xn寄存器值为内存地址，加载此内存地址内容到Xt寄存器
+```c
+LDR Xt, [Xn] 
+```
+&ensp;指令把Xt寄存器中内容存储到Xn寄存器的内存地址中
+```c
+STR Xt, [Xn]  ?
+```
+
+#### 2.基地址加偏移量模式
+&ensp;指令把Xn寄存器值加偏移量(offset是8的倍数)，以相加的结果作为内存地址，加载此地址内容到Xt寄存器
+```c
+// 偏移量从指令编码imm12字段获取 0~32760B
+LDR Xt, [Xn, $offset]
+// 基地址加偏移量存储指令
+STR Xt, [Xn, $offset]
+```
+
+#### 3.基地址扩展模式
+
+```c
+LDR <Xt>, {<Xn>, (<Xn>){, <extend> {<amount>}}}
+STR <Xt>, {<Xn>, (<Xn>){, <extend> {<amount>}}}
+```
+
+```c
+
+
+```
+
+### 3.3.2 变基模式
+
+&ensp;两种变基模式
+- 前变基：先更新偏移量地址，后访问内存
+- 后变基：先访问内存地址，后更新偏移量地址
+
+```c
+// 前变基模式
+LDR <Xt>, [<Xn|SP>, #<simm>]!
+STR <Xt>, [<Xn|SP>, #<simm>]!
+
+// 后变基模式
+LDR <Xt>, [<Xn|SP>], #<simm>
+STR <Xt>, [<Xn|SP>], #<simm>
+```
+
+
+### 3.3.3 PC相对寻址模式
+```c
+// LDR指令访问标签的地址
+LDR <Xt>, <label>
+
+```
+
+### 3.3.4 LDR伪指令
+```c
+// LDR伪指令
+LDR Xt, =<label>  // 把label标记的地址加载到Xt寄存器
+```
+&ensp;Linux内核实现重定位伪代码
+```c
+// arch/arm64/kernel/head.S
+__primary_switch:
+	adrp  x1, init_pg_dir
+	b1  __enable_mmu  // 打开MMU
+
+	ldr  x8, =__primary_switched  // 跳转 到链接地址，即内核空间虚拟地址
+	adrp  x0, __PHYS_OFFSET  // 
+	br  x8
+ENDPROC(__primary_switch)
+```
+
+
+## 3.4 加载与存储指令变种
+### 3.4.1 不同位宽加载与存储指令
+&ensp;LDR、LDRSW、LDRB、LDRSB、LDRH、LDRSH、STRB、STRH
+
+### 3.4.2 不可扩展加载与存储指令
+```c
+LDUR <Xt>, [<Xn|SP>{, #<simm>}]
+STUR <Xt>, [<Xn|SP>{, #<simm>}]
+```
+&ensp;不可扩展LDUR和STUR数据位宽变种
+
+### 3.4.3 多字节内存加载与存储指令
+
+&ensp;A64提供LDP和STP指令
+
+#### 1.基地址偏移量模式
+```c
+LDP <Xt1>, <Xt2>, [<Xn|SP>{, #<imm>}]
+
+STP <Xt1>, <Xt2>, [<Xn|SP>{, #<imm>}]
+
+```
+
+#### 2.前变基模式
+```c
+LDP <Xt1>, <Xt2>, [<Xn|SP>, #<imm>]!
+
+STP <Xt1>, <Xt2>, [<Xn|SP>, #<imm>]!
+
+```
+
+#### 3.后变基模式
+```c
+LDP <Xt1>, <Xt2>, [<Xn|SP>], #<imm>
+
+STP <Xt1>, <Xt2>, [<Xn|SP>], #<imm>
+
+```
+
+
+### 3.4.4 独占内存访问指令
+
+&ensp;ARMv8体系结构独占内存访问(exclusive memory access)指令，A64指令集LDXR指令尝试在内存总线中申请一个独占访问锁，然后访问一个内存地址。STXR会往LDXR指令申请独占访问内存地址中写入新内容。LDXR和STXR组合实现同步操作，如Linux内核自旋锁  <br>
+&ensp;ARMv8多字节多占内存访问指令，LDXP和STXP
+
+### 3.4.5 隐含加-获取/存储-释放内存屏障原语
+
+&ensp;内存屏障原语LDAR和STAR
+
+### 3.4.6 非特权访问级别加载和存储指令
+
+
+## 3.5 入栈和出栈
+&ensp;栈(stack)后进先出数据结构，保存：
+- 临时存储数据，如局部变量
+- 参数：参数小于等于8个，用X0~X7通用寄存器传递，超过8个使用栈
+
+&ensp;栈从高地址向低地址扩展，栈指针(Stack Pointer SP)指向栈顶  <br>
+```c
+// 栈向下扩展16字节
+stp x29, x30, [sp, #-16]
+
+add sp, sp, #-8
+// 释放8字节
+add sp, sp, #8
+
+ldp x29, x30, [sp], #16
+
+```
+
+
+## 3.6 MOV指令
+
+&ensp;MOV指令寄存器直接搬移和立即数搬移
+```c
+// 寄存器搬移
+MOV <Xd|SP>, <Xn|SP>
+// 立即数搬移
+MOV <Xd>, #<imm>
+
+
+MOVZ <Xd>, #<imm16>, LSL #<shift>
+
+ORR <Xd|SP>, XZR, #<imm>
+
+```
+&ensp;objdump指令查看MOV指令
+```c
+aarch64-linux-gnu-objdump -s -d  -M no-aliases test.o
+```
+
+# 第4章 A64指令集2 ———— 算术与移位指令
+
+- N、Z、C、V 4个条件标志位作用
+
+
+## 4.1 条件操作码
+&ensp;A64指令集在PSTATE寄存器中有4个条件标志位，N 负数、 Z 零、 C 进位、 V 溢出  <br>
+
+## 4.2 加法和减肥指令
+
+### 4.2.1 加法
+
+&ensp;add、adds、adc
+
+### 4.2.2 减法
+
+&ensp;SUB、SUBS
+
+
+## 4.3 CMP指令
+
+&ensp;A64指令集中 CMP指令内部调用SUBS指令
+
+```c
+// 立即数的CMP指令
+CMP <Xn|SP>, #<imm>{, <shift>}
+// 上述等同于
+SUBS XZR, <Xn|SP>, #<imm> {, <shift>}
+
+// 寄存器的CMP指令
+CMP <Xn|SP>, <R><m>{, <extend> {#<amount>}}
+
+// 移位操作的CMP指令
+
+
+// CMP指令于添加操作后缀
+
+```
+
+## 4.4 条件表示位
+
+
+## 4.5 移位指令
+&ensp;常见移位指令：
+- LSL：逻辑左移，最高位丢弃，最低位补0
+- LSR：逻辑右移，最高位补0，最低位丢弃
+- ASR：算术右移，最低位丢弃，最高位按符号位扩展
+- ROR：循环右移，最低位移到最高位
+
+
+## 4.6 位操作指令
+&ensp;两种与操作指令
+- AND：按位与操作
+- ANDS：带条件标志位与操作，影响Z标志位
+  
+&ensp;或操作指令
+- ORR
+- EOR 异或
+
+&ensp;位清除操作
+- BIC
+
+&ensp;CLZ指令 计算为1的最高位前面有几个零
+
+## 4.7 位段操作指令
+
+&ensp;1.位段插入操作指令 BFI  
+```c
+
+```
+
+&ensp;2.位段提取操作指令 UBFX
+```c
+
+```
+
+# 第5章 A64指令集3 —— 比较指令与跳转指令
+
+- RET与ERET
+
+## 5.1 比较指令
+
+&ensp;比较指令
+- CMP  CMN
+- CSEL：条件选择指令
+- CSET：条件置位指令
+- CSINC：条件选择并增加指令
+
+### 5.1.1 CMN指令
+&ensp;CMN指令将一个数与另一个数相反数进行比较
+```c
+CMN <Xn|SP>, #<imm>{, <shift>}
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
