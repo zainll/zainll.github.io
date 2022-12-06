@@ -71,3 +71,36 @@ https://blog.csdn.net/qq_44158431/article/details/125199825
 
 
 https://www.cnblogs.com/limstorm/p/16334539.html
+
+
+
+
+
+
+
+
+
+
+
+https://weishu.me/2022/06/12/eBPF-on-Android/
+
+
+
+
+
+
+
+https://www.cnxct.com/ecapture-news-android/
+
+
+
+
+
+
+
+https://ebpf.io/applications/
+
+
+
+
+

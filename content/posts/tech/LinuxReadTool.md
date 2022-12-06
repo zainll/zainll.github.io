@@ -62,6 +62,9 @@ https://elixir.bootlin.com/
 
 <br>
 
+
+https://www.kernel.org/doc/html/latest/
+
 ## U-boot
 
 ```sh

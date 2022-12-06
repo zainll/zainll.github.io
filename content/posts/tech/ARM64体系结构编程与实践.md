@@ -891,9 +891,141 @@ CMP <Xn|SP>, <R><m>{, <extend> {#<amount>}}
 &ensp;CMN指令将一个数与另一个数相反数进行比较
 ```c
 CMN <Xn|SP>, #<imm>{, <shift>}
-CMN <XN|SP>, 
+CMN <XN|SP>, <R><m>{, <extend> {#<amount>}}
 
 ```
+
+### 5.1.2 CSEL指令
+```c
+// cond为真，返回Xn，为假，返回Xm
+CSEL <Xd>, <Xn>, <Xm>, <cond>
+```
+
+### 5.1.3 CSET指令
+```c
+// cond为真，Xd寄存器为1，否则为0
+CSET <Xd>, <cond>
+```
+
+### 5.1.4 CSINC指令
+```c
+// cond为真，返回Xn寄存器值，否则返回Xm寄存器值
+CSINC <Xd>, <Xn>, <Xm>, <cond>
+```
+
+## 5.2 跳转与返回指令
+
+### 5.2.1 跳转指令
+
+<table>
+	<tr>
+	    <th>指   令</th>
+	    <th>描　 述</th>
+	</tr>
+	<tr>
+	    <td>B</td>
+	    <td>跳转指令<br> B Lable</td>
+	</tr>
+	<tr>
+	    <td>B.cond</td>
+	    <td>有条件跳转指令<br> B.cond Lable</td>
+	</tr>
+	<tr>
+	    <td>BL</td>
+	    <td>带返回值跳转指令<br> BL Lable</td>
+	</tr>
+	<tr>
+	    <td>BR</td>
+	    <td>跳转到寄存器指定地址<br> BR Xn</td>
+	</tr>
+	<tr>
+	    <td>BLR</td>
+	    <td>跳转到寄存器指定地址<br> BLR Xn</td>
+	</tr>
+</table>
+
+
+### 5.2.2 返回指令
+&ensp;A64两条返回指令： <br>
+- RET：用于子函数返回，返回地址保存在LR
+- ERET：从当前的异常模式返回，把SPSR内容恢复到PSTATE寄存器中，从ELR中获取跳转地址并返回到该地址，ERET可实现处理器模式切换，如EL1到EL0
+  
+### 5.2.3 比较跳转指令
+
+<table>
+	<tr>
+	    <th>指   令</th>
+	    <th>描　 述</th>
+	</tr>
+	<tr>
+	    <td>CBZ</td>
+	    <td>比较并跳转指令<br> CBZ Xt, Lable</td>
+	</tr>
+	<tr>
+	    <td>CBNZ</td>
+	    <td>比较并跳转指令<br> CBNZ Xt, Lable</td>
+	</tr>
+	<tr>
+	    <td>TBZ</td>
+	    <td>测试位并跳转指令<br> TBZ R< t>, #imm, lable</td>
+	</tr>
+	<tr>
+	    <td>TBNZ</td>
+	    <td>测试并跳转指令<br> TBNZ R< t>， #imm, lable</td>
+	</tr>
+</table>
+
+
+# 第6章 A64指令集——其他重要指令
+
+- ADR/ADRP与伪指令LDR
+- ADRP指令获取的是与 4KB 对齐的地址
+  
+## 6.1 PC相对地址加载指令
+
+&ensp;A64指令集PC相对地址加载指令——ADR和ADRP指令
+```c
+// ADR 加载当前PC值+-1MB范围内label地址到Xd寄存器
+ADR <Xd>, <label>
+
+// ADRP 加载当前PC值一段范围内的label地址到Xd寄存器，与label地址按4Kb对齐
+// 即偏移量位 -4Gb~4GB
+ADRP <Xd>, <label>
+```
+
+## 6.2 LDR余ADRP指令区别
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

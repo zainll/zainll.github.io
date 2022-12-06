@@ -122,7 +122,14 @@ flameshot gui -c -p <path>
 ## free
 
 ```sh
-get -O clash.gz https://github.com/Dreamacro/clash/releases/download/v1.11.8/clash-linux-amd64-v1.11.8.gz
+wget -O clash.gz https://github.com/Dreamacro/clash/releases/download/v1.11.8/clash-linux-amd64-v1.11.8.gz
+
+
+wget -O clash.gz https://github.com/Dreamacro/clash/releases/download/v1.12.0/clash-linux-amd64-v1.12.0.gz
+
+
+curl -LJO -o clash.gz https://github.com/Dreamacro/clash/releases/download/v1.12.0/clash-linux-amd64-v1.12.0.gz
+
 ```
 
 ```sh
