@@ -993,29 +993,138 @@ ADR <Xd>, <label>
 ADRP <Xd>, <label>
 ```
 
-## 6.2 LDR余ADRP指令区别
+## 6.2 LDR与ADRP指令区别
+&ensp;树莓派上电复位后，固件(BOOTROM)把很想加载到`0x80000`地址处  <br>
+&ensp;LDR伪指令加载的是绝对地址，即程序编译是的链接地址。ADR/ADRP指令加载的是当前PC的相对地址(PC relative-address)，即当前PC值加上label的偏移量，理解位当前运行是label的物理地址  <br>
+
+## 6.3 独占内存访问指令
+&ensp;ARMv8体系结构，A64指令集，LDXR指令尝试在内存总线中申请一个独占访问的锁，然后访问一个内存地址。STXR指令会往LDXR指令已经申请的独占访问内存地址宏写入新内容。  <br>
+
+
+## 6.4 异常处理指令
+
+<table>
+	<tr>
+	    <th>指   令</th>
+	    <th>描　 述</th>
+	</tr>
+	<tr>
+	    <td>SVC</td>
+	    <td>系统调用指令<br> SVC #imm</td>
+	</tr>
+	<tr>
+	    <td>HVC</td>
+	    <td>虚拟化系统调用指令<br> HVC #imm</td>
+	</tr>
+	<tr>
+	    <td>SMC</td>
+	    <td>安全监控系统调用指令<br> SMC #imm</td>
+	</tr>
+</table>
+
+
+## 6.5 系统寄存器访问指令
+&ensp;ARMv8体系结构MRS和MSR指令直接访问寄存器  <br>
+
+<table>
+	<tr>
+	    <th>指   令</th>
+	    <th>描　 述</th>
+	</tr>
+	<tr>
+	    <td>MRS</td>
+	    <td>读取系统寄存器的值到通用寄存器</td>
+	</tr>
+	<tr>
+	    <td>MSR</td>
+	    <td>更新系统寄存器的值</td>
+	</tr>
+</table>
+
+&ensp;ARMv8体系结构7类系统寄存器  <br>
+- 通用系统控制寄存器(System Control Register SCTLR)
+- 调试寄存器
+- 性能监控寄存器
+- 活动监控寄存器
+- 统计扩展寄存器
+- RAS寄存器
+- 通用定时寄存器
+
+
+<table>
+	<tr>
+	    <th>特殊系统寄存器</th>
+	    <th>描　 述</th>
+	</tr>
+	<tr>
+	    <td>CurrentEL</td>
+	    <td>获取当前系统的异常等级</td>
+	</tr>
+	<tr>
+	    <td>DAIF</td>
+	    <td>获取和设置PSTATE寄存器中的DAIF掩码</td>
+	</tr>
+	<tr>
+	    <td>NZCV</td>
+	    <td>获取和设置PSTATE寄存器中的条件掩码</td>
+	</tr>
+	<tr>
+	    <td>PAN</td>
+	    <td>获取和设置PSTATE寄存器中的PAN掩码</td>
+	</tr>
+	<tr>
+	    <td>SPSel</td>
+	    <td>获取和设置当前寄存器的SP寄存器</td>
+	</tr>
+	<tr>
+	    <td>UAO</td>
+	    <td>获取和设置PSTATE寄存器中的UAO掩码</td>
+	</tr>
+</table>
+
+
+## 6.6 内存屏障指令
+&ensp;ARMv8体系结构是弱一致性内存模型，内存访问次序可能和程序预取顺序不一样
+
+<table>
+	<tr>
+	    <th>指   令</th>
+	    <th>描　 述</th>
+	</tr>
+	<tr>
+	    <td>DMB</td>
+	    <td>数据存储屏障，确保在执行新的存储访问前所有存储器访问都已完成</td>
+	</tr>
+	<tr>
+	    <td>DSB</td>
+	    <td>数据同步屏障，确保在下一个指令执行前所有存储器访问都已完成</td>
+	</tr>
+<tr>
+	    <td>ISB</td>
+	    <td>指令同步屏障，清空流水线，确保在执行新的指令前，之前所有指令都已完成</td>
+	</tr>
+
+</table>
 
 
 
 
+&ensp;新的加载和存储指令
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<table>
+	<tr>
+	    <th>指   令</th>
+	    <th>描　 述</th>
+	</tr>
+	<tr>
+	    <td>LDAR</td>
+	    <td>加载-获取(laod-acquire)指令 <br> LDAR指令后面的读写内存指令必须在LDAR指令之前执行</td>
+	</tr>
+	<tr>
+	    <td>STLR</td>
+	    <td>存储-释放(store-release)指令 <br> 所有的加载和存储指令必须在STLR指令之前完成</td>
+	</tr>
+</table>
 
 
 
