@@ -1321,7 +1321,16 @@ ENTRY(symbol)
 
 
 
+```c
+// linux5.0/arch/arm64/kernel/head.S
+	__primary_switch;
+	adrp	x1, init_pg_dir
+	bl		__enable_mmu
 
+	ldr 	x8, =__primary_switched
+	adrp	x0, __PHY_OFFSET
+	br		x8
+```
 
 
 
