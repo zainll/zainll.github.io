@@ -1128,6 +1128,68 @@ ADRP <Xd>, <label>
 
 
 
+# 第7章 A64指令集的陷阱
+
+## 7.1 加载宏标签
+&ensp;ARMv8体系结构，在没有使能MMU情况下，访问内存地址变成访问设备类型的内存(device memory)。内存类型分为普通类型内存和设备类型内存  <br>
+&ensp;对设备类型内服访问发起不对齐访问，会触发对齐异常 <br>
+&ensp;系统MMU使能后，访问内存变成了访问普通类型内存，对普通类型内存发起一个不对齐访问，分为两种情况
+- 当SCTLR_ELx寄存器的A字段为1时，触发一个对齐异常
+- 当SCTLR_ELx寄存器的A字段为0时，系统自动完成不对齐访问
+
+## 7.2 加载字符串
+
+
+## 7.3 读写寄存器导致树莓派死机
+
+## 7.4 LDXR指令导致水平4B死机
+
+
+## 7.5 在汇编中实现串口输出功能
+
+
+## 7.6 纷享Linux5.0的启动汇编代码
+
+&ensp;Linux内核入口函数`stext`，在`arch/arm64/kernel/haed.S`汇编文件中实现。系统上电复位后，启动引导程序(bootloader)或BIOS初始化，最终跳转到Linux内核入口函数`stext`汇编函数，启动引导程序必要初始化，如内存设备初始化、磁盘设备初始化以及将内核镜像加载到运行地址，然后跳转到Linux内核入口。  <br>
+&ensp;内核汇编入口到C语言入口`start_kernel()`函数之间的汇编代码
+
+
+# 第8章 GNU汇编器
+
+- 汇编器
+- 符号
+- 伪指令
+- kernel_ventry宏
+
+&ensp;汇编代码同汇编器生成目标代码，然后由连接器链接成可执行二进制程序  <br>
+&ensp;ARM64汇编器：1）ARM公司汇编器，2）GNU项目AS汇编器  <br>
+&ensp;aarch64-linux-gnu，级汇编后文件Wieaarch64体系结构   <br>
+
+
+## 8.1 编译流程与ELF文件
+
+&ensp;GCC编译流程：   <br>
+&emsp;1）预处理(pre-process)，GCC预处理器(cpp)，生成 *.i 文件  <br>
+&emsp;2）编译(compile)，C语言编译器(ccl)，对预处理文件进行词法、语法分析及语义分析    <br>
+&emsp;3）汇编(assemble)，汇编器(as)把汇编代码翻译成机器语言，并生成可重定位目标文件     <br>
+&emsp;4）链接(link)，连接器(ld)把所有生成可重定位目标文件以及用到的库文件综合成可执行二进制文件   <br>
+```c
+gcc -E text.c -o text.i
+
+gcc -S text.i -o text.s
+
+as test.s -o test.o
+
+ld -o test test.o -lc
+```
+
+
+
+
+
+
+
+
 
 
 
