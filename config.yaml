@@ -58,7 +58,7 @@ languages:
             url: posts/read
           - name: 🏖 生活
             url: posts/life
-          - name: 💌 写给娜
+          - name: 💌 写给
             url: posts/na
       menu:
         main:
