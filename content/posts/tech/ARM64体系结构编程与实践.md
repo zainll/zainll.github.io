@@ -48,7 +48,7 @@ cover:
 &ensp;ARMv8是64位处理器指令集和体系结构  <br>
 - 64位虚拟地址空间，32位仅支持4GB
 - 31个64位宽通用寄存器
-- 支持16KB和64Kb页面，降低TLB命中率
+- 支持16KB和64Kb页面，降低TLB未命中率
 - 异常处理模型EL0~EL3
 - 加载-获取指令(Load-Acquire Instruction)，存储-释放指令(Store-Release Instruction)
 
@@ -63,15 +63,15 @@ cover:
 &ensp;ARMv8体系结构基本概念和定义  <br>
 - 处理机PE(Processing Element):处理器处理事务过程抽象
 - 执行状态(execution state):处理器运行时环境，包括寄存器位宽、支持指令集、异常模型、内存管理以及编程模型  <br>
-> ARMv8两个执行状态
->> AArch64：64位执行状态
->>> 31个通用寄存器
->>> 64位程序计数(PC)指针寄存器、栈指针(Stack Pointer SP)寄存器及异常链接寄存器(Exception Link Register ELR)
->>> A64指令集
->>> ARMv8异常模型，4个异常等级，即EL0~EL3
->>> 64位内存模型
->>> 一组处理器状态(PSTATE)保存PE状态
->> AArch32: 32位执行状态
+> ARMv8两个执行状态 
+>> AArch64：64位执行状态   <br>
+>>> 31个通用寄存器   <br>
+>>> 64位程序计数(PC)指针寄存器、栈指针(Stack Pointer SP)寄存器及异常链接寄存器(Exception Link Register ELR)  <br>
+>>> A64指令集   <br>
+>>> ARMv8异常模型，4个异常等级，即EL0~EL3   <br>
+>>> 64位内存模型   <br>
+>>> 一组处理器状态(PSTATE)保存PE状态  <br>
+>> AArch32: 32位执行状态   <br>
 
 &ensp;AArch64状态，部分系统寄存器在不同异常等级提供不同变种寄存器
 ```c
@@ -83,7 +83,7 @@ cover:
 
 ### 1.2.5 ARMv8处理器执行状态
 &ensp;AArch64状态异常等级(exception level)确定处理器当前运行的特权级别
-- EL0:用户特权
+- EL0：用户特权
 - EL1：系统特权，操作系统内核，系统使能虚拟化扩展，运行虚拟操作系统内核
 - EL2：运行虚拟化扩展的虚拟监控程序(hypervisor)
 - EL3：运行安全世界中安全监控器(secure monitor)
@@ -297,7 +297,9 @@ cover:
 &ensp;PAN寄存器表示PSTATE寄存器中PAN字段，通过MSR和MRS指令设置PAN寄存器<br>
 &ensp;内核态访问用户态内存，主动调用内核接口，如copy_from_user()或copy_to_user()  <br>
 
-&ensp;PAN寄存器值：0：表示内核态可访问用户态内存； 1：表示内核态访问用户态内存会触发访问权限异常
+&ensp;PAN寄存器值： <br>
+&emsp;0：表示内核态可访问用户态内存 <br>
+&emsp;1：表示内核态访问用户态内存会触发访问权限异常 <br>
 
 
 #### 10.UAO寄存器
@@ -399,7 +401,7 @@ msr TTBR0_El1, X0   // 把X0寄存器值复制到TTBR0_EL1
 - 32表项全相连的L1数据TLB
 - 4路组相连L2 TLB
   
-&ensp;TLB支持8位或16位ASId，还支持VMID(虚拟化)
+&ensp;TLB支持8位或16位ASID，还支持VMID(虚拟化)
 
 
 #### 7.L2内存子系统
@@ -424,6 +426,9 @@ msr TTBR0_El1, X0   // 把X0寄存器值复制到TTBR0_EL1
 - 事务内存扩展（Transactional Memory Extension，TME）
 
 
+
+
+<br>
 
 # 第2章 搭建树莓派环境
 
@@ -512,14 +517,11 @@ ls
 ```
 
 
+<br>
 
 
 
-
-
-
-
-# 第3章 A64指令集I ———— 加载与存储指令
+# 第3章 A64指令集I —— 加载与存储指令
 
 &ensp;A64指令特点  <br>
 
@@ -799,7 +801,12 @@ ORR <Xd|SP>, XZR, #<imm>
 aarch64-linux-gnu-objdump -s -d  -M no-aliases test.o
 ```
 
-# 第4章 A64指令集2 ———— 算术与移位指令
+
+
+<br>
+
+
+# 第4章 A64指令集2 —— 算术与移位指令
 
 - N、Z、C、V 4个条件标志位作用
 
@@ -874,6 +881,11 @@ CMP <Xn|SP>, <R><m>{, <extend> {#<amount>}}
 ```c
 
 ```
+
+
+
+<br>
+
 
 # 第5章 A64指令集3 —— 比较指令与跳转指令
 
@@ -976,7 +988,10 @@ CSINC <Xd>, <Xn>, <Xm>, <cond>
 </table>
 
 
-# 第6章 A64指令集——其他重要指令
+<br>
+
+
+# 第6章 A64指令集 —— 其他重要指令
 
 - ADR/ADRP与伪指令LDR
 - ADRP指令获取的是与 4KB 对齐的地址
@@ -1128,6 +1143,9 @@ ADRP <Xd>, <label>
 
 
 
+<br>
+
+
 # 第7章 A64指令集的陷阱
 
 ## 7.1 加载宏标签
@@ -1152,6 +1170,9 @@ ADRP <Xd>, <label>
 
 &ensp;Linux内核入口函数`stext`，在`arch/arm64/kernel/haed.S`汇编文件中实现。系统上电复位后，启动引导程序(bootloader)或BIOS初始化，最终跳转到Linux内核入口函数`stext`汇编函数，启动引导程序必要初始化，如内存设备初始化、磁盘设备初始化以及将内核镜像加载到运行地址，然后跳转到Linux内核入口。  <br>
 &ensp;内核汇编入口到C语言入口`start_kernel()`函数之间的汇编代码
+
+
+<br>
 
 
 # 第8章 GNU汇编器
@@ -1234,6 +1255,9 @@ readelf -s test
 
 &ensp;AArch64特有命令行选项  <br>
 
+
+
+<br>
 
 
 
@@ -1335,6 +1359,9 @@ ENTRY(symbol)
 
 
 
+<br>
+
+
 # 第10章 GCC内嵌汇编代码
 
 
@@ -1388,6 +1415,9 @@ asm 修饰词(
 ### 10.1.6 使用goto修饰符
 
 
+
+
+<br>
 
 # 第11章 异常处理
 
@@ -1587,6 +1617,9 @@ asm 修饰词(
 
 ### 11.5.2 数据异常
 
+
+
+<br>
 
 
 # 第 12 章 中断处理
