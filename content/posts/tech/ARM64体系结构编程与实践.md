@@ -326,7 +326,7 @@ msr TTBR0_El1, X0   // 把X0寄存器值复制到TTBR0_EL1
 ```
 
 
-## 1.4 Cortex-A7处理器介绍
+## 1.4 Cortex-A72处理器介绍
 
 &ensp;树莓派4B开发板，内置了4个Cortex-A72处理器内核  <br>
 &ensp;Cortex-A72处理器支持特性  <br>
@@ -528,8 +528,8 @@ ls
 
 &ensp;ARMv8体系结构，A64指令集64位指令集，处理64位宽寄存器和数据，并使用64位指针访问内存，A64指令集指令宽度为32位  <br>
 &ensp;A64指集分类：
-- 内存加载和存在指令
-- 多字节内存饺子和存储指令
+- 内存加载和存储指令
+- 多字节内存加载和存储指令
 - 算数和移位指令
 - 移位操作指令
 - 位操作指令
@@ -1413,6 +1413,207 @@ asm 修饰词(
 &ensp;复位(reset)，由CPU复位引脚产生复位信号，让CPU进入复位状态，并重新启动  <br>
 
 #### 4.系统调用
+&ensp;ARMv8体系结构提供3中软件尝试的异常和3种系统调用
+- SVC指令：用户态程序请求操作系统内核的服务
+- HVC指令：客户操作系统(guest OS)请求虚拟机监控器(hypervisor)的服务 
+- SMC指令：普通世界中的程序请求安全监控器(secure monitor)
+
+
+### 11.1.2 异常等级
+&ensp;处理器两种运行模式：一种是特权模式，另一种是非特权模式，操作系统内核运行在特权模式  <br>
+&ensp;ARM64处理器支持4种特权模式，异常等级(Exception Level EL)：
+- EL0 非特权模式，运行应用程序
+- EL1 特权模式，运行操作系统内核
+- EL2 运行虚拟化管理程序
+- EL3 运行安全世界的管理程序
+
+
+### 11.1.3 同步异常和异步异常
+&ensp;异常分成同步异常和异步异常两种，同步异常是处理器执行某条指令而直接导致的异常，指令异常和数据异常为同步异常  <br>
+&ensp;中断称为异步异常  <br>
+&ensp;异步异常包括物理中断和虚拟中断：
+- 物理中断分为3种：SError、IRQ、FIQ
+- 虚拟中断分为3种：VSError、vIRQ、vFIQ
+
+
+## 11.2 异常处理与返回
+
+### 11.2.1 异常入口
+
+&ensp;CPU内核感知异常发生，生成一个目标异常等级，CPU会做： <br>
+&emsp;1）把PSTATE寄存器的值保存到对应目标异常等级的SPSR_ELx中 <br>
+&emsp;2）把返回地址保存到对应目标异常等级的ELR_ELx中  <br>
+&emsp;3）把PSTATE寄存器中D、A、I、F标志位置为1，禁止中断 <br>
+&emsp;4）对于同步异常，分析异常原因，写入ESR_ELx  <br>
+&emsp;5）切换SP寄存器为目标异常等级的SP_ELx寄存器 <br>
+&emsp;6）从异常现场的异常等级切换到对应的目标异常等级，然后跳转到异常向量表 <br>
+
+### 11.2.2 异常返回
+&ensp;操作系统系统处理完后，执行一条ERET指令从异常返回，指令执行如下操作： <bt>
+&emsp;1）从ELR_ELx中恢复PC指针  <br>
+&emsp;2）从SPSR_ELx中恢复PSTATE寄存器的状态  <br>
+
+### 11.2.3 异常返回地址
+
+
+&ensp;两个寄存器存放不同返回地址： <br>
+&emsp;1）X30寄存器(LR)，存放子函数的返回地址，函数完成调用RET指令返回父函数 <br>
+&emsp;2）ELR_ELx，存放异常返回地址，执行ERET指令返回异常现场  <br>
+
+
+### 11.2.4 异常处理路由
+
+&ensp;异常处理路由指的是当异常发生时应该在哪个异常等级处理
+
+
+### 11.2.5 栈选择
+&ensp;ARMv8体系结构，每个异常等级都有对应的栈指针(SP)寄存器，通过SPSel寄存器配置SP，SPSel寄存器SP字段0，EL使用SP_EL0作为栈指针，1表示SP_ELx作为栈指针寄存器 <br>
+&emsp;栈必须16字节对齐
+
+
+### 11.2.6 异常处理的执行状态
+
+
+### 11.2.7 异常返回的执行状态
+
+&ensp;SPSR决定ERET指令返回是不是切换执行模式 
+
+
+
+
+## 11.3 异常向量表
+
+### 11.3.1 ARMv8异常向量表
+
+&ensp;异常相关处理指令存储在内存中，存储位置为异常向量，ARM体系结构中，异常向量存储到一个异常向量表中<br>
+
+
+
+
+<table>
+	<tr>
+	    <th>地  址</th>
+	    <th>异 常 类 型</th>
+	    <th>描　　述</th>  
+	</tr >
+	<tr>
+	    <td>+ 0x000 </td>
+	    <td>同步</td>
+	    <td  rowspan="4">使用SP_EL0执行状态的当前异常等级</td>
+	</tr>
+	<tr>
+	    <td>+ 0x080 </td>
+	    <td>IRQ/vIRQ</td>
+	</tr>
+	<tr>
+	    <td>+ 0x100 </td>
+	    <td>FIQ/vFIQ</td>
+	</tr>
+	<tr>
+	    <td>+ 0x180 </td>
+	    <td>SError/vSError</td>
+	</tr>
+	<tr>
+	    <td>+ 0x400 </td>
+	    <td>同步</td>
+	    <td  rowspan="4">在AArch64执行状态下的低异常等级</td>
+	</tr>
+	<tr>
+	    <td>+ 0x480 </td>
+	    <td>IRQ/vIRQ</td>
+	</tr>
+	<tr>
+	    <td>+ 0x500 </td>
+	    <td>FIQ/vFIQ</td>
+	</tr>
+	<tr>
+	    <td>+ 0x580 </td>
+	    <td>SError/vSError</td>
+	</tr>
+	<tr>
+	    <td>+ 0x600 </td>
+	    <td>同步</td>
+	    <td  rowspan="4">在AArch32执行状态下的低异常等级</td>
+	</tr>
+	<tr>
+	    <td>+ 0x680 </td>
+	    <td>IRQ/vIRQ</td>
+	</tr>
+	<tr>
+	    <td>+ 0x700 </td>
+	    <td>FIQ/vFIQ</td>
+	</tr>
+	<tr>
+	    <td>+ 0x780 </td>
+	    <td>SError/vSError</td>
+	</tr>
+</table>
+
+
+### 11.3.2 Linux5.0 内核的异常向量表
+&ensp;Linux5.0 内核异常向量表在`arch/arm64/kernel/entry.S`
+```c
+<arch/arm64/kernel/entry.S>
+
+```
+
+
+### 11.3.3 VBAR_ELx
+
+&ensp;ARMv8体系结构中VBAR_ELx寄存器来设置异常向量表地址 <br>
+&ensp;ARMv8体系结构异常向量表特点： <br>
+&emsp;1）除EL0外，每个EL都有自己的异常向量表 <br>
+&emsp;2）异常向量表基地址设置到VBAR_ELx中 <br>
+&emsp;3）异常向量表起始地址必须以2KB字节对齐  <br>
+&emsp;4）每个表项存放32条指令，共128字节  <br>
+
+
+## 11.4 异常现场
+
+&ensp;ARM64处理器异常现场，需要在栈空间保存： <br>
+&emsp;1）PSTATE寄存器的值 <br>
+&ensp;2）PC值  <br>
+&emsp;3）SP值  <br>
+&emsp;4）X0~X30寄存器的值  <br>
+&ensp;这个栈空间指发生异常时进程的内核态的栈空间 <br>
+
+## 11.5 同步异常
+
+&ensp;ARMv8体系结构中一个访问失效相关寄存器--异常综合信息寄存器(Exception Syndrome Register ESR)
+
+
+### 11.5.1 异常类型
+
+
+### 11.5.2 数据异常
+
+
+
+# 第 12 章 中断处理
+
+- 中断处理一般过程
+- 中断现场
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
