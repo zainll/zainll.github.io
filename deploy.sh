@@ -28,7 +28,9 @@ git commit -m "$msg"
 # Push source and build repos.
 git push origin br_hugo
 # ----------------------------------------------
-
+echo -e "
+++++++++++++++++Upload HUGO br_hugo end...++++++++++++++
+"
 
 #### Action 3 ####
 
