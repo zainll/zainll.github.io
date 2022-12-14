@@ -118,8 +118,8 @@ cover:
 	    <th>字　　段</th>
 	    <th>描　　述</th>  
 	    <th>描　　述</th>  
-	</tr >
-	<tr >
+	</tr>
+	<tr>
 	    <td rowspan="4">条件标志位</td>
 	    <td>N</td>
 	    <td>负数标志位。
@@ -1627,12 +1627,138 @@ asm 修饰词(
 - 中断处理一般过程
 - 中断现场
 
+## 12.1 中断知识
+
+### 12.1.1 中断引脚
+
+&ensp;ARM64处理器有两个中断相关引脚：nIRQ和nFIQ，ARM处理中断请求分为普通中断IRQ(Interrupt Request)和FIQ(Fast Interrupt Request) <br>
+&ensp;PSTATE寄存器两位中断相关，CPU内核的中断总开关： <br>
+&emsp; I： 屏蔽和打开IRQ <br>
+&emsp; F： 屏蔽和打开FIQ  <br>
+
+### 12.1.2 中断控制器
+
+&ensp;ARM中断控制器GIC
 
 
 
 
+### 12.1.3 中断处理过程
 
 
+&ensp;中断处理过程： <br>
+&emsp;1）CPU操作，把当前PC值保存到ELR中，把PSTATE寄存器值保存到SPSR中，然后跳转到异常向量表  <br>
+&emsp;2）在异常向量表中，CPU跳转到对应汇编处理函数，IRQ，中断发生在内核态，跳转到el1_irq，用户态，跳转到el0_irq汇编函数  <br>
+&emsp;3）汇编函数中保存中断现场  <br>
+&emsp;4）跳转到中断处理函数，如GIC驱动驱动读取中断号，跳转到设备中断处理程序 <br>
+&emsp;5）在设备中断处理程序里，处理中断 <br>
+&emsp;6）返回el1_irq或el0_irq汇编函数，恢复中断上下文  <br>
+&emsp;7）调用ERET指令完成中断返回，CPU把ELR值恢复到PC寄存器，把SPSR寄存器值恢复到PSTATE寄存器 <br>
+&emsp;8）CPU继续值中断现场下一条指令  <br>
+
+## 12.2 树莓派4B中断控制器
+
+&ensp;树莓派4B支持两种中断控制器:  <br>
+&emsp;1）传统中断控制器，基于寄存器管理中断  <br>
+&emsp;2）GIC-400  <br>
+
+
+## 12.3 ARM内核上通用定时器
+
+&ensp;Cortex-A72内核内置4个通用定时器：PS、PNS、HP、V
+
+## 12.4 中断现场
+
+&ensp;保存中断发生中断前现场，ARM64处理器在栈空间保存： <br>
+&emsp;1）PSTATE寄存器的值  <br>
+&emsp;2）PC值  <br>
+&emsp;3）SP值  <br>
+&emsp;4）X0~X30寄存器的值  <br>
+
+&ensp;栈框数据结构(结构体ps_regs)来保存中断现场  <br>
+
+### 12.4.1 保存中断现场
+
+&ensp;中断现场保存到当前进程的内核栈里:  <br>
+&emsp;1）栈框里的PSTATE保存发生中断时SPSR_EL1内容  <br>
+&emsp;2）栈框里的PC保存ELR_EL1  <br>
+&emsp;3）栈框里的SP保存栈定的位置  <br>
+&emsp;4）栈框里的regs[30]保存LR的值    <br>
+&emsp;5）栈框里的regs[0]~regs[29]分别保存X0~X30寄存器的值  <br>
+
+### 12.4.2 恢复中断现场
+
+&ensp;中断返回时，从进程内核栈恢复中断现场到CPU
+
+
+<br>
+
+
+# 第 13 章 GIC-V2
+
+- GIC-V2的SGI、PPI和SPI
+- GIC-V2中断号分配
+- GIC-V2的SPI外设中断
+
+
+## 12.1 GIC
+
+
+## 12.2 中断状态、中断触发方式和硬件中断号
+
+
+&ensp;中断4种状态： <br>
+&emsp;1）不活跃(inactive)状态：中断处于无效状态  <br>
+&emsp;2）等待(pending)状态：中断处于有效状态，但等待CPU响应该中断  <br>
+&emsp;3）活跃(active)状态：CPU已响应中断  <br>
+&emsp;4）活跃并等待(active and pending)状态：CPU正在响应中断，但该中断源又发送中断  <br>
+
+&ensp;中断触发方式：边沿触发与电平触发  <br>
+
+
+<table>
+	<tr>
+	    <th>中 断 类 型</th>
+	    <th>中 断 号 范 围</th>
+	</tr>
+	<tr>
+	    <td>软件触发中断 SGI</td>
+	    <td>0~15</td>
+	</tr>
+	<tr>
+	    <td>私有外设中断 PPI</td>
+	    <td>16~31</td>
+	</tr>
+	<tr>
+	    <td>共享外设中断 SPI</td>
+	    <td>32~1019</td>
+	</tr>
+</table>
+
+
+
+## 13.3 GIC-V2
+
+
+
+
+## 13.4 树莓派4B的GIC-400
+
+ 
+<br>
+
+# 第 14 章 内存管理
+
+- 分段和分页机制
+- 多级页表
+- 内存管理单元(Memory Management Unit MMU)
+- ARM64中TTBR0和TTBR1 两个转换页表基地址寄存器
+- ARM64处理器4级页表转换过程
+- ARMv8体系结构处理器两种内存属性：普通类型内存(normal memory)和设备类型内存(device memory)
+- 打开MMU时需建立恒等映射
+
+
+## 14.1 内存管理基础
 
 
 
