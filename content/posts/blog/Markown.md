@@ -1,5 +1,5 @@
 ---
-title: "Markown"
+title: "Markdown"
 date: 2022-08-11T00:22:23+08:00
 lastmod: 2022-08-11T00:22:23+08:00
 author: ["Zain"]

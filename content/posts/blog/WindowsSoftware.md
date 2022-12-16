@@ -124,8 +124,7 @@ winget install Microsoft.PowerShell
 
 
 - [安装和设置 Windows 终端](https://docs.microsoft.com/zh-cn/windows/terminal/get-started)
-
-
+- [wsl+windows terminal 美化教程](https://www.jianshu.com/p/aac4c5e87a3a)
 
 
 <br>
@@ -307,6 +306,27 @@ https://www.screentogif.com/
 https://www.grammarly.com/
 
 <br>
+
+### PowerToys
+https://github.com/microsoft/PowerToys
+
+<br>
+
+### Wox
+http://www.wox.one/
+https://github.com/Wox-launcher/Wox
+[WOX 软件高效使用](https://zhuanlan.zhihu.com/p/60477847)
+
+<br>
+
+### Zetero
+https://www.zotero.org/
+https://github.com/zotero/zotero
+[Zotero 简明介绍](https://zhuanlan.zhihu.com/p/445621222)
+
+
+<br>
+
 
 ### potplayer 
 https://iptv-org.github.io/iptv/index.m3u
