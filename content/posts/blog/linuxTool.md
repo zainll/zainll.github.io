@@ -138,6 +138,8 @@ sudo chmod +x clash
 ./clash
 ```
 
+wget -U "Mozilla/6.0" -O ~/.config/clash/config.yaml 
+
 ```sh
 wget -U "Mozilla/6.0" -O ~/.config/clash/config.yaml   https://to.runba.cyou/link/HR6FLUV7z8k7lNyx?clash=1
 ```
