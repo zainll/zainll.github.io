@@ -30,12 +30,24 @@ cover:
 ---
 
 
+# DynamoRIO官方
+
+https://dynamorio.org/  <brs>
+https://github.com/DynamoRIO/dynamorio
+
+```sh
+
+git clone https://github.com/DynamoRIO/dynamorio.git  --recursive
+
+```
 
 
 ## 编译
 - 注意wsl中需要root用户编译
 https://dynamorio.org/page_building.html
+
 ```sh
+# ARM64
 cmake \
 -DCMAKE_TOOLCHAIN_FILE=/mnt/e/code/dynamorio/make/toolchain-android=arm64.cmake \
 -DANDROID_TOOLCHAIN=/android_toolchain_using \
@@ -46,15 +58,31 @@ cmake \
 -DBUILD_CLIENTS=ON \
 ../dynamorio
 
+```
 
 
+
+```sh
+# x64
+cd dynamorio
+mkdir build
+cd build
 cmake \
 -DDR_COPY_TO_DEVICE=OFF \
 -DCMAKE_BUILD_TYPE=Debug \
 -DBUILD_TESTS=OFF \
 -DBUILD_SAMPLES=ON \
 -DBUILD_CLIENTS=ON \
-../dynamorio
+../
+
+# 
+make -j12
+```
+
+```sh
+
+./bin64/drrun -c api/bin/libbbbuf.so -- ls
+
 ```
 
 
@@ -64,7 +92,8 @@ cmake \
 - 学习链接
 DynamoRIO进阶指南
 https://blog.csdn.net/oShuangYue12/article/details/109780166
-
+DynamoRIO的入门指南（Ubuntu）
+https://blog.csdn.net/ts_forever/article/details/124614200
 
 
 
