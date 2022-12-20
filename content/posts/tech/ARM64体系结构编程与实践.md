@@ -2223,6 +2223,40 @@ asm 修饰词(
 &ensp;L1 TLB包括指令TLB和数据TLB，而L2 TLB是统一的TLB体系结构  <br>
 &ensp;全相连L1指令TLB包括48个表项，全相连L1数据TLb包括32个表项。4路组相连的L2 TLB包括1024个表项  <br>
 
+<table>
+	<tr>
+	    <th>属 性</th>
+	    <th>描 述</th>
+	</tr>
+	<tr>
+	    <td>VPN</td>
+		<td>虚拟地址页帧号</td>
+	</tr>
+	<tr>
+	    <td>PFN</td>
+		<td>物理地址页帧号</td>
+	</tr>
+	<tr>
+	    <td>V</td>
+		<td>有效位</td>
+	</tr>
+	<tr>
+	    <td>nG</td>
+		<td>表示是否是全局TLB或进程持有的TLB</td>
+	</tr>
+	<tr>
+	    <td>D</td>
+		<td>脏位</td>
+	</tr>
+	<tr>
+	    <td>AP</td>
+		<td>访问权限</td>
+	</tr>
+	<tr>
+	    <td>ASID</td>
+		<td>进程地址空间ID(Address Space ID ASID)</td>
+	</tr>
+</table>
 
 ## 17.2 TLB重名与同名问题
 
