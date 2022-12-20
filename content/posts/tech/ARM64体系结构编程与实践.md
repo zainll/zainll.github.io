@@ -2194,8 +2194,53 @@ asm 修饰词(
 &ensp;高速缓存行两个标志位——脏(dirty)和有效(valid)
 
 
+<br>
 
 
+
+
+# 第 17 章 TLB管理
+
+- TLB
+- TLB查询过程
+- TLB重名、同名问题
+- ASID机制
+- TLB维护指令后DSB内存屏障指令
+- BBM机制
+- 操作系统切换页表是刷新TLB
+
+&ensp;把MMu的地址转换结果缓存到缓冲区TLB(Translation Lookaside Buffer)，称为快表  <br>
+
+
+
+## 17.1 TLB基础知识
+
+
+&ensp;MMU内部，TLB项(TLB entry)数量较少，没项包含虚拟页帧号(VPN)、物理页帧号(PFN)及一些属性。  <br>
+
+&ensp;TLB类似高速缓存，支持直接映射方式、全相连映射方式及组相连映射方式。TLB大多采用组相连映射方式  <br>
+&ensp;组相连映射TLB，虚拟地址分成三部分，分别是标记域、索引域及页内偏移量  <br>
+&ensp;L1 TLB包括指令TLB和数据TLB，而L2 TLB是统一的TLB体系结构  <br>
+&ensp;全相连L1指令TLB包括48个表项，全相连L1数据TLb包括32个表项。4路组相连的L2 TLB包括1024个表项  <br>
+
+
+## 17.2 TLB重名与同名问题
+
+
+### 17.2.1 重名问题
+
+
+### 17.2.2 同名问题
+
+
+
+
+
+## 17.2 ASID
+
+
+
+## 17.4 TLB管理命令
 
 
 
