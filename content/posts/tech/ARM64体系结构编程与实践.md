@@ -2261,21 +2261,102 @@ asm 修饰词(
 ## 17.2 TLB重名与同名问题
 
 
+
 ### 17.2.1 重名问题
+
+
+&ensp;高速缓存进程索引域和标识域是虚拟地址还是物理地址分为VIVT、PIPT及VIPT。TLB类似VIVT  <br>
+&ensp;TLB和高速缓存内容不一样，高速缓存中存放的是数据，TLB缓存中存放的是VA到PA的映射关系
 
 
 ### 17.2.2 同名问题
 
-
+&ensp;TLB和VIVT类型高速缓存一样，在进程切换是会发生同名问题，解决方法是在进程切换时使旧进程遗留下来的TLB失效  <br>
 
 
 
 ## 17.2 ASID
 
+&ensp;TLB分成两种：  <br>
+&emsp;1）全局类型TLB   <br>
+&emsp;2）进程独有类型TLB   <br>
+
+&ensp;ARM体系结构硬件解决方案，叫作进程地址空间(Address )
+
 
 
 ## 17.4 TLB管理命令
 
+&ensp;ARMv8体系结构TLB管理命令刷新TLb，主要为失效操作，PTE被修改，先刷新对应的TLB项，再修改PTE   <br>
+&ensp;TLB维护操作：   <br>
+&emsp;使所有TLB表项失效   <br>
+&emsp;使ASID对应某一个TLB项失效   <br>
+&emsp;使ASID对应的所有TLB项失效  <br>
+&emsp;使虚拟地址对应所有TLB项失效  <br>
+
+
+### 17.4.1 TLB维护指令
+```sh
+# ARMv8体系结构TLBI指令
+TLBI   <type><level>{IS}   { <Xt>}
+
+TLBI   R<type><level>{IS}  { <Xt>}
+```
+
+
+
+### 17.4.2 TLB广播
+
+&ensp;TLB维护指令具有广播功能，在指定的高速缓存共享域中发送广播
+```c
+void local_flush_tlb_all(void)
+{
+	__tlbi(vmalle1);
+}
+
+void flush_tlb_all(void)
+{
+	__tlbi(vmallelis);
+}
+
+```
+
+### 17.4.3 TLB维护指令执行次序
+
+
+## 17.5 TLB案例
+
+### 17.5.1 TLB在Linux内核中应用
+
+&ensp;待补充
+
+#### 1.不采用KPTI方案
+
+
+#### 2.采用KPTI方案
+
+
+&ensp;copy_to_user()、copy_from_user()
+
+### 17.5.2 ASID在Linux内核中的应用
+
+
+
+### 17.5.3 Linux内核中TLB维护操作
+
+
+
+# 第 18 章 内存屏障指令
+
+- 内存乱序
+- 顺序一致性内存模型
+- 处理器一致性内存模型
+- 弱一致性内存模型
+- DMB和DSB指令
+- 加载-获取屏障原语，存储-释放屏障原语
+
+
+## 18.1 内存屏障指令产生
 
 
 
