@@ -71,6 +71,7 @@ cover:
 >>> ARMv8异常模型，4个异常等级，即EL0~EL3   <br>
 >>> 64位内存模型   <br>
 >>> 一组处理器状态(PSTATE)保存PE状态  <br>
+
 >> AArch32: 32位执行状态   <br>
 
 &ensp;AArch64状态，部分系统寄存器在不同异常等级提供不同变种寄存器
@@ -396,7 +397,8 @@ msr TTBR0_El1, X0   // 把X0寄存器值复制到TTBR0_EL1
 
 #### 6.MMU
 &ensp;MMU实现虚拟地址到物理地址转换，AArch64支持4KB、16KB、64KB页面  <br>
-&ensp;MMMU包括：
+
+&ensp;MMU包括：
 - 48表项全相连的L1指令TLB
 - 32表项全相连的L1数据TLB
 - 4路组相连L2 TLB
@@ -755,7 +757,7 @@ STP <Xt1>, <Xt2>, [<Xn|SP>], #<imm>
 &ensp;ARMv8体系结构独占内存访问(exclusive memory access)指令，A64指令集LDXR指令尝试在内存总线中申请一个独占访问锁，然后访问一个内存地址。STXR会往LDXR指令申请独占访问内存地址中写入新内容。LDXR和STXR组合实现同步操作，如Linux内核自旋锁  <br>
 &ensp;ARMv8多字节多占内存访问指令，LDXP和STXP
 
-### 3.4.5 隐含加-获取/存储-释放内存屏障原语
+### 3.4.5 隐含加载-获取/存储-释放内存屏障原语
 
 &ensp;内存屏障原语LDAR和STAR
 
@@ -1183,8 +1185,8 @@ ADRP <Xd>, <label>
 - kernel_ventry宏
 
 &ensp;汇编代码同汇编器生成目标代码，然后由连接器链接成可执行二进制程序  <br>
-&ensp;ARM64汇编器：1）ARM公司汇编器，2）GNU项目AS汇编器  <br>
-&ensp;aarch64-linux-gnu，级汇编后文件Wieaarch64体系结构   <br>
+&ensp;ARM64汇编器：1）ARM公司汇编器 2）GNU项目AS汇编器  <br>
+&ensp;aarch64-linux-gnu 汇编后文件Aarch64体系结构   <br>
 
 
 ## 8.1 编译流程与ELF文件
@@ -1602,7 +1604,7 @@ asm 修饰词(
 
 &ensp;ARM64处理器异常现场，需要在栈空间保存： <br>
 &emsp;1）PSTATE寄存器的值 <br>
-&ensp;2）PC值  <br>
+&emsp;2）PC值  <br>
 &emsp;3）SP值  <br>
 &emsp;4）X0~X30寄存器的值  <br>
 &ensp;这个栈空间指发生异常时进程的内核态的栈空间 <br>
