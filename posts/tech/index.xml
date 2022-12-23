@@ -31,7 +31,7 @@
       <pubDate>Sat, 15 Oct 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/%E6%A0%91%E8%8E%93%E6%B4%BE/</guid>
-      <description>树莓派安装Ubuntu系统 如何在树莓派上安装 Ubuntu 服务器 https://cloud.tencent.com/developer/article/1863949 系统信息 AIDA64 https://www.aida64.com/</description>
+      <description>1. 系统安装 1.1 下载树莓派镜像工具 Raspberry Pi Imager 支持Windows与Linux系统 官网下载地址：https://www.raspberrypi.com/</description>
     </item>
     
     <item>
@@ -98,6 +98,15 @@
       <guid>https://liuz0123.gitee.io/zain/posts/tech/cmake/</guid>
       <description>&lt;h2 id=&#34;1cmake简述&#34;&gt;1.cmake简述&lt;/h2&gt;
 &lt;p&gt; CMake是跨平台编译管理工具,为第三方依赖和引入,创建编译系统,程序测试及安装.Cmake工具使用CMakeLists.txt文件,跨平台执行相同编译命令,生成对应平台的可执行程序或者链接库.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Android</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/android/</link>
+      <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/android/</guid>
+      <description>Termux Android手机命令行中断 https://termux.dev/en/ https://github.com/termux/termux-app</description>
     </item>
     
     <item>
