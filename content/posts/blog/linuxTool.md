@@ -119,6 +119,9 @@ flameshot gui -c -p <path>
 - https://www.cnblogs.com/kendoziyu/p/how_to_screenshot_in_ubuntu2004.html
 
 
+
+[ubuntu/linux系统知识（14）ubuntu 搜狗输入法不见了，重启方法](https://blog.csdn.net/HandsomeHong/article/details/125669922)
+
 ## free
 
 ```sh
