@@ -2621,7 +2621,7 @@ void flush_tlb_all(void)
 <br>
 
 
-# 第 22 章 读点运输与NEON指令
+# 第 22 章 浮点运算与NEON指令
 
 - SISD和SIMD指令
 - ARM64体系结构矢量数据

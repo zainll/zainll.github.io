@@ -53,11 +53,12 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
     int i, j;
     int *ret = (int *)malloc(sizeof(int) * 2);
     for (i = 0; i < numsSize; i++) {
-        int key = target - nums[i];
+        int key = target - nums[i]; // 临时变量外层计算一次
         for (j = i + 1; j < numsSize; j++) {
             if (nums[j] == key) {
                 ret[0] = i;
                 ret[1] = j;
+                break;
             }
         }
     }
