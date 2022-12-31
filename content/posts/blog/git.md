@@ -110,6 +110,8 @@ git config --global core.editor "vim"
 [Git设置换行符为LF](https://blog.csdn.net/sunday2018/article/details/116402894)
 
 
+[git使用小技巧 url.](https://blog.csdn.net/weixin_42309693/article/details/121718073)
+
 ## 自动上传脚本
 ```sh
 #!/usr/bin/env bash

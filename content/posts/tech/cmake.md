@@ -157,7 +157,9 @@ cmake --build .
 cmake --build . --config Release
 ```
 
+## CPM
 
+[使用CPM管理CMake C++工程中的外部依赖库](https://blog.csdn.net/davidhopper/article/details/121030549)
 
 
 - 参考链接:
