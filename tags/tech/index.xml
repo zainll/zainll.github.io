@@ -62,6 +62,15 @@
     </item>
     
     <item>
+      <title>linux系统启动</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/linux%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8/</link>
+      <pubDate>Wed, 17 Aug 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/linux%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8/</guid>
+      <description>LInux系统启动5个阶段： 内核引导 -&amp;gt; 运行init -&amp;gt; 系统初始化 -&amp;gt; 建立终端 -&amp;gt; 用户登录系统 1.内核引导 机器上电后，BIOS开机自检，根据BIOS</description>
+    </item>
+    
+    <item>
       <title>benchmark</title>
       <link>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</link>
       <pubDate>Mon, 27 Jun 2022 00:21:08 +0800</pubDate>
