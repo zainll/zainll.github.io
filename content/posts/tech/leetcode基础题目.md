@@ -861,7 +861,7 @@ struct ListNode* swapPairs(struct ListNode* head) {
     struct ListNode* first = head->next;
     head->next = swapPairs(head->next->next);
     first->next = head;
-    head = head->next;
+    //head = head->next;
     return first;
 }
 ```
