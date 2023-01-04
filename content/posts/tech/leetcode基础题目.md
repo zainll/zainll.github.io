@@ -879,7 +879,7 @@ struct ListNode* swapPairs(struct ListNode* head) {
 
 ### 26.[删除有序数组中的重复项](https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/)
 
-> 思路：++
+> 思路：快慢双指针，不重复时赋值，慢指针右移
 
 ```c
 int removeDuplicates(int* nums, int numsSize) {
@@ -914,7 +914,7 @@ int removeDuplicates(int* nums, int numsSize) {
 
 ### 27.[移除元素](https://leetcode-cn.com/problems/remove-element/)
 
-> 思路：nums[start++] = nums[i];
+> 思路：判断不等于指定值，nums[start++] = nums[i];
 
 ```c
 int removeElement(int* nums, int numsSize, int val){
