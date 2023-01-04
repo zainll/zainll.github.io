@@ -931,7 +931,7 @@ int removeElement(int* nums, int numsSize, int val){
 
 ### <span id="28">28</span>.[实现 strStr()](https://leetcode-cn.com/problems/implement-strstr/)
 
-> 思路：
+> 思路：双层for循环，外层判断首个字符，内层逐个判断
 
 ```c
 int strStr(char * haystack, char * needle){
@@ -975,7 +975,7 @@ int strStr(char * haystack, char * needle){
 
 ### 29.[两数相除](https://leetcode-cn.com/problems/divide-two-integers/)
 
-> 思路：
+> 思路：1.先判断符号 2.再判断边界 3.取绝对值，正数 4. >> 1 移位折半
 
 ```c
 int divide(int dividend, int divisor) {
