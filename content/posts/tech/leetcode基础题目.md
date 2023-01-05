@@ -889,7 +889,7 @@ int removeDuplicates(int* nums, int numsSize) {
     int fast = 1, low = 0;
     while (fast < numsSize) {
         if (nums[fast] != nums[low]) {
-            nums[low + 1] = nums[fast];
+            nums[low + 1] = nums[fast]; // 此处 low++ 出错
             low++;
         }
         fast++;
@@ -1057,7 +1057,7 @@ int divide(int dividend, int divisor){
 
 ### 35.[搜索插入位置](https://leetcode-cn.com/problems/search-insert-position/)
 
-> 思路：
+> 思路：二分法
 
 ```c
 int searchInsert(int* nums, int numsSize, int target) {
@@ -1094,7 +1094,7 @@ int searchInsert(int* nums, int numsSize, int target) {
 
 ### <span id="38">38</span>.[外观数列](https://leetcode-cn.com/problems/count-and-say/)
 
-> 思路：
+> 思路：？？？
 
 ```c
 char * countAndSay(int n) {

@@ -40,3 +40,14 @@ Android手机命令行中断
 
 https://termux.dev/en/
 https://github.com/termux/termux-app
+
+
+IDA
+
+010 Editor
+
+
+speedscope
+
+
+
