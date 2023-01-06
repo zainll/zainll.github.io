@@ -115,8 +115,8 @@ var _hmt = _hmt || [];
   "keywords": [
     ""
   ],
-  "articleBody": " LInux系统启动5个阶段： 内核引导 -\u003e 运行init -\u003e 系统初始化 -\u003e 建立终端 -\u003e 用户登录系统\n1.内核引导 机器上电后，BIOS开机自检，根据BIOS中设置的启动设备(通常为硬盘)启动 操作系统阶段硬件，首先读入/boot目录下内核文件 \\\n",
-  "wordCount" : "113",
+  "articleBody": " LInux系统启动5个阶段： 内核引导 -\u003e 运行init -\u003e 系统初始化 -\u003e 建立终端 -\u003e 用户登录系统\n1.内核引导 机器上电后，BIOS开机自检，根据BIOS中设置的启动设备(通常为硬盘)启动 操作系统阶段硬件，首先读入/boot目录下内核文件 \\\ninit 进程是系统所有进程的起点，init 程序首先是需要读取配置文件 /etc/inittab。 许多程序需要开机启动。它们在Windows叫做\"服务\"（service），在Linux就叫做\"守护进程\"（daemon） init进程的一大任务，就是去运行这些开机启动的程序。 不同的场合需要启动不同的程序，比如用作服务器时，需要启动Apache， Linux允许为不同的场合，分配不同的开机启动程序，这就叫做\"运行级别\"（runlevel）。也就是说，启动时根据\"运行级别\"，确定要运行哪些程序 \\\nLinux系统有7个运行级别(runlevel)： 运行级别0：系统停机状态，系统默认运行级别不能设为0，否则不能正常启动 运行级别1：单用户工作状态，root权限，用于系统维护，禁止远程登陆 运行级别2：多用户状态(没有NFS) 运行级别3：完全的多用户状态(有NFS)，登陆后进入控制台命令行模式 运行级别4：系统未使用，保留 运行级别5：X11控制台，登陆后进入图形GUI模式 运行级别6：系统正常关闭并重启，默认运行级别不能设为6，否则不能正常启动 \\\n2.系统初始化 在init的配置文件中有这么一行：si::sysinit:/etc/rc.d/rc.sysinit　它调用执行了/etc/rc.d/rc.sysinit，而rc.sysinit是一个bash shell的脚本，它主要是完成一些系统初始化的工作，rc.sysinit是每一个运行级别都要首先运行的重要脚本 它主要完成的工作有：激活交换分区，检查磁盘，加载硬件模块以及其它一些需要优先执行任务。 \\\n15:5wait:/etc/rc.d/rc 5 这一行表示以5为参数运行/etc/rc.d/rc，/etc/rc.d/rc是一个Shell脚本，它接受5作为参数，去执行/etc/rc.d/rc5.d/目录下的所有的rc启动脚本，/etc/rc.d/rc5.d/目录中的这些启动脚本实际上都是一些连接文件，而不是真正的rc启动脚本，真正的rc启动脚本实际上都是放在/etc/rc.d/init.d/目录下 而这些rc启动脚本有着类似的用法，它们一般能接受start、stop、restart、status等参数 /etc/rc.d/rc5.d/中的rc启动脚本通常是K或S开头的连接文件，对于以 S 开头的启动脚本，将以start参数来运行 而如果发现存在相应的脚本也存在K打头的连接，而且已经处于运行态了(以/var/lock/subsys/下的文件作为标志)，则将首先以stop为参数停止这些已经启动了的守护进程，然后再重新运行 这样做是为了保证是当init改变运行级别时，所有相关的守护进程都将重启。 至于在每个运行级中将运行哪些守护进程，用户可以通过chkconfig或setup中的\"System Services\"来自行设定 \\\nrc执行完毕后，返回init。这时基本系统环境已经设置好了，各种守护进程也已经启动了。 init接下来会打开6个终端，以便用户登录系统。在inittab中的以下6行就是定义了6个终端： \\\n从上面可以看出在2、3、4、5的运行级别中都将以respawn方式运行mingetty程序，mingetty程序能打开终端、设置模式。 同时它会显示一个文本登录界面，这个界面就是我们经常看到的登录界面，在这个登录界面中会提示用户输入用户名，而用户输入的用户将作为参数传给login程序来验证用户的身份 \\\n3.用户登录系统 一般来说，用户的登录方式有三种： （1）命令行登录 （2）ssh登录 （3）图形界面登录 \\\n对于运行级别为5的图形方式用户来说，他们的登录是通过一个图形化的登录界面。登录成功后可以直接进入 KDE、Gnome 等窗口管理器。 而本文主要讲的还是文本方式登录的情况：当我们看到mingetty的登录界面时，我们就可以输入用户名和密码来登录系统了。 Linux 的账号验证程序是 login，login 会接收 mingetty 传来的用户名作为用户名参数。 然后 login 会对用户名进行分析：如果用户名不是 root，且存在 /etc/nologin 文件，login 将输出 nologin 文件的内容，然后退出。 这通常用来系统维护时防止非root用户登录。只有/etc/securetty中登记了的终端才允许 root 用户登录，如果不存在这个文件，则 root 用户可以在任何终端上登录。 /etc/usertty文件用于对用户作出附加访问限制，如果不存在这个文件，则没有其他限制 \\\n参考链接 https://mp.weixin.qq.com/s?__biz=Mzg4OTgyNzQwMQ==\u0026mid=2247484052\u0026idx=1\u0026sn=4b74f1134fcd2e9341173653d271bbd6\u0026chksm=cfe4bbb2f89332a491e774cbcce98f8b7e9075d837bfa58dd0a9d5b151f72647dac8f0cae5e0\u0026mpshare=1\u0026scene=1\u0026srcid=1231tifch9Iyv8wFwiPLT39I\u0026sharer_sharetime=1672481021630\u0026sharer_shareid=813a8c319563d8c50feefd77b191f183#rd ",
+  "wordCount" : "1948",
   "inLanguage": "en",
   "datePublished": "2022-08-17T00:17:58+08:00",
   "dateModified": "2022-08-18T00:17:58+08:00",
@@ -233,7 +233,7 @@ var _hmt = _hmt || [];
             <h1 class="post-title">
                 linux系统启动
             </h1>
-            <div class="post-meta">Create:&nbsp;<span title='2022-08-17 00:17:58 +0800 CST'>2022-08-17</span>&nbsp;|&nbsp;Update:&nbsp;2022-08-18&nbsp;|&nbsp;Words:&nbsp;113&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
+            <div class="post-meta">Create:&nbsp;<span title='2022-08-17 00:17:58 +0800 CST'>2022-08-17</span>&nbsp;|&nbsp;Update:&nbsp;2022-08-18&nbsp;|&nbsp;Words:&nbsp;1948&nbsp;|&nbsp;&nbsp;4 min&nbsp;|&nbsp;
 &nbsp;Zain
 
 
@@ -260,7 +260,11 @@ var _hmt = _hmt || [];
 
         <div class="inner"><ul>
                 <li>
-                    <a href="#1%e5%86%85%e6%a0%b8%e5%bc%95%e5%af%bc" aria-label="1.内核引导">1.内核引导</a>
+                    <a href="#1%e5%86%85%e6%a0%b8%e5%bc%95%e5%af%bc" aria-label="1.内核引导">1.内核引导</a></li>
+                <li>
+                    <a href="#2%e7%b3%bb%e7%bb%9f%e5%88%9d%e5%a7%8b%e5%8c%96" aria-label="2.系统初始化">2.系统初始化</a></li>
+                <li>
+                    <a href="#3%e7%94%a8%e6%88%b7%e7%99%bb%e5%bd%95%e7%b3%bb%e7%bb%9f" aria-label="3.用户登录系统">3.用户登录系统</a>
                 </li>
             </ul>
         </div>
@@ -332,6 +336,59 @@ var _hmt = _hmt || [];
 <h1 id="1内核引导">1.内核引导<a hidden class="anchor" aria-hidden="true" href="#1内核引导">#</a></h1>
 <p> 机器上电后，BIOS开机自检，根据BIOS中设置的启动设备(通常为硬盘)启动 <br>
  操作系统阶段硬件，首先读入<code>/boot</code>目录下内核文件 \</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/2023-01-06_21-47.png" alt="2023-01-06_21-47"  />
+</p>
+<p> init 进程是系统所有进程的起点，init 程序首先是需要读取配置文件 /etc/inittab。    <br>
+ 许多程序需要开机启动。它们在Windows叫做&quot;服务&quot;（service），在Linux就叫做&quot;守护进程&quot;（daemon）  <br>
+ init进程的一大任务，就是去运行这些开机启动的程序。  <br>
+ 不同的场合需要启动不同的程序，比如用作服务器时，需要启动Apache，  <br>
+ Linux允许为不同的场合，分配不同的开机启动程序，这就叫做&quot;运行级别&quot;（runlevel）。也就是说，启动时根据&quot;运行级别&quot;，确定要运行哪些程序  \</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/2023-01-06_21-51.png" alt="2023-01-06_21-51"  />
+</p>
+<p> Linux系统有7个运行级别(runlevel)： <br>
+ 运行级别0：系统停机状态，系统默认运行级别不能设为0，否则不能正常启动  <br>
+ 运行级别1：单用户工作状态，root权限，用于系统维护，禁止远程登陆  <br>
+ 运行级别2：多用户状态(没有NFS)  <br>
+ 运行级别3：完全的多用户状态(有NFS)，登陆后进入控制台命令行模式
+<br>
+ 运行级别4：系统未使用，保留 <br>
+ 运行级别5：X11控制台，登陆后进入图形GUI模式  <br>
+ 运行级别6：系统正常关闭并重启，默认运行级别不能设为6，否则不能正常启动 \</p>
+<h1 id="2系统初始化">2.系统初始化<a hidden class="anchor" aria-hidden="true" href="#2系统初始化">#</a></h1>
+<p> 在init的配置文件中有这么一行：si::sysinit:/etc/rc.d/rc.sysinit　它调用执行了/etc/rc.d/rc.sysinit，而rc.sysinit是一个bash shell的脚本，它主要是完成一些系统初始化的工作，rc.sysinit是每一个运行级别都要首先运行的重要脚本  <br>
+ 它主要完成的工作有：激活交换分区，检查磁盘，加载硬件模块以及其它一些需要优先执行任务。  \</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>15:5wait:/etc/rc.d/rc <span style="color:#ae81ff">5</span>
+</span></span></code></pre></div><p> 这一行表示以5为参数运行/etc/rc.d/rc，/etc/rc.d/rc是一个Shell脚本，它接受5作为参数，去执行/etc/rc.d/rc5.d/目录下的所有的rc启动脚本，/etc/rc.d/rc5.d/目录中的这些启动脚本实际上都是一些连接文件，而不是真正的rc启动脚本，真正的rc启动脚本实际上都是放在/etc/rc.d/init.d/目录下  <br>
+ 而这些rc启动脚本有着类似的用法，它们一般能接受start、stop、restart、status等参数  <br>
+ /etc/rc.d/rc5.d/中的rc启动脚本通常是K或S开头的连接文件，对于以 S 开头的启动脚本，将以start参数来运行  <br>
+ 而如果发现存在相应的脚本也存在K打头的连接，而且已经处于运行态了(以/var/lock/subsys/下的文件作为标志)，则将首先以stop为参数停止这些已经启动了的守护进程，然后再重新运行  <br>
+ 这样做是为了保证是当init改变运行级别时，所有相关的守护进程都将重启。 <br>
+ 至于在每个运行级中将运行哪些守护进程，用户可以通过chkconfig或setup中的&quot;System Services&quot;来自行设定  \</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/2023-01-06_21-56.png" alt="2023-01-06_21-56"  />
+</p>
+<p> rc执行完毕后，返回init。这时基本系统环境已经设置好了，各种守护进程也已经启动了。 <br>
+ init接下来会打开6个终端，以便用户登录系统。在inittab中的以下6行就是定义了6个终端： \</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/2023-01-06_21-57.png" alt="2023-01-06_21-57"  />
+</p>
+<p> 从上面可以看出在2、3、4、5的运行级别中都将以respawn方式运行mingetty程序，mingetty程序能打开终端、设置模式。  <br>
+ 同时它会显示一个文本登录界面，这个界面就是我们经常看到的登录界面，在这个登录界面中会提示用户输入用户名，而用户输入的用户将作为参数传给login程序来验证用户的身份  \</p>
+<h1 id="3用户登录系统">3.用户登录系统<a hidden class="anchor" aria-hidden="true" href="#3用户登录系统">#</a></h1>
+<p> 一般来说，用户的登录方式有三种： <br>
+ （1）命令行登录  <br>
+ （2）ssh登录  <br>
+ （3）图形界面登录  \</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/2023-01-06_22-00.png" alt="2023-01-06_22-00"  />
+</p>
+<p> 对于运行级别为5的图形方式用户来说，他们的登录是通过一个图形化的登录界面。登录成功后可以直接进入 KDE、Gnome 等窗口管理器。  <br>
+ 而本文主要讲的还是文本方式登录的情况：当我们看到mingetty的登录界面时，我们就可以输入用户名和密码来登录系统了。  <br>
+ Linux 的账号验证程序是 login，login 会接收 mingetty 传来的用户名作为用户名参数。  <br>
+ 然后 login 会对用户名进行分析：如果用户名不是 root，且存在 /etc/nologin 文件，login 将输出 nologin 文件的内容，然后退出。  <br>
+ 这通常用来系统维护时防止非root用户登录。只有/etc/securetty中登记了的终端才允许 root 用户登录，如果不存在这个文件，则 root 用户可以在任何终端上登录。  <br>
+ /etc/usertty文件用于对用户作出附加访问限制，如果不存在这个文件，则没有其他限制  \</p>
+<ul>
+<li>参考链接
+<a href="https://mp.weixin.qq.com/s?__biz=Mzg4OTgyNzQwMQ==&amp;mid=2247484052&amp;idx=1&amp;sn=4b74f1134fcd2e9341173653d271bbd6&amp;chksm=cfe4bbb2f89332a491e774cbcce98f8b7e9075d837bfa58dd0a9d5b151f72647dac8f0cae5e0&amp;mpshare=1&amp;scene=1&amp;srcid=1231tifch9Iyv8wFwiPLT39I&amp;sharer_sharetime=1672481021630&amp;sharer_shareid=813a8c319563d8c50feefd77b191f183#rd">https://mp.weixin.qq.com/s?__biz=Mzg4OTgyNzQwMQ==&amp;mid=2247484052&amp;idx=1&amp;sn=4b74f1134fcd2e9341173653d271bbd6&amp;chksm=cfe4bbb2f89332a491e774cbcce98f8b7e9075d837bfa58dd0a9d5b151f72647dac8f0cae5e0&amp;mpshare=1&amp;scene=1&amp;srcid=1231tifch9Iyv8wFwiPLT39I&amp;sharer_sharetime=1672481021630&amp;sharer_shareid=813a8c319563d8c50feefd77b191f183#rd</a></li>
+</ul>
 
 
         </div>
@@ -417,6 +474,9 @@ var _hmt = _hmt || [];
 </div>
 </article>
 </main>
+
+
+<script async src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
 
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
