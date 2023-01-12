@@ -324,6 +324,9 @@ https://github.com/Wox-launcher/Wox
 https://www.zotero.org/
 https://github.com/zotero/zotero
 [Zotero 简明介绍](https://zhuanlan.zhihu.com/p/445621222)
+[Zotero+TeraCloud同步应用](https://blog.csdn.net/qq_40301351/article/details/126968367)
+
+
 
 
 <br>

@@ -144,7 +144,9 @@ sudo chmod +x clash
 wget -U "Mozilla/6.0" -O ~/.config/clash/config.yaml 
 
 ```sh
-wget -U "Mozilla/6.0" -O ~/.config/clash/config.yaml   https://to.runba.cyou/link/HR6FLUV7z8k7lNyx?clash=1
+wget -U "Mozilla/6.0" -O ~/.config/clash/config.yaml   
+https://to.runba.cyou/link/HR6FLUV7z8k7lNyx?clash=1
+
 ```
 
 https://github.com/esrrhs/pingtunnel/tree/delete
