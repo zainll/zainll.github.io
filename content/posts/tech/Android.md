@@ -30,6 +30,12 @@ cover:
 ---
 
 
+# ptrace
+
+
+[ptrace使用简介](https://www.jianshu.com/p/b1f9d6911c90)
+[android的ptrace详细分析](https://blog.csdn.net/c_kongfei/article/details/113242082)
+[【Android 逆向】ptrace 函数 ( C 标准库 ptrace 函数简介 | ptrace 函数真实作用 )](https://blog.csdn.net/shulianghan/article/details/121032501)
 
 
 
