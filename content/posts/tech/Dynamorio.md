@@ -47,7 +47,7 @@ git clone https://github.com/DynamoRIO/dynamorio.git  --recursive
 https://dynamorio.org/page_building.html
 
 ```sh
-# ARM64
+# ARM64 编译配置
 cmake \
 -DCMAKE_TOOLCHAIN_FILE=/mnt/e/code/dynamorio/make/toolchain-android=arm64.cmake \
 -DANDROID_TOOLCHAIN=/android_toolchain_using \
@@ -63,7 +63,7 @@ cmake \
 
 
 ```sh
-# x64
+# x64 编译配置
 cd dynamorio
 mkdir build
 cd build
@@ -75,18 +75,28 @@ cmake \
 -DBUILD_CLIENTS=ON \
 ../
 
-# 
+# 编译
 make -j12
 ```
 
 ```sh
-
-./bin64/drrun -c api/bin/libbbbuf.so -- ls
+# 使用
+# 帮助
+./bin64/drrun --help
+# 参数 -c 指定client so 
+# libbbbuf
+./bin64/drrun -c ./api/bin/libbbbuf.so -- ls
 
 ```
 
 
-<!--more-->
+
+## client
+
+### libbbbuf.so
+
+
+
 
 
 - 学习链接
