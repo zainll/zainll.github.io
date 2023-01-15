@@ -6,7 +6,16 @@
     <description>Recent content on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 18 Dec 2022 00:18:23 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 05 Jan 2023 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>代码随想录</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/</link>
+      <pubDate>Thu, 05 Jan 2023 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/</guid>
+      <description>代码随想录网站 https://programmercarl.com/ 一.数组 1.数组基础 数组是存放在连续内存空间上的相同类型数据的集合 数组下标都是从0开始的。 数组内存空间的地址是连续的 数组的在</description>
+    </item>
+    
     <item>
       <title>电子书网站</title>
       <link>https://liuz0123.gitee.io/zain/posts/read/read/ebookwebsite/</link>
@@ -327,7 +336,7 @@ BASIC&lt;/p&gt;</description>
       <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</guid>
-      <description>DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # ARM64 编译配置 cmake \ -DCMAKE_TOOLCHAIN_FILE=/mnt/e/code/dynamorio/make/toolchain-android=arm64.cmake \ -DANDROID_TOOLCHAIN=/android_toolchain_using \ -DDR_COPY_TO_DEVICE=OFF \ -DCMAKE_BUILD_TYPE=Debug \ -DBUILD_TESTS=OFF \ -DBUILD_SAMPLES=ON \ -DBUILD_CLIENTS=ON \ ../dynamorio # x64 编译配置 cd dynamorio mkdir build cd</description>
+      <description>DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # Android 编译配置 mkdir build cd build cmake \ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android=arm64.cmake \ -DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \ -DDR_COPY_TO_DEVICE=OFF \ -DCMAKE_BUILD_TYPE=Debug \ -DBUILD_TESTS=OFF \ -DBUILD_SAMPLES=ON \ -DBUILD_CLIENTS=ON \ ../ ../dynamorio /home/zain/tool/android-ndk-r21e/toolchains -DANDROID_TOOLCHAIN=/android_toolchain_using \ # AArch64 树</description>
     </item>
     
     <item>

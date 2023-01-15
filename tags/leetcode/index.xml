@@ -6,7 +6,16 @@
     <description>Recent content in leetcode on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 05 Jul 2022 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/tags/leetcode/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 05 Jan 2023 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/tags/leetcode/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>代码随想录</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/</link>
+      <pubDate>Thu, 05 Jan 2023 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/</guid>
+      <description>代码随想录网站 https://programmercarl.com/ 一.数组 1.数组基础 数组是存放在连续内存空间上的相同类型数据的集合 数组下标都是从0开始的。 数组内存空间的地址是连续的 数组的在</description>
+    </item>
+    
     <item>
       <title>leetcode基础题目</title>
       <link>https://liuz0123.gitee.io/zain/posts/tech/leetcode%E5%9F%BA%E7%A1%80%E9%A2%98%E7%9B%AE/</link>

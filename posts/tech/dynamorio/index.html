@@ -7,7 +7,7 @@
 <meta name="robots" content="index, follow">
 <title>DynamoRIO | zain&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # ARM64 编译配置 cmake \ -DCMAKE_TOOLCHAIN_FILE=/mnt/e/code/dynamorio/make/toolchain-android=arm64.cmake \ -DANDROID_TOOLCHAIN=/android_toolchain_using \ -DDR_COPY_TO_DEVICE=OFF \ -DCMAKE_BUILD_TYPE=Debug \ -DBUILD_TESTS=OFF \ -DBUILD_SAMPLES=ON \ -DBUILD_CLIENTS=ON \ ../dynamorio # x64 编译配置 cd dynamorio mkdir build cd">
+<meta name="description" content="DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # Android 编译配置 mkdir build cd build cmake \ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android=arm64.cmake \ -DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \ -DDR_COPY_TO_DEVICE=OFF \ -DCMAKE_BUILD_TYPE=Debug \ -DBUILD_TESTS=OFF \ -DBUILD_SAMPLES=ON \ -DBUILD_CLIENTS=ON \ ../ ../dynamorio /home/zain/tool/android-ndk-r21e/toolchains -DANDROID_TOOLCHAIN=/android_toolchain_using \ # AArch64 树">
 <meta name="author" content="
 &nbsp;Zain">
 <link rel="canonical" href="https://liuz0123.gitee.io/zain/posts/tech/dynamorio/">
@@ -68,7 +68,7 @@ var _hmt = _hmt || [];
 })();
 </script>
 <meta property="og:title" content="DynamoRIO" />
-<meta property="og:description" content="DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # ARM64 编译配置 cmake \ -DCMAKE_TOOLCHAIN_FILE=/mnt/e/code/dynamorio/make/toolchain-android=arm64.cmake \ -DANDROID_TOOLCHAIN=/android_toolchain_using \ -DDR_COPY_TO_DEVICE=OFF \ -DCMAKE_BUILD_TYPE=Debug \ -DBUILD_TESTS=OFF \ -DBUILD_SAMPLES=ON \ -DBUILD_CLIENTS=ON \ ../dynamorio # x64 编译配置 cd dynamorio mkdir build cd" />
+<meta property="og:description" content="DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # Android 编译配置 mkdir build cd build cmake \ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android=arm64.cmake \ -DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \ -DDR_COPY_TO_DEVICE=OFF \ -DCMAKE_BUILD_TYPE=Debug \ -DBUILD_TESTS=OFF \ -DBUILD_SAMPLES=ON \ -DBUILD_CLIENTS=ON \ ../ ../dynamorio /home/zain/tool/android-ndk-r21e/toolchains -DANDROID_TOOLCHAIN=/android_toolchain_using \ # AArch64 树" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://liuz0123.gitee.io/zain/posts/tech/dynamorio/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-05-05T00:17:58&#43;08:00" />
@@ -76,7 +76,7 @@ var _hmt = _hmt || [];
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="DynamoRIO"/>
-<meta name="twitter:description" content="DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # ARM64 编译配置 cmake \ -DCMAKE_TOOLCHAIN_FILE=/mnt/e/code/dynamorio/make/toolchain-android=arm64.cmake \ -DANDROID_TOOLCHAIN=/android_toolchain_using \ -DDR_COPY_TO_DEVICE=OFF \ -DCMAKE_BUILD_TYPE=Debug \ -DBUILD_TESTS=OFF \ -DBUILD_SAMPLES=ON \ -DBUILD_CLIENTS=ON \ ../dynamorio # x64 编译配置 cd dynamorio mkdir build cd"/>
+<meta name="twitter:description" content="DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # Android 编译配置 mkdir build cd build cmake \ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android=arm64.cmake \ -DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \ -DDR_COPY_TO_DEVICE=OFF \ -DCMAKE_BUILD_TYPE=Debug \ -DBUILD_TESTS=OFF \ -DBUILD_SAMPLES=ON \ -DBUILD_CLIENTS=ON \ ../ ../dynamorio /home/zain/tool/android-ndk-r21e/toolchains -DANDROID_TOOLCHAIN=/android_toolchain_using \ # AArch64 树"/>
 
 
 <script type="application/ld+json">
@@ -111,12 +111,12 @@ var _hmt = _hmt || [];
   "@type": "BlogPosting",
   "headline": "DynamoRIO",
   "name": "DynamoRIO",
-  "description": "DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # ARM64 编译配置 cmake \\ -DCMAKE_TOOLCHAIN_FILE=/mnt/e/code/dynamorio/make/toolchain-android=arm64.cmake \\ -DANDROID_TOOLCHAIN=/android_toolchain_using \\ -DDR_COPY_TO_DEVICE=OFF \\ -DCMAKE_BUILD_TYPE=Debug \\ -DBUILD_TESTS=OFF \\ -DBUILD_SAMPLES=ON \\ -DBUILD_CLIENTS=ON \\ ../dynamorio # x64 编译配置 cd dynamorio mkdir build cd",
+  "description": "DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # Android 编译配置 mkdir build cd build cmake \\ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android=arm64.cmake \\ -DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \\ -DDR_COPY_TO_DEVICE=OFF \\ -DCMAKE_BUILD_TYPE=Debug \\ -DBUILD_TESTS=OFF \\ -DBUILD_SAMPLES=ON \\ -DBUILD_CLIENTS=ON \\ ../ ../dynamorio /home/zain/tool/android-ndk-r21e/toolchains -DANDROID_TOOLCHAIN=/android_toolchain_using \\ # AArch64 树",
   "keywords": [
     ""
   ],
-  "articleBody": "DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio\ngit clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # ARM64 编译配置 cmake \\ -DCMAKE_TOOLCHAIN_FILE=/mnt/e/code/dynamorio/make/toolchain-android=arm64.cmake \\ -DANDROID_TOOLCHAIN=/android_toolchain_using \\ -DDR_COPY_TO_DEVICE=OFF \\ -DCMAKE_BUILD_TYPE=Debug \\ -DBUILD_TESTS=OFF \\ -DBUILD_SAMPLES=ON \\ -DBUILD_CLIENTS=ON \\ ../dynamorio # x64 编译配置 cd dynamorio mkdir build cd build cmake \\ -DDR_COPY_TO_DEVICE=OFF \\ -DCMAKE_BUILD_TYPE=Debug \\ -DBUILD_TESTS=OFF \\ -DBUILD_SAMPLES=ON \\ -DBUILD_CLIENTS=ON \\ ../ # 编译 make -j12 # 使用 # 帮助 ./bin64/drrun --help # 参数 -c 指定client so # libbbbuf ./bin64/drrun -c ./api/bin/libbbbuf.so -- ls client libbbbuf.so 学习链接 DynamoRIO进阶指南 https://blog.csdn.net/oShuangYue12/article/details/109780166 DynamoRIO的入门指南（Ubuntu） https://blog.csdn.net/ts_forever/article/details/124614200 ",
-  "wordCount" : "160",
+  "articleBody": "DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio\ngit clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # Android 编译配置 mkdir build cd build cmake \\ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android=arm64.cmake \\ -DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \\ -DDR_COPY_TO_DEVICE=OFF \\ -DCMAKE_BUILD_TYPE=Debug \\ -DBUILD_TESTS=OFF \\ -DBUILD_SAMPLES=ON \\ -DBUILD_CLIENTS=ON \\ ../ ../dynamorio /home/zain/tool/android-ndk-r21e/toolchains -DANDROID_TOOLCHAIN=/android_toolchain_using \\ # AArch64 树莓派 编译配置 mkdir build cd build cmake \\ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-arm32.cmake \\ -DANDROID_TOOLCHAIN=/home/zain/tool/raspbian_complier/arm-bcm2708/arm-linux-gnueabihf/bin \\ -DDR_COPY_TO_DEVICE=OFF \\ -DCMAKE_BUILD_TYPE=Debug \\ -DBUILD_TESTS=OFF \\ -DBUILD_SAMPLES=ON \\ -DBUILD_CLIENTS=ON \\ ../dynamorio cmake \\ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-aarch64_raspbian_armv8.cmake \\ -DANDROID_TOOLCHAIN=/home/zain/tool/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin \\ -DDR_COPY_TO_DEVICE=OFF \\ -DCMAKE_BUILD_TYPE=Debug \\ -DBUILD_TESTS=OFF \\ -DBUILD_SAMPLES=ON \\ -DBUILD_CLIENTS=ON \\ ../dynamorio /home/zain/tool/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-aarch64_raspbian.cmake \\ ../dynamorio /home/zain/tool/android-ndk-r21e/toolchains -DANDROID_TOOLCHAIN=/android_toolchain_using \\ # x64 编译配置 cd dynamorio mkdir build cd build cmake \\ -DDR_COPY_TO_DEVICE=OFF \\ -DCMAKE_BUILD_TYPE=Debug \\ -DBUILD_TESTS=OFF \\ -DBUILD_SAMPLES=ON \\ -DBUILD_CLIENTS=ON \\ ../dynamorio/ # 编译 make -j12 # 使用 # 帮助 ./bin64/drrun --help # 参数 -c 指定client so # libbbbuf ./bin64/drrun -c ./api/bin/libbbbuf.so -- ls client libbbbuf.so 学习链接 DynamoRIO进阶指南 https://blog.csdn.net/oShuangYue12/article/details/109780166 DynamoRIO的入门指南（Ubuntu） https://blog.csdn.net/ts_forever/article/details/124614200 aarch64-linux-gnu 交叉编译 libpcap\n",
+  "wordCount" : "228",
   "inLanguage": "en",
   "datePublished": "2022-05-05T00:17:58+08:00",
   "dateModified": "2022-05-05T00:17:58+08:00",
@@ -233,7 +233,7 @@ var _hmt = _hmt || [];
             <h1 class="post-title">
                 DynamoRIO
             </h1>
-            <div class="post-meta">Create:&nbsp;<span title='2022-05-05 00:17:58 +0800 CST'>2022-05-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-05-05&nbsp;|&nbsp;Words:&nbsp;160&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
+            <div class="post-meta">Create:&nbsp;<span title='2022-05-05 00:17:58 +0800 CST'>2022-05-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-05-05&nbsp;|&nbsp;Words:&nbsp;228&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
 &nbsp;Zain
 
 
@@ -349,17 +349,55 @@ var _hmt = _hmt || [];
 <li>注意wsl中需要root用户编译
 <a href="https://dynamorio.org/page_building.html">https://dynamorio.org/page_building.html</a></li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># ARM64 编译配置</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Android 编译配置</span>
+</span></span><span style="display:flex;"><span>mkdir build
+</span></span><span style="display:flex;"><span>cd build
 </span></span><span style="display:flex;"><span>cmake <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DCMAKE_TOOLCHAIN_FILE<span style="color:#f92672">=</span>/mnt/e/code/dynamorio/make/toolchain-android<span style="color:#f92672">=</span>arm64.cmake <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DANDROID_TOOLCHAIN<span style="color:#f92672">=</span>/android_toolchain_using <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DCMAKE_TOOLCHAIN_FILE<span style="color:#f92672">=</span>../dynamorio/make/toolchain-android<span style="color:#f92672">=</span>arm64.cmake <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DANDROID_TOOLCHAIN<span style="color:#f92672">=</span>/home/zain/tool/android-ndk-r21e/toolchains <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DDR_COPY_TO_DEVICE<span style="color:#f92672">=</span>OFF <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Debug <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DBUILD_TESTS<span style="color:#f92672">=</span>OFF <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DBUILD_SAMPLES<span style="color:#f92672">=</span>ON <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DBUILD_CLIENTS<span style="color:#f92672">=</span>ON <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>../
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>../dynamorio
+</span></span><span style="display:flex;"><span>/home/zain/tool/android-ndk-r21e/toolchains
+</span></span><span style="display:flex;"><span>-DANDROID_TOOLCHAIN<span style="color:#f92672">=</span>/android_toolchain_using <span style="color:#ae81ff">\
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># AArch64 树莓派 编译配置</span>
+</span></span><span style="display:flex;"><span>mkdir build
+</span></span><span style="display:flex;"><span>cd build
+</span></span><span style="display:flex;"><span>cmake <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DCMAKE_TOOLCHAIN_FILE<span style="color:#f92672">=</span>../dynamorio/make/toolchain-arm32.cmake <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DANDROID_TOOLCHAIN<span style="color:#f92672">=</span>/home/zain/tool/raspbian_complier/arm-bcm2708/arm-linux-gnueabihf/bin <span style="color:#ae81ff">\
 </span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DDR_COPY_TO_DEVICE<span style="color:#f92672">=</span>OFF <span style="color:#ae81ff">\
 </span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Debug <span style="color:#ae81ff">\
 </span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DBUILD_TESTS<span style="color:#f92672">=</span>OFF <span style="color:#ae81ff">\
 </span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DBUILD_SAMPLES<span style="color:#f92672">=</span>ON <span style="color:#ae81ff">\
 </span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DBUILD_CLIENTS<span style="color:#f92672">=</span>ON <span style="color:#ae81ff">\
 </span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>../dynamorio
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># x64 编译配置</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cmake <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DCMAKE_TOOLCHAIN_FILE<span style="color:#f92672">=</span>../dynamorio/make/toolchain-aarch64_raspbian_armv8.cmake <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DANDROID_TOOLCHAIN<span style="color:#f92672">=</span>/home/zain/tool/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DDR_COPY_TO_DEVICE<span style="color:#f92672">=</span>OFF <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Debug <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DBUILD_TESTS<span style="color:#f92672">=</span>OFF <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DBUILD_SAMPLES<span style="color:#f92672">=</span>ON <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DBUILD_CLIENTS<span style="color:#f92672">=</span>ON <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>../dynamorio
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/home/zain/tool/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-DCMAKE_TOOLCHAIN_FILE<span style="color:#f92672">=</span>../dynamorio/make/toolchain-aarch64_raspbian.cmake <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>../dynamorio
+</span></span><span style="display:flex;"><span>/home/zain/tool/android-ndk-r21e/toolchains
+</span></span><span style="display:flex;"><span>-DANDROID_TOOLCHAIN<span style="color:#f92672">=</span>/android_toolchain_using <span style="color:#ae81ff">\
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># x64 编译配置</span>
 </span></span><span style="display:flex;"><span>cd dynamorio
 </span></span><span style="display:flex;"><span>mkdir build
 </span></span><span style="display:flex;"><span>cd build
@@ -369,7 +407,7 @@ var _hmt = _hmt || [];
 </span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DBUILD_TESTS<span style="color:#f92672">=</span>OFF <span style="color:#ae81ff">\
 </span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DBUILD_SAMPLES<span style="color:#f92672">=</span>ON <span style="color:#ae81ff">\
 </span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>-DBUILD_CLIENTS<span style="color:#f92672">=</span>ON <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>../
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>../dynamorio/
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># 编译</span>
 </span></span><span style="display:flex;"><span>make -j12
@@ -388,6 +426,7 @@ DynamoRIO进阶指南
 DynamoRIO的入门指南（Ubuntu）
 <a href="https://blog.csdn.net/ts_forever/article/details/124614200">https://blog.csdn.net/ts_forever/article/details/124614200</a></li>
 </ul>
+<p><a href="https://blog.csdn.net/huaheshangxo/article/details/123897854">aarch64-linux-gnu 交叉编译 libpcap</a></p>
 
 
         </div>
@@ -473,6 +512,9 @@ DynamoRIO的入门指南（Ubuntu）
 </div>
 </article>
 </main>
+
+
+<script async src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
 
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
