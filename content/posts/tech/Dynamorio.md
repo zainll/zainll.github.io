@@ -47,10 +47,32 @@ git clone https://github.com/DynamoRIO/dynamorio.git  --recursive
 https://dynamorio.org/page_building.html
 
 ```sh
-# ARM64 编译配置
+# Android 编译配置
+mkdir build
+cd build
 cmake \
--DCMAKE_TOOLCHAIN_FILE=/mnt/e/code/dynamorio/make/toolchain-android=arm64.cmake \
+-DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android=arm64.cmake \
+-DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \
+-DDR_COPY_TO_DEVICE=OFF \
+-DCMAKE_BUILD_TYPE=Debug \
+-DBUILD_TESTS=OFF \
+-DBUILD_SAMPLES=ON \
+-DBUILD_CLIENTS=ON \
+../
+
+
+../dynamorio
+/home/zain/tool/android-ndk-r21e/toolchains
 -DANDROID_TOOLCHAIN=/android_toolchain_using \
+```
+
+```sh
+# AArch64 树莓派 编译配置
+mkdir build
+cd build
+cmake \
+-DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-arm32.cmake \
+-DANDROID_TOOLCHAIN=/home/zain/tool/raspbian_complier/arm-bcm2708/arm-linux-gnueabihf/bin \
 -DDR_COPY_TO_DEVICE=OFF \
 -DCMAKE_BUILD_TYPE=Debug \
 -DBUILD_TESTS=OFF \
@@ -58,7 +80,26 @@ cmake \
 -DBUILD_CLIENTS=ON \
 ../dynamorio
 
+cmake \
+-DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-aarch64_raspbian_armv8.cmake \
+-DANDROID_TOOLCHAIN=/home/zain/tool/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin \
+-DDR_COPY_TO_DEVICE=OFF \
+-DCMAKE_BUILD_TYPE=Debug \
+-DBUILD_TESTS=OFF \
+-DBUILD_SAMPLES=ON \
+-DBUILD_CLIENTS=ON \
+../dynamorio
+
+/home/zain/tool/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin
+
+
+
+-DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-aarch64_raspbian.cmake \
+../dynamorio
+/home/zain/tool/android-ndk-r21e/toolchains
+-DANDROID_TOOLCHAIN=/android_toolchain_using \
 ```
+
 
 
 
@@ -73,7 +114,7 @@ cmake \
 -DBUILD_TESTS=OFF \
 -DBUILD_SAMPLES=ON \
 -DBUILD_CLIENTS=ON \
-../
+../dynamorio/
 
 # 编译
 make -j12
@@ -106,5 +147,5 @@ DynamoRIO的入门指南（Ubuntu）
 https://blog.csdn.net/ts_forever/article/details/124614200
 
 
-
+[aarch64-linux-gnu 交叉编译 libpcap](https://blog.csdn.net/huaheshangxo/article/details/123897854)
 
