@@ -67,7 +67,9 @@ speedscope
 [树莓派4 安装Android系统(lineage os) 体验](https://zhuanlan.zhihu.com/p/358637971)
 
 
+[xda社区](https://forum.xda-developers.com/)
 
+[小米手机刷 LineageOS 系统操作指南](https://miuiver.com/install-lineageos-on-xiaomi/)
 
-
+[miui删除内置不卡米教程_LineageOS V17 安装刷入教程](https://blog.csdn.net/weixin_30965253/article/details/112205240)
 
