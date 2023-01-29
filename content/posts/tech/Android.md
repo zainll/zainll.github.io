@@ -57,6 +57,7 @@ speedscope
 
 
 # LineageOS
+
 &ensp;第三方开源Android
 
 [LineageOS Download](https://download.lineageos.org/)
@@ -73,3 +74,6 @@ speedscope
 
 [miui删除内置不卡米教程_LineageOS V17 安装刷入教程](https://blog.csdn.net/weixin_30965253/article/details/112205240)
 
+
+
+[App逆向 | 安卓环境搭建-LineageOS刷机指南](https://zhuanlan.zhihu.com/p/147299441?utm_id=0)
