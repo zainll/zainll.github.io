@@ -6,7 +6,7 @@
     <description>Recent content on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 05 Jan 2023 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 05 Jan 2023 00:18:23 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>代码随想录</title>
       <link>https://liuz0123.gitee.io/zain/posts/tech/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/</link>
@@ -41,6 +41,15 @@
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/</guid>
       <description>&lt;h2 id=&#34;1-程序性能&#34;&gt;1 程序性能&lt;/h2&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux内核设计与实现原书第3版)</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E5%8E%9F%E4%B9%A6%E7%AC%AC3%E7%89%88/</link>
+      <pubDate>Thu, 05 Jan 2023 00:18:23 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E5%8E%9F%E4%B9%A6%E7%AC%AC3%E7%89%88/</guid>
+      <description>Linux内核设计与实现 基于Linux 2.6.34, 主要内容：进程管理、进程调度、时间管理好定时器、系统调用接口、内存寻址、内存管理和页缓存、VFS、内</description>
     </item>
     
     <item>
