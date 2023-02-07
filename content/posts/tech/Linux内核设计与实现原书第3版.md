@@ -26,10 +26,15 @@ cover:
     caption: "" #图片底部描述
     alt: ""
     relative: false
+
 ---
 
 
+# Linux内核设计与实现
 
+&ensp;基于Linux 2.6.34, 主要内容：进程管理、进程调度、时间管理好定时器、系统调用接口、内存寻址、内存管理和页缓存、VFS、内核同步及调试技术。Linux 2.6内核特色内容：CFS调度程序、抢占式内核、块I/O层及I/O调度程序 <br>
+&ensp;《Understanding the Linux kernel》、《Linux Devices Drivers》 <br>
+&ensp;www.kerneltravel.net
 
 
 
