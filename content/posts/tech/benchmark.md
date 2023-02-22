@@ -103,4 +103,14 @@ https://ebpf.io/applications/
 
 
 
+geekbench
+https://www.geekbench.com/
+https://www.geekbench.com/doc/geekbenck6-benchmark-internals.pdf
+
+
+
+
+
+https://medium.com/
+https://netflixtechblog.medium.com/
 
