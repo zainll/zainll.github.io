@@ -160,7 +160,7 @@
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/android/</guid>
-      <description>ptrace ptrace使用简介 android的ptrace详细分析 【Android 逆向】ptrace 函数 ( C 标准库 ptrace 函数简介 | ptrace 函数真实作用 ) Termux An</description>
+      <description>ptrace ptrace使用简介 android的ptrace详细分析 【Android 逆向】ptrace 函数 ( C 标准库 ptrace 函数简介 | ptrace 函数真实作用 ) android Pa</description>
     </item>
     
     <item>
@@ -196,7 +196,8 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/arm/</guid>
-      <description>ARM https://www.arm.com/
+      <description>`
+ARM https://www.arm.com/
 Arm klein a510
 A77 https://www.arm.com/products/silicon-ip-cpu/cortex-a/cortex-a77
 Arm Cortex-A77 Core Software Optimization Guide https://developer.arm.com/documentation/swog011050/c/?_ga=2.110866307.700198089.1594914903-1661128752.1594914903
