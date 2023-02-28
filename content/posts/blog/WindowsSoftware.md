@@ -337,6 +337,27 @@ https://iptv-org.github.io/iptv/index.m3u
 
 ### maya  三维建模软件
 
+
+### sscom
+
+https://www.51xiazai.cn/soft/637125.htm
+
+
+
+### IDA
+7.6
+http://www.ddooo.com/softdown/215615.htm
+7.0
+http://www.ddooo.com/softdown/183917.htm
+
+https://www.wangan.com/p/7fy7f6eefd60ebc3
+
+### OllyDbg
+http://www.ollydbg.de/
+https://gitee.com/geekneo/A64Dbg
+
+
+
 <br>
 <br>
 

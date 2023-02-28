@@ -40,6 +40,8 @@ cover:
 
 
 
+android PackageManager和PackageInstall
+https://blog.csdn.net/u013673422/article/details/46655589
 
 # Termux
 Android手机命令行中断
