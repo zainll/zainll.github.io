@@ -6,16 +6,7 @@
     <description>Recent content in 🧱 工具 on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 18 Dec 2022 00:18:23 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/posts/blog/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>关于软件，硬件发展的一些不靠谱的看法</title>
-      <link>https://liuz0123.gitee.io/zain/posts/blog/2022/</link>
-      <pubDate>Sun, 18 Dec 2022 00:18:23 +0800</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/blog/2022/</guid>
-      <description>操作系统层次Windows10以来已经是现代系统，包括支持了wsl，最近新布丁支持在Linux中运行多个Windows，见过Windows 9</description>
-    </item>
-    
+    <lastBuildDate>Sun, 23 Oct 2022 00:00:08 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/posts/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>vscode c/c&#43;&#43;一键创建工程插件</title>
       <link>https://liuz0123.gitee.io/zain/posts/blog/vscode_c_project_config/</link>

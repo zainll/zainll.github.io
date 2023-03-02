@@ -62,15 +62,6 @@
     </item>
     
     <item>
-      <title>关于软件，硬件发展的一些不靠谱的看法</title>
-      <link>https://liuz0123.gitee.io/zain/posts/blog/2022/</link>
-      <pubDate>Sun, 18 Dec 2022 00:18:23 +0800</pubDate>
-      
-      <guid>https://liuz0123.gitee.io/zain/posts/blog/2022/</guid>
-      <description>操作系统层次Windows10以来已经是现代系统，包括支持了wsl，最近新布丁支持在Linux中运行多个Windows，见过Windows 9</description>
-    </item>
-    
-    <item>
       <title>docker</title>
       <link>https://liuz0123.gitee.io/zain/posts/tech/docker/</link>
       <pubDate>Wed, 02 Nov 2022 00:22:58 +0800</pubDate>
