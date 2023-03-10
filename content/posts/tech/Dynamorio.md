@@ -174,8 +174,27 @@ _tmain函数开始部分为配置参数，如 -verbose，-force，-attach，-tak
 use_debug verbose
 
 
-libdynamorio
+libdynamorio   core/arch/aarchxx/aarchxx.asm core/arch/riscv64/riscv64.asm  core/arch/x86/x86.asm
 _start
+    relocate_dynamorio
+    privload_early_inject
+    if (*argc == ARGC_PTRACE_SENTINEL)
+        takeover_ptrace
+            dynamorio_app_init
+                dynamorio_app_init_part_one_options
+                    open_log_file  日志
+                dynamorio_app_init_part_two_finalize  初始化主要部分
+
+            dynamorio_syscall  core/arch/x86_code.c 不区分平台目录
+                call_switch_stack
+                    d_r_dispatch
+            dynamo_start
+                dynamorio_take_over_threads
+                call_switch_stack
+                    d_r_dispatch
+                        dispatch_enter_dynamorio
+                        build_basic_block_fragment
+                        dispatch_enter_fcache
 
 
 ## client
