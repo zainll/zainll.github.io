@@ -136,14 +136,14 @@ bin64/drrun -debug -loglevel 2 -- ls
 ## drrun
 
 ```c
-_tmain  drrun入口    tools/drdeploy.c
-    dr_inject_process_create   创建注入子进程？ dr_inject_info_t *info 
-        fork_suspended_child   fork子进程
-    dr_inject_process_inject  进程注入？  core/unix/injector.c
+_tmain  // drrun入口    tools/drdeploy.c
+    dr_inject_process_create   // 创建注入子进程？ dr_inject_info_t *info 
+        fork_suspended_child   // fork子进程
+    dr_inject_process_inject   // 进程注入？  core/unix/injector.c
         switch (info->method) {
             case INJECT_EARLY: 
-                return inject_early(info, library_path);   exec 执行？
-                    execute_exec   执行 libdynamorio.so？ 
+                return inject_early(info, library_path);   // exec 执行？
+                    execute_exec   // 执行 libdynamorio.so？ 
                         execv
             case INJECT_LD_PRELOAD: 
                 return inject_ld_preload(info, library_path);
@@ -152,30 +152,32 @@ _tmain  drrun入口    tools/drdeploy.c
                         execv
             case INJECT_PTRACE: 
                 return inject_ptrace(info, library_path);  attach ？
-                    our_ptrace    ptrace ？
-                    injectee_open  Call sys_open in the child
-                    elf_loader_read_headers  子进程执行mmap？
-                    elf_loader_map_phdrs   计算 libdynamorio 地址？
+                    our_ptrace   // ptrace ？
+                    injectee_open  // Call sys_open in the child
+                    elf_loader_read_headers  // 子进程执行mmap？
+                    elf_loader_map_phdrs   // 计算 libdynamorio 地址？
                         injectee_map_file
                         injectee_unmap
                         injectee_prot
                         injectee_memset
                     our_ptrace_getregs
-                    等待SIGTRAP信号
-                    unexpected_trace_event 处理非SIGTRAP信号，return false
+                    // 等待SIGTRAP信号
+                    unexpected_trace_event // 处理非SIGTRAP信号，return false
 
     dr_inject_process_run
         execute_exec
-    dr_inject_wait_for_child   waiting for app to exit..
-    dr_inject_process_exit  退出
+    dr_inject_wait_for_child   // waiting for app to exit..
+    dr_inject_process_exit  // 退出
  
+```
+&emsp;_tmain函数开始部分为配置参数，如 -verbose，-force，-attach，-takeovers，-c等,
+  append_client添加client <br>
+&emsp;use_debug verbose
 
-_tmain函数开始部分为配置参数，如 -verbose，-force，-attach，-takeovers，-c等,
-  append_client添加client
-use_debug verbose
+## libdynamorio
 
-
-libdynamorio   core/arch/aarchxx/aarchxx.asm core/arch/riscv64/riscv64.asm  core/arch/x86/x86.asm
+```C
+// core/arch/aarchxx/aarchxx.asm core/arch/riscv64/riscv64.asm  core/arch/x86/x86.asm
 _start
     relocate_dynamorio
     privload_early_inject
@@ -183,10 +185,10 @@ _start
         takeover_ptrace
             dynamorio_app_init
                 dynamorio_app_init_part_one_options
-                    open_log_file  日志
-                dynamorio_app_init_part_two_finalize  初始化主要部分
+                    open_log_file  // 日志
+                dynamorio_app_init_part_two_finalize  // 初始化主要部分
 
-            dynamorio_syscall  core/arch/x86_code.c 不区分平台目录
+            dynamorio_syscall  core/arch/x86_code.c // 不区分平台目录
                 call_switch_stack
                     d_r_dispatch
             dynamo_start
