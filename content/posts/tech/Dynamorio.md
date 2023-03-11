@@ -195,10 +195,34 @@ _start
                 dynamorio_take_over_threads
                 call_switch_stack
                     d_r_dispatch
-                        dispatch_enter_dynamorio
-                        build_basic_block_fragment
-                        dispatch_enter_fcache
+                        while(true) {
+                            dispatch_enter_dynamorio
+                                handle_post_system_call
+                                    post_system_call   // 信号前
+                                handle_system_call
+                                    pre_system_call    // 信号后
+                            build_basic_block_fragment
+                                build_bb_ilist
+                            dispatch_enter_fcache
+                                enter_fcache
+                                    (*entry)(dcontext);
+                        }
 ```
+
+dispatch_enter_dynamorio
+    handle_system_call
+        pre_system_call
+
+        handle_post_system_call
+            post_system_call
+
+
+dynamorio_app_init_part_two_finalize           
+    dynamo_thread_init
+        os_thread_init
+            signal_thread_init
+                call_switch_stack
+
 
 ## client
 
@@ -214,6 +238,8 @@ https://blog.csdn.net/oShuangYue12/article/details/109780166
 DynamoRIO的入门指南（Ubuntu）
 https://blog.csdn.net/ts_forever/article/details/124614200
 
+
+https://www.anquanke.com/post/id/218568?display=mobile
 
 [aarch64-linux-gnu 交叉编译 libpcap](https://blog.csdn.net/huaheshangxo/article/details/123897854)
 
