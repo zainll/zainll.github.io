@@ -202,7 +202,8 @@ _start
                                 handle_system_call
                                     pre_system_call    // 信号后
                             build_basic_block_fragment
-                                build_bb_ilist
+                                build_bb_ilist    // 构建bb块
+                                build_native_exec_bb  // 执行bb块？
                             dispatch_enter_fcache
                                 enter_fcache
                                     (*entry)(dcontext);
