@@ -135,6 +135,7 @@ bin64/drrun -debug -loglevel 2 -- ls
 
 ## drrun
 
+```c
 _tmain  drrun入口    tools/drdeploy.c
     dr_inject_process_create   创建注入子进程？ dr_inject_info_t *info 
         fork_suspended_child   fork子进程
@@ -195,7 +196,7 @@ _start
                         dispatch_enter_dynamorio
                         build_basic_block_fragment
                         dispatch_enter_fcache
-
+```
 
 ## client
 
