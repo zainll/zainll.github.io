@@ -85,7 +85,7 @@
       <pubDate>Sat, 15 Oct 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/%E6%80%A7%E8%83%BD%E5%B7%A5%E5%85%B7/</guid>
-      <description>perf &amp;amp; simpleperf</description>
+      <description>perf &amp;amp; simpleperf perf sudo apt install linux-tools-common sudo apt install linux-tools-generic sudo apt install linux-cloud-tools-generic perf --version https://blog.csdn.net/qq_44158431/article/details/125199825 https://www.cnblogs.com/limstorm/p/16334539.html simpleperf simpleperf README 开源代码 simpleperf 二进制 perfetto perfetto UI perfetto 官网 perfetto 开源代码</description>
     </item>
     
     <item>
@@ -175,7 +175,7 @@
       <pubDate>Mon, 27 Jun 2022 00:21:08 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</guid>
-      <description>openbenchmark openssl speed openssl speed --multi 1 openssl speed --multi 1 aes-128-cbc # 编译 https://www.jianshu.com/p/499c4603cfd5 https://blog.csdn.net/CHYabc123456hh/article/details/125794350 perf sudo apt install linux-tools-common sudo apt install linux-tools-generic sudo apt install linux-cloud-tools-generic perf --version https://blog.csdn.net/qq_44158431/article/details/125199825 https://www.cnblogs.com/limstorm/p/16334539.html https://weishu.me/2022/06/12/eBPF-on-Android/ https://www.cnxct.com/ecapture-news-android/ https://ebpf.io/applications/ geekbench https://www.geekbench.com/ https://www.geekbench.com/doc/geekbenck6-benchmark-internals.pdf https://medium.com/ https://netflixtechblog.medium.com/</description>
+      <description>openssl openbenchmark openssl speed openssl speed --multi 1 openssl speed --multi 1 aes-128-cbc # 编译 https://www.jianshu.com/p/499c4603cfd5 https://blog.csdn.net/CHYabc123456hh/article/details/125794350 https://weishu.me/2022/06/12/eBPF-on-Android/ https://www.cnxct.com/ecapture-news-android/ https://ebpf.io/applications/ GKB geekbench https://www.geekbench.com/ https://www.geekbench.com/doc/geekbenck6-benchmark-internals.pdf https://github.com/cloudharmony/geekbench5 https://medium.com/ https://netflixtechblog.medium.com/ Lzbench lzbench 源码 lmbench</description>
     </item>
     
     <item>
@@ -220,7 +220,7 @@
       <pubDate>Thu, 05 May 2022 00:18:23 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/android/</guid>
-      <description>ptrace ptrace使用简介 android的ptrace详细分析 【Android 逆向】ptrace 函数 ( C 标准库 ptrace 函数简介 | ptrace 函数真实作用 ) android Pa</description>
+      <description>https://cs.android.com/ ptrace ptrace使用简介 android的ptrace详细分析 【Android 逆向】ptrace 函数 ( C 标准库 ptrace 函数简介 | ptrace 函数真实作用 ) android P</description>
     </item>
     
     <item>
