@@ -30,7 +30,16 @@ cover:
 ---
 
 
+
+官方文档
+https://source.android.com/docs/core/architecture?hl=zh-cn
+
+
+
+aosp代码
 https://cs.android.com/
+
+
 
 # ptrace
 
