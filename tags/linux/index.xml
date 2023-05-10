@@ -6,7 +6,16 @@
     <description>Recent content in linux on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 05 Jan 2023 00:18:23 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 10 May 2023 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>编译器</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/%E7%BC%96%E8%AF%91%E5%99%A8/</link>
+      <pubDate>Wed, 10 May 2023 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/%E7%BC%96%E8%AF%91%E5%99%A8/</guid>
+      <description>gnu https://www.gnu.org/ 交叉编译 gnu https://www.linaro.org/ https://github.com/llvm/llvm-project/releases/ https://snapshots.linaro.org/gnu-toolchain/ https://snapshots.linaro.org/gnu-toolchain/13.0-2022.11-1/aarch64-linux-gnu/ https://releases.linaro.org/components/toolchain/</description>
+    </item>
+    
     <item>
       <title>Linux内核设计与实现原书第3版)</title>
       <link>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E5%8E%9F%E4%B9%A6%E7%AC%AC3%E7%89%88/</link>
@@ -58,7 +67,7 @@
       <pubDate>Mon, 27 Jun 2022 00:21:08 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</guid>
-      <description>openssl openbenchmark openssl speed openssl speed --multi 1 openssl speed --multi 1 aes-128-cbc # 编译 https://www.jianshu.com/p/499c4603cfd5 https://blog.csdn.net/CHYabc123456hh/article/details/125794350 https://weishu.me/2022/06/12/eBPF-on-Android/ https://www.cnxct.com/ecapture-news-android/ https://ebpf.io/applications/ GKB geekbench https://www.geekbench.com/ https://www.geekbench.com/doc/geekbenck6-benchmark-internals.pdf https://github.com/cloudharmony/geekbench5 https://medium.com/ https://netflixtechblog.medium.com/ Lzbench lzbench 源码 lmbench</description>
+      <description>openssl openbenchmark openssl speed openssl speed --multi 1 openssl speed --multi 1 aes-128-cbc # 编译 https://www.jianshu.com/p/499c4603cfd5 https://blog.csdn.net/CHYabc123456hh/article/details/125794350 https://weishu.me/2022/06/12/eBPF-on-Android/ https://www.cnxct.com/ecapture-news-android/ https://ebpf.io/applications/ GKB geekbench https://www.geekbench.com/ https://www.geekbench.com/doc/geekbenck6-benchmark-internals.pdf https://github.com/cloudharmony/geekbench5 https://medium.com/ https://netflixtechblog.medium.com/ Lzbench lzbench 源码 fork lzbench lmbench</description>
     </item>
     
     <item>
