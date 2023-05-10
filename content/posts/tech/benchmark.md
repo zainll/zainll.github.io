@@ -30,7 +30,7 @@ cover:
 ---
 
 
-# 
+# openssl
 
 
 
@@ -54,23 +54,6 @@ https://www.jianshu.com/p/499c4603cfd5
 
 https://blog.csdn.net/CHYabc123456hh/article/details/125794350
 
-
-
-# perf
-
-```sh
-
-sudo apt install linux-tools-common
-sudo apt install linux-tools-generic
-sudo apt install linux-cloud-tools-generic 
-perf --version
-```
-
-
-https://blog.csdn.net/qq_44158431/article/details/125199825
-
-
-https://www.cnblogs.com/limstorm/p/16334539.html
 
 
 
@@ -102,15 +85,31 @@ https://ebpf.io/applications/
 
 
 
+# GKB
+
 
 geekbench
 https://www.geekbench.com/
 https://www.geekbench.com/doc/geekbenck6-benchmark-internals.pdf
 
 
-
+https://github.com/cloudharmony/geekbench5
 
 
 https://medium.com/
 https://netflixtechblog.medium.com/
+
+
+
+# Lzbench
+
+[lzbench 源码](https://github.com/inikep/lzbench)
+
+
+
+
+# lmbench
+
+
+
 

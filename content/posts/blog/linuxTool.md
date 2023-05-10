@@ -130,6 +130,8 @@ wget -O clash.gz https://github.com/Dreamacro/clash/releases/download/v1.11.8/cl
 
 wget -O clash.gz https://github.com/Dreamacro/clash/releases/download/v1.12.0/clash-linux-amd64-v1.12.0.gz
 
+https://github.com/Dreamacro/clash/releases/download/v1.15.1/clash-linux-amd64-v3-v1.15.1.gz
+wget -O clash.gz https://github.com/Dreamacro/clash/releases/download/v1.15.1/clash-linux-amd64-v1.15.1.gz
 
 curl -LJO -o clash.gz https://github.com/Dreamacro/clash/releases/download/v1.12.0/clash-linux-amd64-v1.12.0.gz
 
