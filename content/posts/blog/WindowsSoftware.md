@@ -129,6 +129,16 @@ winget install Microsoft.PowerShell
 
 <br>
 
+<br>
+### WindTerm
+
+[WindTerm 源码](https://github.com/kingToolbox/WindTerm)
+
+
+
+
+<br>
+
 ### Q-Dir  
 >多窗口资源管理器                   \
 [Download](http://www.q-dir.com/)

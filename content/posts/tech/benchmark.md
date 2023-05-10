@@ -104,7 +104,7 @@ https://netflixtechblog.medium.com/
 # Lzbench
 
 [lzbench 源码](https://github.com/inikep/lzbench)
-
+[fork lzbench](https://github.com/zainll/lzbench)
 
 
 
