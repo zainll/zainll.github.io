@@ -21,3 +21,10 @@ Arm Cortex-A77 Core Software Optimization Guide
 https://developer.arm.com/documentation/swog011050/c/?_ga=2.110866307.700198089.1594914903-1661128752.1594914903
 
 
+
+
+
+WikeChip
+https://en.wikichip.org/wiki/WikiChip
+
+

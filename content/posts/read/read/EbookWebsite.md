@@ -133,6 +133,20 @@ https://bookfere.com/post/4.html  
 
 <br>
 
+## 论文网站
+
+https://sci.hubbza.co.za/
+
+https://sci-hub.41610.org/
+
+https://oa.mg/
+
+http://ww01.libgen.tw/?pid=9POT3387I&pbsubid=1c71af66-95f8-abd0-8084-b36adbe840fe&noads=http%3A%2F%2Fww01.libgen.tw%2F%3Fskipskenzo%3Dtrue&enc_txt=bcyI8BR%2BUkJKcS52HK9c3iZDluHJ5uKRnpA40GnChc8HH4XIo7AEro9tX9cZ%2Bv2rdNyv%2FPJSpJtoFTuqNq%2Fw%2FPj%2B0KfDL2vh4vQA7EYPQyo%3D&enc_lnk=0uAY8uOutq6CoxzAMQqkZkx%2B6HoaCxFO637V4Y37Q0U%3D
+
+
+
+
+
 
 ## 参考链接：
 http://www.360doc.com/content/20/0219/14/5008209_893150066.shtml                     \

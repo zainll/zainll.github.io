@@ -34,7 +34,7 @@ cover:
 官方文档
 https://source.android.com/docs/core/architecture?hl=zh-cn
 
-
+https://source.android.com/docs/setup/contribute/code-search?hl=zh-cn
 
 aosp代码
 https://cs.android.com/
@@ -90,3 +90,7 @@ speedscope
 
 
 [App逆向 | 安卓环境搭建-LineageOS刷机指南](https://zhuanlan.zhihu.com/p/147299441?utm_id=0)
+
+
+
+
