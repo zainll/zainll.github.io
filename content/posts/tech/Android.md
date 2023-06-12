@@ -75,7 +75,7 @@ speedscope
 
 [LineageOS Download](https://download.lineageos.org/)
 
-
+https://6xyun.cn/article/169
 
 [树梅派烧录Lineage OS](https://blog.csdn.net/xsh_fu/article/details/125862825)
 [树莓派4 安装Android系统(lineage os) 体验](https://zhuanlan.zhihu.com/p/358637971)
