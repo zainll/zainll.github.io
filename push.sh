@@ -8,5 +8,5 @@ cd public
 git status
 git add .
 git commit -m "public"
-git push
+git push -u origin/master --force
 
