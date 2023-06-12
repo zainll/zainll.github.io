@@ -43,9 +43,15 @@ cover:
 
 # 第1章 基于Linux内核的操作系统
 
+&ensp;基于Linux内核的操作系统，一般包括： \
+&emsp;(1)BootLoader: 如GRUB和SYSLINUX，负责加载内核到内存，在系统上电或BIOS初始化完成后执行加载 \
+&emsp;(2)init程序：负责启动系统的服务和操作系统的核心程序  \
+&emsp;(3)软件库：如加载elf文件的ld-linux-so、支持C程序的库、如GUN C Library(glibc)、Android的Bionic \
+&emsp;(4)命令和工具：如Shell明后和GNU coreutils   \
 
 
-
+![20230613004743](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230613004743.png)
+&ensp;Android
 
 
 
