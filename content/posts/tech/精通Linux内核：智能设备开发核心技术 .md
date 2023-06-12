@@ -51,14 +51,25 @@ cover:
 
 
 ![20230613004743](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230613004743.png)
-&ensp;Android
+&ensp;Android操作系统架构图 \
+&ensp;Linux内核是整个架构的基础，它负责管理内存、电源、文件系统和进程等核心模块，提供系统的设备驱动
+ 
 
+![20230613005710](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230613005710.png)
 
+&ensp;三个进程，APP1、APP2和Service，APP和Service之间传递控制和数据都需要通过进程通信实现，Service将控制传递至HAL，最终到设备驱动，HAL得到驱动产生的数据，报告至Service，由Service分发给APP1和APP2  \
 
+&ensp;操作系统的核心功能看Android与内核的关系 \
+&emsp;进程管理： 进程这个概念本身是由内核实现的，还包括进程调度、进程通信。\
+&ensp;&emsp;Android利用Pthread等实现了它的进程、线程，是对内核系统调用的封装。Android引入Binder通信，Binder不仅需要用户空间，还需要驱动  \
+&ensp;内存管理： 内存、内存映射和内存分配、回收等内核都已实现 \
+&ensp;&emsp;Android实现了特有的ION内存管理机制，使用它在用户空间申请大段连续的物理内存  \
+&ensp;文件系统： 内核实现了文件系统的框架和常用的文件系统  \
+&ensp;&emsp;文件系统不仅关乎数据存储，进程、内存和设备，Linux一切皆文件  \
+&ensp;用户界面： Android开发了一套控件（View）,一套完整的显示架构，用户界面： Android开发了一套控件（View） \
+&ensp;设备驱动： 设备驱动由内核提供,随系统启动而运行的设备驱动，一般在内核启动过程中加载，某些在特定情况下才会使用的设备驱动
 
-
-
-
+ 
 
 
 
