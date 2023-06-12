@@ -8,7 +8,7 @@ echo -e "
 ===========Building web pages... [HTML]==============="
 # Build the project.
 #hugo --config ./config/_default/config.toml --gc --minify
-hugo -F --cleanDestinationDir
+hugo -F --cleanDestinationDir --panicOnWarning
 
 #### Action 2 ####
 
