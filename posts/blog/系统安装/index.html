@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>系统安装 | zain&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="启动U盘制作 下载镜像 Ubuntu 镜像 Ubuntu 20.04&amp;22.04 Windows 镜像烧录工具 软碟通UltraISO 写入镜像，树莓派刷镜像 Ventoy 官方网站 Ventoy支持多个ISO镜像，开源，支持">
+<meta name="author" content="
+&nbsp;Zain">
+<link rel="canonical" href="https://liuz0123.gitee.io/zain/posts/blog/%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/">
+<link crossorigin="anonymous" href="/zain/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/zain/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="icon" type="image/png" sizes="16x16" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="icon" type="image/png" sizes="32x32" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="apple-touch-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="mask-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="系统安装" />
+<meta property="og:description" content="启动U盘制作 下载镜像 Ubuntu 镜像 Ubuntu 20.04&amp;22.04 Windows 镜像烧录工具 软碟通UltraISO 写入镜像，树莓派刷镜像 Ventoy 官方网站 Ventoy支持多个ISO镜像，开源，支持" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liuz0123.gitee.io/zain/posts/blog/%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-05-05T00:18:23&#43;08:00" />
+<meta property="article:modified_time" content="2022-05-05T00:18:23&#43;08:00" /><meta property="og:site_name" content="(〃&#39;▽&#39;〃)" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="系统安装"/>
+<meta name="twitter:description" content="启动U盘制作 下载镜像 Ubuntu 镜像 Ubuntu 20.04&amp;22.04 Windows 镜像烧录工具 软碟通UltraISO 写入镜像，树莓派刷镜像 Ventoy 官方网站 Ventoy支持多个ISO镜像，开源，支持"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://liuz0123.gitee.io/zain/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "🧱 工具",
+      "item": "https://liuz0123.gitee.io/zain/posts/blog/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "系统安装",
+      "item": "https://liuz0123.gitee.io/zain/posts/blog/%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "系统安装",
+  "name": "系统安装",
+  "description": "启动U盘制作 下载镜像 Ubuntu 镜像 Ubuntu 20.04\u0026amp;22.04 Windows 镜像烧录工具 软碟通UltraISO 写入镜像，树莓派刷镜像 Ventoy 官方网站 Ventoy支持多个ISO镜像，开源，支持",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "启动U盘制作 下载镜像 Ubuntu 镜像 Ubuntu 20.04\u002622.04\nWindows\n镜像烧录工具 软碟通UltraISO 写入镜像，树莓派刷镜像\nVentoy 官方网站 Ventoy支持多个ISO镜像，开源，支持Linux和Windows ventoy详细使用教程 制作完启动盘，将ISO复制到U盘即可\nWinPE 支持多镜像 支持多镜像\n安装系统 小米 F2设置boot密码，重启F12安装Ubuntu\nThinkpad 1.关闭bitlocker 2.f1进入bios关闭security boot 3.f12进入boot，选择启动U盘\nQ 什么功能Windows上有，在Linux没有又没有替代方法？ ",
+  "wordCount" : "238",
+  "inLanguage": "en",
+  "datePublished": "2022-05-05T00:18:23+08:00",
+  "dateModified": "2022-05-05T00:18:23+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Zain"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://liuz0123.gitee.io/zain/posts/blog/%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "zain's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://liuz0123.gitee.io/zain/img/Q.gif"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://liuz0123.gitee.io/zain/" accesskey="h" title="Zain&#39;s Blog (Alt + H)">
+            <img src="https://liuz0123.gitee.io/zain/img/Q.gif" alt="logo" aria-label="logo"
+                 height="35">Zain&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/archives/" title="⏱ 时间轴">
+                <span>⏱ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/links" title="🤝 闲言俗语">
+                <span>🤝 闲言俗语</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://liuz0123.gitee.io/zain/">主页</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/posts/blog/">🧱 工具</a></div>
+            <h1 class="post-title">
+                系统安装
+            </h1>
+            <div class="post-meta">Create:&nbsp;<span title='2022-05-05 00:18:23 +0800 CST'>2022-05-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-05-05&nbsp;|&nbsp;Words:&nbsp;238&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
+&nbsp;Zain
+
+
+
+                &nbsp;|&nbsp;tags: &nbsp;
+                <ul class="post-tags-meta">
+                    <a href="https://liuz0123.gitee.io/zain/tags/blog/">blog</a>
+                </ul>
+
+                
+                <span id="busuanzi_container_page_pv">
+                &nbsp;| Viewers: <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+</div>
+        </header> 
+        <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">文章目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%90%af%e5%8a%a8u%e7%9b%98%e5%88%b6%e4%bd%9c" aria-label="启动U盘制作">启动U盘制作</a><ul>
+                        
+                <li>
+                    <a href="#%e4%b8%8b%e8%bd%bd%e9%95%9c%e5%83%8f" aria-label="下载镜像">下载镜像</a></li>
+                <li>
+                    <a href="#%e9%95%9c%e5%83%8f%e7%83%a7%e5%bd%95%e5%b7%a5%e5%85%b7" aria-label="镜像烧录工具">镜像烧录工具</a><ul>
+                        
+                <li>
+                    <a href="#%e8%bd%af%e7%a2%9f%e9%80%9aultraiso" aria-label="软碟通UltraISO">软碟通UltraISO</a></li>
+                <li>
+                    <a href="#ventoy" aria-label="Ventoy">Ventoy</a></li>
+                <li>
+                    <a href="#winpe-%e6%94%af%e6%8c%81%e5%a4%9a%e9%95%9c%e5%83%8f" aria-label="WinPE 支持多镜像">WinPE 支持多镜像</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%ae%89%e8%a3%85%e7%b3%bb%e7%bb%9f" aria-label="安装系统">安装系统</a><ul>
+                        
+                <li>
+                    <a href="#%e5%b0%8f%e7%b1%b3" aria-label="小米">小米</a></li>
+                <li>
+                    <a href="#thinkpad" aria-label="Thinkpad">Thinkpad</a></li></ul>
+                </li>
+                <li>
+                    <a href="#q-%e4%bb%80%e4%b9%88%e5%8a%9f%e8%83%bdwindows%e4%b8%8a%e6%9c%89%e5%9c%a8linux%e6%b2%a1%e6%9c%89%e5%8f%88%e6%b2%a1%e6%9c%89%e6%9b%bf%e4%bb%a3%e6%96%b9%e6%b3%95" aria-label="Q 什么功能Windows上有，在Linux没有又没有替代方法？">Q 什么功能Windows上有，在Linux没有又没有替代方法？</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        
+        <div class="post-content"><h1 id="启动u盘制作">启动U盘制作<a hidden class="anchor" aria-hidden="true" href="#启动u盘制作">#</a></h1>
+<h2 id="下载镜像">下载镜像<a hidden class="anchor" aria-hidden="true" href="#下载镜像">#</a></h2>
+<ul>
+<li>
+<p>Ubuntu 镜像
+<a href="https://releases.ubuntu.com/">Ubuntu 20.04&amp;22.04</a></p>
+</li>
+<li>
+<p>Windows</p>
+</li>
+</ul>
+<h2 id="镜像烧录工具">镜像烧录工具<a hidden class="anchor" aria-hidden="true" href="#镜像烧录工具">#</a></h2>
+<h3 id="软碟通ultraiso">软碟通UltraISO<a hidden class="anchor" aria-hidden="true" href="#软碟通ultraiso">#</a></h3>
+<p>写入镜像，树莓派刷镜像</p>
+<br>
+<h3 id="ventoy">Ventoy<a hidden class="anchor" aria-hidden="true" href="#ventoy">#</a></h3>
+<p><a href="https://www.ventoy.net/cn/index.html">官方网站</a>   <br>
+Ventoy支持多个ISO镜像，开源，支持Linux和Windows  <br>
+<a href="https://m.somode.com/softjc/18183.html">ventoy详细使用教程</a>   <br>
+制作完启动盘，将ISO复制到U盘即可</p>
+<h3 id="winpe-支持多镜像">WinPE 支持多镜像<a hidden class="anchor" aria-hidden="true" href="#winpe-支持多镜像">#</a></h3>
+<blockquote>
+<p>支持多镜像</p>
+</blockquote>
+<br>
+<h2 id="安装系统">安装系统<a hidden class="anchor" aria-hidden="true" href="#安装系统">#</a></h2>
+<h3 id="小米">小米<a hidden class="anchor" aria-hidden="true" href="#小米">#</a></h3>
+<p> F2设置boot密码，重启F12安装Ubuntu</p>
+<h3 id="thinkpad">Thinkpad<a hidden class="anchor" aria-hidden="true" href="#thinkpad">#</a></h3>
+<p> 1.关闭bitlocker          <br>
+ 2.f1进入bios关闭security boot    <br>
+ 3.f12进入boot，选择启动U盘</p>
+<h2 id="q-什么功能windows上有在linux没有又没有替代方法">Q 什么功能Windows上有，在Linux没有又没有替代方法？<a hidden class="anchor" aria-hidden="true" href="#q-什么功能windows上有在linux没有又没有替代方法">#</a></h2>
+
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://liuz0123.gitee.io/zain/img/wechat_pay.jpg" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://liuz0123.gitee.io/zain/img/alipay.jpg" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://liuz0123.gitee.io/zain/posts/blog/windowssoftware/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>WindowsSoftware</span>
+  </a>
+  <a class="next" href="https://liuz0123.gitee.io/zain/posts/life/life/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>Life</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+
+
+<div>
+    <div class="pagination__title">
+        <span class="pagination__title-h" style="font-size: 20px;">💬评论</span>
+        <hr />
+    </div>
+
+    <div id="tcomment"></div>
+
+    <script src="https://cdn.staticfile.org/twikoo/1.6.7/twikoo.all.min.js">
+    </script>
+    
+
+    
+
+    <script>
+        twikoo.init({
+            envId: "https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2", 
+            el: "#tcomment",
+            lang: 'zh-CN',
+            region: 'ap-guangzhou', 
+            path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+            
+            
+            
+            
+            
+            
+            
+        });
+    </script>
+
+</div>
+</article>
+</main>
+
+
+<script async src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2020-2023 
+        <a href="https://liuz0123.gitee.io/zain/" style="color:#939393;">zain&#39;s Blog</a>
+         All Rights Reserved
+    </span>
+
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">备案号申请中</a>&nbsp;
+
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="填自己的公安图标链接" style="float:left;margin: 0px 5px 0px 0px;"/>
+             公网安备
+        </a>
+    </span>
+
+    <span id="busuanzi_container">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        总访客数: <span id="busuanzi_value_site_uv"></span>
+        总访问量: <span id="busuanzi_value_site_pv"></span>
+    </span>
+    
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {
+            }
+            ;
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>linux on zain&#39;s Blog</title>
+    <link>https://liuz0123.gitee.io/zain/tags/linux/</link>
+    <description>Recent content in linux on zain&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 05 Jun 2023 00:21:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>精通Linux内核：智能设备开发核心技术 </title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/%E7%B2%BE%E9%80%9Alinux%E5%86%85%E6%A0%B8%E6%99%BA%E8%83%BD%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF-/</link>
+      <pubDate>Mon, 05 Jun 2023 00:21:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/%E7%B2%BE%E9%80%9Alinux%E5%86%85%E6%A0%B8%E6%99%BA%E8%83%BD%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF-/</guid>
+      <description>知识储备篇介绍了Linux的数据结构、中断处理、内核同步和时间计算等 内存管理篇、文件系统篇、进程管理篇、介绍Linux的三大核心模块 Linu</description>
+    </item>
+    
+    <item>
+      <title>编译器</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/%E7%BC%96%E8%AF%91%E5%99%A8/</link>
+      <pubDate>Wed, 10 May 2023 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/%E7%BC%96%E8%AF%91%E5%99%A8/</guid>
+      <description>gnu https://www.gnu.org/ 交叉编译 gnu https://www.linaro.org/ https://github.com/llvm/llvm-project/releases/ https://snapshots.linaro.org/gnu-toolchain/ https://snapshots.linaro.org/gnu-toolchain/13.0-2022.11-1/aarch64-linux-gnu/ https://releases.linaro.org/components/toolchain/</description>
+    </item>
+    
+    <item>
+      <title>Linux内核设计与实现原书第3版)</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E5%8E%9F%E4%B9%A6%E7%AC%AC3%E7%89%88/</link>
+      <pubDate>Thu, 05 Jan 2023 00:18:23 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E5%8E%9F%E4%B9%A6%E7%AC%AC3%E7%89%88/</guid>
+      <description>Linux内核设计与实现 基于Linux 2.6.34, 主要内容：进程管理、进程调度、时间管理好定时器、系统调用接口、内存寻址、内存管理和页缓存、VFS、内</description>
+    </item>
+    
+    <item>
+      <title>docker</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/docker/</link>
+      <pubDate>Wed, 02 Nov 2022 00:22:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/docker/</guid>
+      <description>Ubuntu22.04 中使用docker容器，在容器内运行qemu可行否？ Docker默认禁用ptrace？ https://www.mocusez.site/posts/1912.html</description>
+    </item>
+    
+    <item>
+      <title>Linux内核深度解析</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Wed, 05 Oct 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/linux%E5%86%85%E6%A0%B8%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</guid>
+      <description>内容提纲 内核的引导过程U-Boot 内核管理和调度进程 内核管理虚拟内存和物理内存 内核处理异常和中断的技术原理，以及系统调用的实现方式 保护临界区</description>
+    </item>
+    
+    <item>
+      <title>linux系统启动</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/linux%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8/</link>
+      <pubDate>Wed, 17 Aug 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/linux%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8/</guid>
+      <description>LInux系统启动5个阶段： 内核引导 -&amp;gt; 运行init -&amp;gt; 系统初始化 -&amp;gt; 建立终端 -&amp;gt; 用户登录系统 1.内核引导 机器上电后，BIOS开机自检，根据BIOS</description>
+    </item>
+    
+    <item>
+      <title>LinuxCommand</title>
+      <link>https://liuz0123.gitee.io/zain/posts/blog/linuxcommand/</link>
+      <pubDate>Tue, 05 Jul 2022 00:18:23 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/blog/linuxcommand/</guid>
+      <description>查看大小 # 查看系统目录大小 df -lh # 查看当前目录下文件大小 du -h --max-depth=1 权限 chmod chown</description>
+    </item>
+    
+    <item>
+      <title>benchmark</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</link>
+      <pubDate>Mon, 27 Jun 2022 00:21:08 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/benchmark/</guid>
+      <description>openssl openbenchmark openssl speed openssl speed --multi 1 openssl speed --multi 1 aes-128-cbc # 编译 https://www.jianshu.com/p/499c4603cfd5 https://blog.csdn.net/CHYabc123456hh/article/details/125794350 https://weishu.me/2022/06/12/eBPF-on-Android/ https://www.cnxct.com/ecapture-news-android/ https://ebpf.io/applications/ GKB geekbench https://www.geekbench.com/ https://www.geekbench.com/doc/geekbenck6-benchmark-internals.pdf https://github.com/cloudharmony/geekbench5 https://medium.com/ https://netflixtechblog.medium.com/ Lzbench lzbench 源码 fork lzbench lmbench</description>
+    </item>
+    
+    <item>
+      <title>cmake</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/cmake/</link>
+      <pubDate>Tue, 17 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/cmake/</guid>
+      <description>&lt;h2 id=&#34;1cmake简述&#34;&gt;1.cmake简述&lt;/h2&gt;
+&lt;p&gt; CMake是跨平台编译管理工具,为第三方依赖和引入,创建编译系统,程序测试及安装.Cmake工具使用CMakeLists.txt文件,跨平台执行相同编译命令,生成对应平台的可执行程序或者链接库.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>DynamoRIO</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</link>
+      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/dynamorio/</guid>
+      <description>DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # Android 编译配置 mkdir build cd build cmake \ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android=arm64.cmake \ -DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \ -DDR_COPY_TO_DEVICE=OFF \ -DCMAKE_BUILD_TYPE=Debug \ -DBUILD_TESTS=OFF \ -DBUILD_SAMPLES=ON \ -DBUILD_CLIENTS=ON \ ../ ../dynamorio /home/zain/tool/android-ndk-r21e/toolchains -DANDROID_TOOLCHAIN=/android_toolchain_using \ # AArch64 树</description>
+    </item>
+    
+    <item>
+      <title>Linux Read Tool</title>
+      <link>https://liuz0123.gitee.io/zain/posts/tech/linuxreadtool/</link>
+      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/posts/tech/linuxreadtool/</guid>
+      <description>Linux Kernel阅读工具 需要多久才能看完linux内核源码？ Linux内核代码下载 Linux kernel官网 https://www.kernel.org/ 解压 linux-5.19.10.tar.xz tar -xvf linux-5.19.10.tar.xz https://blog.csdn.net/m0_49328056/article/details/121669035 linux内核线上阅读 li</description>
+    </item>
+    
+  </channel>
+</rss>

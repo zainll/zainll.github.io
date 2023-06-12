@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>linux系统启动 | zain&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="LInux系统启动5个阶段： 内核引导 -&gt; 运行init -&gt; 系统初始化 -&gt; 建立终端 -&gt; 用户登录系统 1.内核引导 机器上电后，BIOS开机自检，根据BIOS">
+<meta name="author" content="
+&nbsp;Zain">
+<link rel="canonical" href="https://liuz0123.gitee.io/zain/posts/tech/linux%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8/">
+<link crossorigin="anonymous" href="/zain/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/zain/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="icon" type="image/png" sizes="16x16" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="icon" type="image/png" sizes="32x32" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="apple-touch-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="mask-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="linux系统启动" />
+<meta property="og:description" content="LInux系统启动5个阶段： 内核引导 -&gt; 运行init -&gt; 系统初始化 -&gt; 建立终端 -&gt; 用户登录系统 1.内核引导 机器上电后，BIOS开机自检，根据BIOS" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liuz0123.gitee.io/zain/posts/tech/linux%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-08-17T00:17:58&#43;08:00" />
+<meta property="article:modified_time" content="2022-08-18T00:17:58&#43;08:00" /><meta property="og:site_name" content="(〃&#39;▽&#39;〃)" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="linux系统启动"/>
+<meta name="twitter:description" content="LInux系统启动5个阶段： 内核引导 -&gt; 运行init -&gt; 系统初始化 -&gt; 建立终端 -&gt; 用户登录系统 1.内核引导 机器上电后，BIOS开机自检，根据BIOS"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://liuz0123.gitee.io/zain/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "👨🏻‍💻 技术",
+      "item": "https://liuz0123.gitee.io/zain/posts/tech/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "linux系统启动",
+      "item": "https://liuz0123.gitee.io/zain/posts/tech/linux%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "linux系统启动",
+  "name": "linux系统启动",
+  "description": "LInux系统启动5个阶段： 内核引导 -\u0026gt; 运行init -\u0026gt; 系统初始化 -\u0026gt; 建立终端 -\u0026gt; 用户登录系统 1.内核引导 机器上电后，BIOS开机自检，根据BIOS",
+  "keywords": [
+    ""
+  ],
+  "articleBody": " LInux系统启动5个阶段： 内核引导 -\u003e 运行init -\u003e 系统初始化 -\u003e 建立终端 -\u003e 用户登录系统\n1.内核引导 机器上电后，BIOS开机自检，根据BIOS中设置的启动设备(通常为硬盘)启动 操作系统阶段硬件，首先读入/boot目录下内核文件 \\\ninit 进程是系统所有进程的起点，init 程序首先是需要读取配置文件 /etc/inittab。 许多程序需要开机启动。它们在Windows叫做\"服务\"（service），在Linux就叫做\"守护进程\"（daemon） init进程的一大任务，就是去运行这些开机启动的程序。 不同的场合需要启动不同的程序，比如用作服务器时，需要启动Apache， Linux允许为不同的场合，分配不同的开机启动程序，这就叫做\"运行级别\"（runlevel）。也就是说，启动时根据\"运行级别\"，确定要运行哪些程序 \\\nLinux系统有7个运行级别(runlevel)： 运行级别0：系统停机状态，系统默认运行级别不能设为0，否则不能正常启动 运行级别1：单用户工作状态，root权限，用于系统维护，禁止远程登陆 运行级别2：多用户状态(没有NFS) 运行级别3：完全的多用户状态(有NFS)，登陆后进入控制台命令行模式 运行级别4：系统未使用，保留 运行级别5：X11控制台，登陆后进入图形GUI模式 运行级别6：系统正常关闭并重启，默认运行级别不能设为6，否则不能正常启动 \\\n2.系统初始化 在init的配置文件中有这么一行：si::sysinit:/etc/rc.d/rc.sysinit　它调用执行了/etc/rc.d/rc.sysinit，而rc.sysinit是一个bash shell的脚本，它主要是完成一些系统初始化的工作，rc.sysinit是每一个运行级别都要首先运行的重要脚本 它主要完成的工作有：激活交换分区，检查磁盘，加载硬件模块以及其它一些需要优先执行任务。 \\\n15:5wait:/etc/rc.d/rc 5 这一行表示以5为参数运行/etc/rc.d/rc，/etc/rc.d/rc是一个Shell脚本，它接受5作为参数，去执行/etc/rc.d/rc5.d/目录下的所有的rc启动脚本，/etc/rc.d/rc5.d/目录中的这些启动脚本实际上都是一些连接文件，而不是真正的rc启动脚本，真正的rc启动脚本实际上都是放在/etc/rc.d/init.d/目录下 而这些rc启动脚本有着类似的用法，它们一般能接受start、stop、restart、status等参数 /etc/rc.d/rc5.d/中的rc启动脚本通常是K或S开头的连接文件，对于以 S 开头的启动脚本，将以start参数来运行 而如果发现存在相应的脚本也存在K打头的连接，而且已经处于运行态了(以/var/lock/subsys/下的文件作为标志)，则将首先以stop为参数停止这些已经启动了的守护进程，然后再重新运行 这样做是为了保证是当init改变运行级别时，所有相关的守护进程都将重启。 至于在每个运行级中将运行哪些守护进程，用户可以通过chkconfig或setup中的\"System Services\"来自行设定 \\\nrc执行完毕后，返回init。这时基本系统环境已经设置好了，各种守护进程也已经启动了。 init接下来会打开6个终端，以便用户登录系统。在inittab中的以下6行就是定义了6个终端： \\\n从上面可以看出在2、3、4、5的运行级别中都将以respawn方式运行mingetty程序，mingetty程序能打开终端、设置模式。 同时它会显示一个文本登录界面，这个界面就是我们经常看到的登录界面，在这个登录界面中会提示用户输入用户名，而用户输入的用户将作为参数传给login程序来验证用户的身份 \\\n3.用户登录系统 一般来说，用户的登录方式有三种： （1）命令行登录 （2）ssh登录 （3）图形界面登录 \\\n对于运行级别为5的图形方式用户来说，他们的登录是通过一个图形化的登录界面。登录成功后可以直接进入 KDE、Gnome 等窗口管理器。 而本文主要讲的还是文本方式登录的情况：当我们看到mingetty的登录界面时，我们就可以输入用户名和密码来登录系统了。 Linux 的账号验证程序是 login，login 会接收 mingetty 传来的用户名作为用户名参数。 然后 login 会对用户名进行分析：如果用户名不是 root，且存在 /etc/nologin 文件，login 将输出 nologin 文件的内容，然后退出。 这通常用来系统维护时防止非root用户登录。只有/etc/securetty中登记了的终端才允许 root 用户登录，如果不存在这个文件，则 root 用户可以在任何终端上登录。 /etc/usertty文件用于对用户作出附加访问限制，如果不存在这个文件，则没有其他限制 \\\n参考链接 https://mp.weixin.qq.com/s?__biz=Mzg4OTgyNzQwMQ==\u0026mid=2247484052\u0026idx=1\u0026sn=4b74f1134fcd2e9341173653d271bbd6\u0026chksm=cfe4bbb2f89332a491e774cbcce98f8b7e9075d837bfa58dd0a9d5b151f72647dac8f0cae5e0\u0026mpshare=1\u0026scene=1\u0026srcid=1231tifch9Iyv8wFwiPLT39I\u0026sharer_sharetime=1672481021630\u0026sharer_shareid=813a8c319563d8c50feefd77b191f183#rd ",
+  "wordCount" : "1948",
+  "inLanguage": "en",
+  "datePublished": "2022-08-17T00:17:58+08:00",
+  "dateModified": "2022-08-18T00:17:58+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Zain"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://liuz0123.gitee.io/zain/posts/tech/linux%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "zain's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://liuz0123.gitee.io/zain/img/Q.gif"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://liuz0123.gitee.io/zain/" accesskey="h" title="Zain&#39;s Blog (Alt + H)">
+            <img src="https://liuz0123.gitee.io/zain/img/Q.gif" alt="logo" aria-label="logo"
+                 height="35">Zain&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/archives/" title="⏱ 时间轴">
+                <span>⏱ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/links" title="🤝 闲言俗语">
+                <span>🤝 闲言俗语</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://liuz0123.gitee.io/zain/">主页</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/posts/tech/">👨🏻‍💻 技术</a></div>
+            <h1 class="post-title">
+                linux系统启动
+            </h1>
+            <div class="post-meta">Create:&nbsp;<span title='2022-08-17 00:17:58 +0800 CST'>2022-08-17</span>&nbsp;|&nbsp;Update:&nbsp;2022-08-18&nbsp;|&nbsp;Words:&nbsp;1948&nbsp;|&nbsp;&nbsp;4 min&nbsp;|&nbsp;
+&nbsp;Zain
+
+
+
+                &nbsp;|&nbsp;tags: &nbsp;
+                <ul class="post-tags-meta">
+                    <a href="https://liuz0123.gitee.io/zain/tags/tech/">tech</a>
+                    <a href="https://liuz0123.gitee.io/zain/tags/linux/">、linux</a>
+                </ul>
+
+                
+                <span id="busuanzi_container_page_pv">
+                &nbsp;| Viewers: <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+</div>
+        </header> 
+        <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">文章目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#1%e5%86%85%e6%a0%b8%e5%bc%95%e5%af%bc" aria-label="1.内核引导">1.内核引导</a></li>
+                <li>
+                    <a href="#2%e7%b3%bb%e7%bb%9f%e5%88%9d%e5%a7%8b%e5%8c%96" aria-label="2.系统初始化">2.系统初始化</a></li>
+                <li>
+                    <a href="#3%e7%94%a8%e6%88%b7%e7%99%bb%e5%bd%95%e7%b3%bb%e7%bb%9f" aria-label="3.用户登录系统">3.用户登录系统</a>
+                </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        
+        <div class="post-content"><p> LInux系统启动5个阶段： <br>
+ 内核引导 -&gt; 运行init -&gt; 系统初始化 -&gt; 建立终端 -&gt; 用户登录系统</p>
+<h1 id="1内核引导">1.内核引导<a hidden class="anchor" aria-hidden="true" href="#1内核引导">#</a></h1>
+<p> 机器上电后，BIOS开机自检，根据BIOS中设置的启动设备(通常为硬盘)启动 <br>
+ 操作系统阶段硬件，首先读入<code>/boot</code>目录下内核文件 \</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/2023-01-06_21-47.png" alt="2023-01-06_21-47"  />
+</p>
+<p> init 进程是系统所有进程的起点，init 程序首先是需要读取配置文件 /etc/inittab。    <br>
+ 许多程序需要开机启动。它们在Windows叫做&quot;服务&quot;（service），在Linux就叫做&quot;守护进程&quot;（daemon）  <br>
+ init进程的一大任务，就是去运行这些开机启动的程序。  <br>
+ 不同的场合需要启动不同的程序，比如用作服务器时，需要启动Apache，  <br>
+ Linux允许为不同的场合，分配不同的开机启动程序，这就叫做&quot;运行级别&quot;（runlevel）。也就是说，启动时根据&quot;运行级别&quot;，确定要运行哪些程序  \</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/2023-01-06_21-51.png" alt="2023-01-06_21-51"  />
+</p>
+<p> Linux系统有7个运行级别(runlevel)： <br>
+ 运行级别0：系统停机状态，系统默认运行级别不能设为0，否则不能正常启动  <br>
+ 运行级别1：单用户工作状态，root权限，用于系统维护，禁止远程登陆  <br>
+ 运行级别2：多用户状态(没有NFS)  <br>
+ 运行级别3：完全的多用户状态(有NFS)，登陆后进入控制台命令行模式
+<br>
+ 运行级别4：系统未使用，保留 <br>
+ 运行级别5：X11控制台，登陆后进入图形GUI模式  <br>
+ 运行级别6：系统正常关闭并重启，默认运行级别不能设为6，否则不能正常启动 \</p>
+<h1 id="2系统初始化">2.系统初始化<a hidden class="anchor" aria-hidden="true" href="#2系统初始化">#</a></h1>
+<p> 在init的配置文件中有这么一行：si::sysinit:/etc/rc.d/rc.sysinit　它调用执行了/etc/rc.d/rc.sysinit，而rc.sysinit是一个bash shell的脚本，它主要是完成一些系统初始化的工作，rc.sysinit是每一个运行级别都要首先运行的重要脚本  <br>
+ 它主要完成的工作有：激活交换分区，检查磁盘，加载硬件模块以及其它一些需要优先执行任务。  \</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>15:5wait:/etc/rc.d/rc <span style="color:#ae81ff">5</span>
+</span></span></code></pre></div><p> 这一行表示以5为参数运行/etc/rc.d/rc，/etc/rc.d/rc是一个Shell脚本，它接受5作为参数，去执行/etc/rc.d/rc5.d/目录下的所有的rc启动脚本，/etc/rc.d/rc5.d/目录中的这些启动脚本实际上都是一些连接文件，而不是真正的rc启动脚本，真正的rc启动脚本实际上都是放在/etc/rc.d/init.d/目录下  <br>
+ 而这些rc启动脚本有着类似的用法，它们一般能接受start、stop、restart、status等参数  <br>
+ /etc/rc.d/rc5.d/中的rc启动脚本通常是K或S开头的连接文件，对于以 S 开头的启动脚本，将以start参数来运行  <br>
+ 而如果发现存在相应的脚本也存在K打头的连接，而且已经处于运行态了(以/var/lock/subsys/下的文件作为标志)，则将首先以stop为参数停止这些已经启动了的守护进程，然后再重新运行  <br>
+ 这样做是为了保证是当init改变运行级别时，所有相关的守护进程都将重启。 <br>
+ 至于在每个运行级中将运行哪些守护进程，用户可以通过chkconfig或setup中的&quot;System Services&quot;来自行设定  \</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/2023-01-06_21-56.png" alt="2023-01-06_21-56"  />
+</p>
+<p> rc执行完毕后，返回init。这时基本系统环境已经设置好了，各种守护进程也已经启动了。 <br>
+ init接下来会打开6个终端，以便用户登录系统。在inittab中的以下6行就是定义了6个终端： \</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/2023-01-06_21-57.png" alt="2023-01-06_21-57"  />
+</p>
+<p> 从上面可以看出在2、3、4、5的运行级别中都将以respawn方式运行mingetty程序，mingetty程序能打开终端、设置模式。  <br>
+ 同时它会显示一个文本登录界面，这个界面就是我们经常看到的登录界面，在这个登录界面中会提示用户输入用户名，而用户输入的用户将作为参数传给login程序来验证用户的身份  \</p>
+<h1 id="3用户登录系统">3.用户登录系统<a hidden class="anchor" aria-hidden="true" href="#3用户登录系统">#</a></h1>
+<p> 一般来说，用户的登录方式有三种： <br>
+ （1）命令行登录  <br>
+ （2）ssh登录  <br>
+ （3）图形界面登录  \</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/2023-01-06_22-00.png" alt="2023-01-06_22-00"  />
+</p>
+<p> 对于运行级别为5的图形方式用户来说，他们的登录是通过一个图形化的登录界面。登录成功后可以直接进入 KDE、Gnome 等窗口管理器。  <br>
+ 而本文主要讲的还是文本方式登录的情况：当我们看到mingetty的登录界面时，我们就可以输入用户名和密码来登录系统了。  <br>
+ Linux 的账号验证程序是 login，login 会接收 mingetty 传来的用户名作为用户名参数。  <br>
+ 然后 login 会对用户名进行分析：如果用户名不是 root，且存在 /etc/nologin 文件，login 将输出 nologin 文件的内容，然后退出。  <br>
+ 这通常用来系统维护时防止非root用户登录。只有/etc/securetty中登记了的终端才允许 root 用户登录，如果不存在这个文件，则 root 用户可以在任何终端上登录。  <br>
+ /etc/usertty文件用于对用户作出附加访问限制，如果不存在这个文件，则没有其他限制  \</p>
+<ul>
+<li>参考链接
+<a href="https://mp.weixin.qq.com/s?__biz=Mzg4OTgyNzQwMQ==&amp;mid=2247484052&amp;idx=1&amp;sn=4b74f1134fcd2e9341173653d271bbd6&amp;chksm=cfe4bbb2f89332a491e774cbcce98f8b7e9075d837bfa58dd0a9d5b151f72647dac8f0cae5e0&amp;mpshare=1&amp;scene=1&amp;srcid=1231tifch9Iyv8wFwiPLT39I&amp;sharer_sharetime=1672481021630&amp;sharer_shareid=813a8c319563d8c50feefd77b191f183#rd">https://mp.weixin.qq.com/s?__biz=Mzg4OTgyNzQwMQ==&amp;mid=2247484052&amp;idx=1&amp;sn=4b74f1134fcd2e9341173653d271bbd6&amp;chksm=cfe4bbb2f89332a491e774cbcce98f8b7e9075d837bfa58dd0a9d5b151f72647dac8f0cae5e0&amp;mpshare=1&amp;scene=1&amp;srcid=1231tifch9Iyv8wFwiPLT39I&amp;sharer_sharetime=1672481021630&amp;sharer_shareid=813a8c319563d8c50feefd77b191f183#rd</a></li>
+</ul>
+
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://liuz0123.gitee.io/zain/img/wechat_pay.jpg" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://liuz0123.gitee.io/zain/img/alipay.jpg" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://liuz0123.gitee.io/zain/posts/tech/logging/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>logging</span>
+  </a>
+  <a class="next" href="https://liuz0123.gitee.io/zain/posts/blog/markown/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>Markdown</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+
+
+<div>
+    <div class="pagination__title">
+        <span class="pagination__title-h" style="font-size: 20px;">💬评论</span>
+        <hr />
+    </div>
+
+    <div id="tcomment"></div>
+
+    <script src="https://cdn.staticfile.org/twikoo/1.6.7/twikoo.all.min.js">
+    </script>
+    
+
+    
+
+    <script>
+        twikoo.init({
+            envId: "https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2", 
+            el: "#tcomment",
+            lang: 'zh-CN',
+            region: 'ap-guangzhou', 
+            path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+            
+            
+            
+            
+            
+            
+            
+        });
+    </script>
+
+</div>
+</article>
+</main>
+
+
+<script async src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2020-2023 
+        <a href="https://liuz0123.gitee.io/zain/" style="color:#939393;">zain&#39;s Blog</a>
+         All Rights Reserved
+    </span>
+
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">备案号申请中</a>&nbsp;
+
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="填自己的公安图标链接" style="float:left;margin: 0px 5px 0px 0px;"/>
+             公网安备
+        </a>
+    </span>
+
+    <span id="busuanzi_container">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        总访客数: <span id="busuanzi_value_site_uv"></span>
+        总访问量: <span id="busuanzi_value_site_pv"></span>
+    </span>
+    
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {
+            }
+            ;
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
