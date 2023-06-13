@@ -40,8 +40,8 @@ languages:
     en:
       languageName: "English"
       weight: 1
-      #profileMode:
-      params:
+      profileMode:
+      #params:
         enabled: true
         title: (〃'▽'〃)
         subtitle: "在路上，记录生活💦 <br/>学而时习之，不亦说乎？🐣<br/> 有朋自远方来，不亦乐乎？🌈"
