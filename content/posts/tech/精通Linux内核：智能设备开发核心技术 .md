@@ -43,12 +43,17 @@ cover:
 
 # 第1章 基于Linux内核的操作系统
 
+## 1.1 处理器、平台和操作系统
+
 &ensp;基于Linux内核的操作系统，一般包括： \
 &emsp;(1)BootLoader: 如GRUB和SYSLINUX，负责加载内核到内存，在系统上电或BIOS初始化完成后执行加载 \
 &emsp;(2)init程序：负责启动系统的服务和操作系统的核心程序  \
 &emsp;(3)软件库：如加载elf文件的ld-linux-so、支持C程序的库、如GUN C Library(glibc)、Android的Bionic \
 &emsp;(4)命令和工具：如Shell命令和GNU coreutils   \
 
+
+## 1.2 以安卓为例剖析操作系统
+### 1.2.1 安卓的整体架构
 
 ![20230613004743](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230613004743.png)
 &ensp;Android操作系统架构图 \
@@ -69,12 +74,43 @@ cover:
 &ensp;用户界面： Android开发了一套控件（View）,一套完整的显示架构，用户界面： Android开发了一套控件（View） \
 &ensp;设备驱动： 设备驱动由内核提供,随系统启动而运行的设备驱动，一般在内核启动过程中加载，某些在特定情况下才会使用的设备驱动
 
+### 1.2.2 Linux内核的核心作用
+
 &ensp;开机后，内核由bootloader加载进入内存执行，它是创建系统的第一个进程，初始化时钟、内存、中断等核心功能，然后执行init程序。init程序是基于Linux内核的操作系统，在用户空间的起点，它启动核心服务，挂载文件系统，更改文件权限，由后续的服务一步步初始化整个操作系统
 
 &ensp;内核实现了内存管理、文件系统、进程管理和网络管理等核心模块，将用户空间封装内核提供的系统调用作为类库，供其他部分使用
 
 
- 
+## 1.3 内核整体架构
+
+### 1.3.1 内核代码目录结构
+
+ &ensp;内核代码一级目录： \
+ &ensp;&emsp;Documentation目录：存放说明文档 \
+ &ensp;&emsp;arch目录：arch是architecture，体系结构相关代码，体系结构相关，如内存页表和进程上下文等 \
+ &ensp;&emsp;kernel目录：内核核心部分，包括进程调度、中断处理和时钟等模块的核心代码，与体系结构相关代码存在arch/xx/kernel下  \
+ &ensp;&emsp;drivers目录：设备驱动代码  \
+ &ensp;&emsp;mm目录：mm是memory managemnt缩写，包括内存管理相关代码 \
+ &ensp;&emsp;fs目录：fs是file system文件系统代码，文件系统架构(VFS)和系统支持各种文件系统，一个子目录至少对应一种文件系统  \
+ &ensp;&emsp;ipc目录：inter process communication，包括消息队列、共享内存和信号量等进程通信方式 \
+ &ensp;&emsp;block目录：块设备管理的代码，块设备与字符设备。块设备支持随机访问，SD卡和硬盘是块设备；字符设备只能顺序访问，键盘和串口是字符设备  \
+ &ensp;&emsp;lib目录：公用的库函数，比如红黑树和字符串操作，内核处在C语言库(glibc等)下一层，glibc是由封装内核的系统调用实现的  \
+ &ensp;&emsp;init目录：内核初始化代码，main.c定义内核启动的入口start_kernel函数 \
+ &ensp;&emsp;firmware目录：包括运行在芯片内的固件  \
+ &ensp;&emsp;scripts目录：辅助内核配置脚本，如make menuconfig命令配置  \
+ &ensp;&emsp;net：网络、crypto：加密、certs：证书、security：安全、tools：工具、virt：虚拟化  \
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
