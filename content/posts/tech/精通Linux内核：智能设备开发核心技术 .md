@@ -202,6 +202,30 @@ struct hlist_node {
 
 ## 2.2 位操作数据结构
 &ensp;位图(bitmap)，以每一位(bit)来存放或表示某种状态，一个字节(byte)就可以表示8个元素的状态，节省内存 \
+![20230615004359](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230615004359.png)
+
+&ensp;find_first_zero_bit和find_first_bit的第二个参数size是以位(bit)为单位的，find_next_zero_bit和find_next_bit从第offset位(包含offset)开始查找为0和为1的位置，找不到则返回size
+
+## 2.3 模块和内核参数传递
+
+
+### 2.3.1 内嵌通用数据结构
+&ensp;inode是一个典型的例子，内核使用inode对象
+```c
+struct my_inode {
+    struct inode inode;
+    // others
+}
+
+```
+
+&ensp;传递参数给内核的时候，传递my_inode的inode的地址ptr；从内核获得的inode地址，通过container_of(ptr, my_inode, inode)宏就可以获得my_inode对象
+
+
+### 2.3.2 通用结构的私有变量
+
+
+
 
 
 
