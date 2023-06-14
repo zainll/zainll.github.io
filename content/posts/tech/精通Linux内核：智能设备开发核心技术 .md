@@ -104,18 +104,104 @@ cover:
 ### 1.3.2 内核的核心模块及关联
 
 
+![20230615000241](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230615000241.png)
+
+&ensp;中断模块不仅在设备驱动中频繁使用，内存管理和进程调度等也需要它的支持，内存管理需要缺页中断，进程调度则需要时钟中断和处理器间中断 \
+&ensp;内核同步模块贯穿整个内核，如果没有同步机制，错综复杂的执行流访问临界区域就会失去保护，系统瞬间瘫痪 \
+&ensp;内存管理、文件管理和进程管理 \
+&ensp;&emsp;内存管理模块涉及内存寻址、映射、虚拟内存和物理内存空间的管理、缓存和异常 \
+&ensp;&emsp;文件系统的重要性从“一切皆文件”，硬件的控制、数据的传递和存储，几乎都与文件有关 \
+&ensp;&emsp;进程管理模块涉及进程的实现、创建、退出和进程通信等，进程本身是管理资源的载体，管理的资源包括内存、文件、I/O设备等 \
+&ensp;&emsp;设备驱动模块,每一个设备驱动都是一个小型的系统，电源管理、内存申请、释放、控制、数据，复杂一些的还会涉及进程调度 \
+
+## 1.4 实例分析
+
+&ensp;由芯片开始，经过操作系统的传递，数据到达应用，然后计算并刷新屏幕
+
+
+# 第 2 章 数据结构使用
+
+## 2.1 关系型数据结构
 
 
 
+&ensp;程序=数据结构+算法，数据结构指的是数据与数据之间的逻辑关系，算法指的是解决特定问题的步骤和方法 
+
+### 2.1.1 一对一关系
+
+&ensp;两个结构体之间的一对一关系有指针和内嵌（包含）两种表达方式
+&ensp;内嵌，通过container_of宏（内核定义好的）可以由b计算出a的位置 \
+```c
+// 指针
+struct entity_a {
+    struct entity_b *b;
+};
+struct entity_b {
+    (struct entity_a *;)
+};
+// 内嵌(包含)
+struct entity_a {
+    struct entity_b b;
+}
+```
+
+### 2.1.2 一对多关系
+&ensp;一对多关系在内核中一般由链表或树实现，链表实现有多种常用方式，包括list_head、hlist_head/hlist_node、rb_root/rb_node（红黑树）等数据结构  \
+
+```c
+// 单链表
+struct branch {
+    // others
+    struct leaf *head;
+};
+struct leaf {
+    // others
+    struct leaf *next;
+};
+
+```
+
+
+```c
+// 双链表
+struct branch {
+    // others
+    struct list_head head;
+};
+struct leaf {
+    // others
+    struct list_head node;
+};
+struct list_head {
+    struct list_head *next, *prev;
+}
+
+```
+
+![20230615002624](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230615002624.png)
 
 
 
+&ensp;hlist_head表示链表头，hlist_node表示链表元素 
+```c
+struct hlist_head {
+    struct hlist_node *first;
+}；
+struct hlist_node {
+    struct hlist_node *next, **pprev;
+}
+
+```
+![20230615003851](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230615003851.png)
 
 
+### 2.1.3 多对多关系
+
+&ensp;input子系统的三个关键结构体input_dev、input_handler、input_handle是多对多几个
 
 
-
-
+## 2.2 位操作数据结构
+&ensp;位图(bitmap)，以每一位(bit)来存放或表示某种状态，一个字节(byte)就可以表示8个元素的状态，节省内存 \
 
 
 
