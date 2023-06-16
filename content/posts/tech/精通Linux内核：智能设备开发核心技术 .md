@@ -279,15 +279,42 @@ u64 timekeeping_get_ns(const struct tk_read_base *tkr)
 
 ![20230616233327](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230616233327.png)
 
-&ensp;rating字段代表cs的等级，内核只会选择一个时钟源作为watchdog(即看门狗)，也只会选择一个时钟源作为系统的时钟源(与全局变量tk_core.timekeeper对应)，同等条件下，等级更高的时钟源拥有更高的优先级
+&ensp;rating字段代表cs的等级，内核只会选择一个时钟源作为watchdog(即看门狗)，也只会选择一个时钟源作为系统的时钟源(与全局变量tk_core.timekeeper对应)，同等条件下，等级更高的时钟源拥有更高的优先级 
+
+&ensp;将保持时间的设备称为时钟源，将关注时间事件的设备称为时钟中断设备
+
+![20230616233842](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230616233842.png)
+
+&ensp;set_state_xxx是切换当前设备状态的回调函数，xxx可以有共有periodic、oneshot、oneshot_stopped和shutdown四种。其中，periodic表示周期性地触发时钟中断，oneshot表示单触发。所谓周期性是指触发一次中断之后自动进入下一次中断计时，单触发是指触发一次中断之后停止。rating字段表示设备的等级，等级越高优先级越高。最常用的设备特性（features字段）有PERIODIC、ONESHOT和C3STOP三种，其中C3STOP表示系统处于C3状态的时候设备停止  \
+&ensp;时钟中断产生后，内核会调用event_handler字段的回调函数处理中断，该函数完成时钟中断相关的逻辑，还可以回调set_next_event设置下一次时钟中断 \
+&ensp;内核使用了几个常见的变量和宏定义
+- HZ：一秒内的滴答数
+- jiffies：累计的滴答数
+- tick_period：ktime_t类型的全局变量，周期性时钟中断的时间间隔
+- tick_cpu_device：每cpu变量，类型为tick_device，简称td
+- tick_cpu_sched：每cpu变量，类型为tick_sched，简称ts，它与系统调度和更新系统时间有关
 
 
+## 3.2 时钟芯片
+
+&ensp;x86架构上常见的设备  \
+&ensp;&emsp;RTC（Real-timeClock）：实时时钟，兼具时钟源和时钟中断两种功能  \
+&ensp;&emsp;PIT（Programmable interval timer）：可编程间隔计时器，时钟中断设备  \
+&ensp;&emsp;TSC（Time Stamp Counter）：时间戳计数器，是一个64位的寄存器,TSC记录处理器的时钟周期数，程序可以通过RDTSC指令来读取它的值 \
+&ensp;&emsp;HPET（High Precision Event Timer）：俗称高精度定时器，兼具时钟源和时钟中断两种功能  \
+&ensp;&emsp;APIC（Advanced Programmable Interrupt Controller）：高级可编程中断控制器，用作时钟中断设备  \
 
 
+## 3.3 从内核的角度看时间
+
+&ensp;内核维护了多种时间，其中最常用REALTIME、MONOTONIC和BOOTTIME三种 \
+&ensp;REALTIME时间：WALLTIME（墙上时间）系统时间  \
+&ensp;MONOTONIC时间：表示系统启动到当前所经历的非休眠时间，不计算系统休眠的时间  \
+&ensp;BOOTTIME时间：表示系统启动到现在的时间  \
+![20230616234554](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230616234554.png)
 
 
-
-
+## 3.4 周期性和单触发的时钟中断
 
 
 
