@@ -238,4 +238,58 @@ struct my_inode {
 &ensp;首先要理清模块内的数据结构，数据结构是灵魂，函数是表现
 
 
+# 第 3 章 时间的衡量和计算
+
+&ensp;&emsp;内核时间以滴答(jiffy)来计算
+
+
+## 3.1 数据结构
+
+&ensp;gettimeofday系统调用获取当前时间，结果以timeval和timezone(时区)结构体形式返回 \
+&ensp;内核先通过ktime_get_real_ts64获得timespec表示当前时间，然后转化为timeval形式，timespec64的tv_sec以秒为单位，tv_nsec以纳秒为单位
+
+```c
+void ktime_get_real_ts64(struct timespec64 *ts)
+{
+    struct timekeeper *tk = &tk_core.timekeeper;
+    u64 nsecs;
+
+    ts->tv_sec = tk->xtime_sec;
+    nsecs = timekeeping_get_ns(&tk->mono);
+    ts->tv_nesc = 0;
+    timespce64 _add_ns(ts, nsecs);
+}
+
+u64 timekeeping_get_ns(const struct tk_read_base *tkr)
+{
+    struct clocksource *clock = READ_ONCE(tkr->clock);
+    cycle_now = clock->read(clock);
+    cycle_delta = (cycle_now - tkr->cycle_last) &tkr->mask;
+    nsec = cycle_delta * tkr->mult + tkr->xtime_nsec;
+    nsec >>= tkr->shift;
+    return nsec + get_arch_timeoffset();
+}
+
+```
+
+&ensp;第一个与时间相关的结构体为timekeeper，主要功能是保持或者记录时间，从timekeeping_get_ns函数可以看到，tk的tkr_mono->clock字段指向clocksource类型的对象，表示当前使用的时钟源  \
+&ensp;时钟源以clocksource结构体(简称cs)表示
+
+![20230616233307](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230616233307.png)
+
+![20230616233327](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230616233327.png)
+
+&ensp;rating字段代表cs的等级，内核只会选择一个时钟源作为watchdog(即看门狗)，也只会选择一个时钟源作为系统的时钟源(与全局变量tk_core.timekeeper对应)，同等条件下，等级更高的时钟源拥有更高的优先级
+
+
+
+
+
+
+
+
+
+
+
+
 
