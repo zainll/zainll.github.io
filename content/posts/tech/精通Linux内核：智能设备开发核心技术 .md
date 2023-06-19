@@ -316,6 +316,45 @@ u64 timekeeping_get_ns(const struct tk_read_base *tkr)
 
 ## 3.4 周期性和单触发的时钟中断
 
+&ensp;包含多种时钟中断设备，它们可以支持周期性和单触发的时钟中断，下文以PIT和APICTimer的组合  \
+&ensp;APIC Timer进入工作（setup_APIC_timer）之后，由于它的rating比PIT高，td的evtdev字段被替换成APIC的evt，此时可以尝试切换至nohz模式 \
+&ensp;nohz模式（也可称为tickless模式、oneshot模式、动态时钟模式）  \
+&ensp;nohz模式又分为两种模式：高精度模式和低精度模式 \
+
+
+## 3.5 时间相关的系统调用
+### 3.5.1 获取时间
+
+&ensp;gettimeofday和settimeofday系统调用外，内核可能还会实现time和stime系统调用，后面二者都是以秒为单位的，兼容POSIX标准的系统调用clock_gettime和clock_settime
+
+
+### 3.5.2 给程序定个闹钟
+
+&ensp;setitimer，alarm多数情况下会通过调用setitimer实现，后者是一个系统调用，通过它可以设置一个定时器。getitimer与之对应，用来获得定时器的当前时间。setitimer的精度为微秒
+
+## 3.6 实例分析
+
+### 3.6.1 实现智能手机的长按
+
+
+&ensp;滑动和长按的区别在于手指移动的距离
+
+
+### 3.6.2 系统的时间并不如你所
+
+
+
+
+# 第 4 章 中断和中断处理
+
+&ensp;广义的中断包括中断（interrupt）和异常（exception）两种类型。处理器在执行完一条指令之后，会检查当前的状态，如果发现有事件到来，在执行下一条语句之前，处理事件，然后返回继续执行下一条指令，这就是中断。中断是被动的，陷阱是处理器主动触发的
+![20230620001402](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230620001402.png)
+
+## 4.1 处理器识别中断
+
+
+
+
 
 
 
