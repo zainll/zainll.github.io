@@ -92,5 +92,13 @@ https://6xyun.cn/article/169
 [App逆向 | 安卓环境搭建-LineageOS刷机指南](https://zhuanlan.zhihu.com/p/147299441?utm_id=0)
 
 
+# Android APK
+
+https://apkcombo.com/zh/youtube/com.google.android.youtube/
 
 
+
+https://www.gdaily.org/14895/youtube-vanced
+
+
+https://www.gdaily.org/30590/youtube-revanced-apk
