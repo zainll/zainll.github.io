@@ -102,3 +102,6 @@ https://www.gdaily.org/14895/youtube-vanced
 
 
 https://www.gdaily.org/30590/youtube-revanced-apk
+
+
+https://developer.android.com/ndk/guides/application_mk?hl=zh-cn
