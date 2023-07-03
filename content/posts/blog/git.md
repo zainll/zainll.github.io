@@ -112,6 +112,8 @@ git config --global core.editor "vim"
 
 [git使用小技巧 url.](https://blog.csdn.net/weixin_42309693/article/details/121718073)
 
+[gitee突然无法访问](https://www.cnblogs.com/jerrybky/p/17188466.html)
+
 ## 自动上传脚本
 ```sh
 #!/usr/bin/env bash
