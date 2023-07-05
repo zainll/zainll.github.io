@@ -114,8 +114,8 @@ var _hmt = _hmt || [];
   "keywords": [
     ""
   ],
-  "articleBody": "1. 系统安装 1.1 下载树莓派镜像工具 Raspberry Pi Imager 支持Windows与Linux系统\n官网下载地址：https://www.raspberrypi.com/software/ 1.2 下载系统镜像 树莓派的Ubuntu系统下载地址：https://cn.ubuntu.com/download/raspberry-pi 树莓派的Ubuntu系统 清华下载地址：https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cdimage/ubuntu/releases/ 树莓派系统 Raspberry Pi OS ： https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-32-bit 2 烧录系统 SD卡 读卡器 2.1 Raspberry Pi Imager软件 1）选择镜像 2）选择SD卡 3）设置里开启ssh及wireless 4）WRITE写入镜像 3.登录系统 # Ubuntu 查询树莓派IP sudo arp-scan -I wlp2s0 --localnet # 连接ssh 1 ssh pi@192.168.18.160 无显示器配置树莓派\n树莓派安装Ubuntu系统\n如何在树莓派上安装 Ubuntu 服务器\n树莓派无屏幕的情况下初始化WIFI设置和开启SSH\nhttps://cloud.tencent.com/developer/article/1863949\n系统信息 AIDA64 https://www.aida64.com/\n1 安装系统 官方镜像2022-04-04-raspios-bullseye-arm64.img.xz，xz格式文件可通过7zip直接解压。\n通过win32diskimager安装\n无显示配置 https://blog.csdn.net/weixin_39591031/article/details/122325148\n配置wifi 开启ssh\n`` sudo raspi-config\n选择Interface Options 选择SSH 开启SSH服务 Yes 连接ssh ssh pi@192.168.18.160\n同一局域网中windows软件IP Scanner 扫描IP Ubuntu - 参考链接： 树莓派官网 https://www.raspberrypi.com/software/ 树莓派无屏幕无网线远程桌面连接配置方法 https://copyfuture.com/blogs-details/202211120526368123 VNC https://www.realvnc.com/en/connect/download/viewer/ ubuntu下类似IP Scan扫描同一局域网的IP https://code84.com/741895.html ```sh 10.42.0.52 192.168.18.128 openwrt https://openwrt.org/toh/raspberry_pi_foundation/raspberry_pi\nhttps://zhuanlan.zhihu.com/p/626146019\n",
-  "wordCount" : "632",
+  "articleBody": "1. 系统安装 1.1 下载树莓派镜像工具 Raspberry Pi Imager 支持Windows与Linux系统\n官网下载地址：https://www.raspberrypi.com/software/ 1.2 下载系统镜像 树莓派的Ubuntu系统下载地址：https://cn.ubuntu.com/download/raspberry-pi 树莓派的Ubuntu系统 清华下载地址：https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cdimage/ubuntu/releases/ 树莓派系统 Raspberry Pi OS ： https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-32-bit 2 烧录系统 SD卡 读卡器 2.1 Raspberry Pi Imager软件 1）选择镜像 2）选择SD卡 3）设置里开启ssh及wireless 4）WRITE写入镜像 3.登录系统 # Ubuntu 查询树莓派IP sudo arp-scan -I wlp2s0 --localnet # 连接ssh 1 ssh pi@192.168.18.160 无显示器配置树莓派\n树莓派安装Ubuntu系统\n如何在树莓派上安装 Ubuntu 服务器\n树莓派无屏幕的情况下初始化WIFI设置和开启SSH\nhttps://cloud.tencent.com/developer/article/1863949\n系统信息 AIDA64 https://www.aida64.com/\n1 安装系统 官方镜像2022-04-04-raspios-bullseye-arm64.img.xz，xz格式文件可通过7zip直接解压。\n通过win32diskimager安装\n无显示配置 https://blog.csdn.net/weixin_39591031/article/details/122325148\n配置wifi 开启ssh\n`` sudo raspi-config\n选择Interface Options 选择SSH 开启SSH服务 Yes 连接ssh ssh pi@192.168.18.160\n同一局域网中windows软件IP Scanner 扫描IP Ubuntu - 参考链接： 树莓派官网 https://www.raspberrypi.com/software/ 树莓派无屏幕无网线远程桌面连接配置方法 https://copyfuture.com/blogs-details/202211120526368123 VNC https://www.realvnc.com/en/connect/download/viewer/ ubuntu下类似IP Scan扫描同一局域网的IP https://code84.com/741895.html ```sh ssh pi@10.42.0.52 10.42.0.52 192.168.18.128 openwrt https://openwrt.org/toh/raspberry_pi_foundation/raspberry_pi\nhttps://zhuanlan.zhihu.com/p/626146019\n",
+  "wordCount" : "634",
   "inLanguage": "en",
   "datePublished": "2022-10-15T00:17:58+08:00",
   "dateModified": "2022-10-15T00:17:58+08:00",
@@ -232,7 +232,7 @@ var _hmt = _hmt || [];
             <h1 class="post-title">
                 树莓派
             </h1>
-            <div class="post-meta">Create:&nbsp;<span title='2022-10-15 00:17:58 +0800 CST'>2022-10-15</span>&nbsp;|&nbsp;Update:&nbsp;2022-10-15&nbsp;|&nbsp;Words:&nbsp;632&nbsp;|&nbsp;&nbsp;2 min&nbsp;|&nbsp;
+            <div class="post-meta">Create:&nbsp;<span title='2022-10-15 00:17:58 +0800 CST'>2022-10-15</span>&nbsp;|&nbsp;Update:&nbsp;2022-10-15&nbsp;|&nbsp;Words:&nbsp;634&nbsp;|&nbsp;&nbsp;2 min&nbsp;|&nbsp;
 &nbsp;Zain
 
 
@@ -448,6 +448,7 @@ sudo raspi-config</p>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>```sh
 </span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ssh pi@10.42.0.52
 </span></span><span style="display:flex;"><span>10.42.0.52
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>192.168.18.128
