@@ -347,13 +347,68 @@ u64 timekeeping_get_ns(const struct tk_read_base *tkr)
 
 # 第 4 章 中断和中断处理
 
-&ensp;广义的中断包括中断（interrupt）和异常（exception）两种类型。处理器在执行完一条指令之后，会检查当前的状态，如果发现有事件到来，在执行下一条语句之前，处理事件，然后返回继续执行下一条指令，这就是中断。中断是被动的，陷阱是处理器主动触发的
+&ensp;广义的中断包括中断（interrupt）和异常（exception）两种类型。处理器在执行完一条指令之后，会检查当前的状态，如果发现有事件到来，在执行下一条语句之前，处理事件，然后返回继续执行下一条指令，这就是中断。中断是被动的，陷阱是处理器主动触发的。程序调用系统调用，处理器执行int 0x80，触发系统调用程序，这是主动的
 ![20230620001402](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230620001402.png)
 
 ## 4.1 处理器识别中断
 
+&ensp;x86处理器的INTR和NMI接受外部中断请求信号，INTR接受可屏蔽中断请求，NMI接受不可屏蔽中断请求。标志寄存器EFLAGS中的IF标志决定是否屏蔽可屏蔽中断请求
+
+&ensp;中断控制器与处理器相连，传统的中断控制器为PIC(可编程中断控制器，如8259A)。在SMP架构中，每一个处理器都包含一个IOAPIC（高级可编程中断控制器）
+
+&ensp;两个与IF标志相关的函数，local_irq_enable和local_irq_disable，它们通过设置或清楚本地处理器的EFLAGS的IF标志来控制是否使能本地中断
 
 
+## 4.2 处理中断
+
+&ensp;处理器识别到特定的中断后，跳到指定的中断处理程序处执行
+
+### 4.2.1 中断处理程序
+
+&ensp;中断描述符表（Interrupt Descriptor Table，IDT）。IDT包含了256个中断描述符，实际是内存中的一个数组，由idt_table变量表示  \
+&ensp;中断描述符由gate_desc结构体表示，有GATE_INTERRUPT、GATE_TRAP、GATE_CALL和GATE_TASK几种类型，idt_table就是gate_desc类型的数组。系统启动过程中，会为idt_table的元素赋值，然后将它的地址写入寄存器。中断发生时，CPU根据该地址和中断号，计算得到对应的中断处理程序地址并执行 \
+&ensp;内核预定义了多数专用的中断描述符，多由idt_data数组的形式给出，比如early_idts、def_idts和apic_idts等，系统初始化过程中会调用idt_setup_from_table将这些数组的元素信息转换为idt_table对应的元素信息 \
+&ensp;内核在中断初始化的过程中可以为0x20-0xeb号中断指定具体的中断处理程序，此时由system_vectors位图表示一个中断是否已指定 \
+&ensp;中断处理必须完成三个任务：保存现场以便处理完毕后返回、调用已注册的中断服务例程（isr）处理中断事件以及返回中断前工作继续执行 \
+&ensp;中断处理程序包括中断处理的整个过程，中断服务例程是该过程中对产生中断的设备的处理逻辑  \
+
+### 4.2.2 中断服务例程
+
+&ensp;中断服务例程涉及两个关键的结构体，即irq_desc和irqaction，二者是一对多的关系。Irq_desc与irq号对应，irqaction与一个设备对应，共享同一个irq号的多个设备的irqaction对应同一个irq_desc
+
+![20230707234106](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230707234106.png)
+
+&ensp;irqaction主要字段
+![20230707234224](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230707234224.png)
+
+&ensp;译内核的时候config配置，irq_desc对象在内存中有数组与radix_tree两种组织方式，通过irq_to_desc可以由irq获得对应的irq_desc
+
+![20230707234335](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230707234335.png)
+
+&ensp;irq只有一个设备，且相关的参数都已设置完毕，irq_desc并不一定需要irqaction。实际上，irq_desc的handle_irq是一定会执行的，irqaction的函数一般由handle_irq调用，它们执行与否完全取决于handle_irq的策略
+
+&ensp;使用中断模式的设备，在使能中断之前必须设置触发方式（电平/边沿触发等）、irq号、处理函数等信息。内核提供了request_irq和request_threaded_irq两个函数可以方便地配置这些信息，前者用于调用，而后者用于实现
+
+![20230707234450](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230707234450.png)
+
+&ensp;第二个参数handler表示对中断的第一步处理，thread_fn表示在独立线程中执行的处理函数，request_irq将thread_fn置位NULL，调用request_threaded_irq表示不在独立线程中进行中断处理，flags表示中断触发方式、中断共享等的标志，dev是设备绑定的数据，用作调用handler和thread_fn时传递的参数
+
+&ensp;request_threaded_irq函数主要下工作 \
+&ensp;&ensp;(1) 根据传递的参数对irqaction对象的字段赋值 \
+&ensp;&ensp;(2) 将新的irqaction链接至irq对应的irq_desc \
+&ensp;&ensp;(3) 如果thread_fn不等于NULL，则调用setup_irq_thread新建一个线程来处理中断
+
+&ensp;中断处理函数handler和thread_fn的编写要遵守以下几个重要原则
+&ensp;&ensp;中断处理.打断了当前进程的执行，同时需要进行一系列复杂的处理，所以要快速返回，不能在handler中做复杂的操作，中断处理的上半段（Top Half）。一种是在函数中启动工作队列或者软中断（如tasklet）等，由工作队列等来完成时间工作；第二种做法是在thread_fn中执行，这就是所谓的中断处理的下半段（Bottom Half）作。\
+&ensp;handler中不能进行任何sleep的动作，调用sleep，使用信号量、互斥锁等可能导致sleep的机制都不可行  
+
+&ensp;request_irq通过将request_threaded_irq的thread_fn参数置为NULL来实现，request_irq的handler直接在当前中断上下文中执行，request_threaded_irq的thread_fn在独立的线程中执行  \
+&ensp;request_threaded_irq创建新线程时，会调用sched_setscheduler_nocheck(t, SCHED_FIFO,…)将线程设置为实时的
+
+
+
+
+### 4.2.3 中断处理
 
 
 
