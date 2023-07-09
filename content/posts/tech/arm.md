@@ -24,8 +24,6 @@ https://developer.arm.com/documentation/swog011050/c/?_ga=2.110866307.700198089.
 
 
 
-WikeChip
-https://en.wikichip.org/wiki/WikiChip
 
 androidauthority Cortex-X4
 https://www.androidauthority.com/arm-cortex-x4-explained-3328008/
@@ -51,6 +49,10 @@ https://www.androidauthority.com/arm-cortex-x4-explained-3328008/
 
 
 
+# 网站
 
+[WikiChip Fuse](https://fuse.wikichip.org/)
+[WikeChip](https://en.wikichip.org/wiki/WikiChip)
+[anandtech](https://www.anandtech.com/)
 
 
