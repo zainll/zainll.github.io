@@ -73,8 +73,6 @@ speedscope
 
 &ensp;第三方开源Android
 
-[LineageOS Download](https://download.lineageos.org/)
-
 https://6xyun.cn/article/169
 
 [树梅派烧录Lineage OS](https://blog.csdn.net/xsh_fu/article/details/125862825)
@@ -105,3 +103,37 @@ https://www.gdaily.org/30590/youtube-revanced-apk
 
 
 https://developer.android.com/ndk/guides/application_mk?hl=zh-cn
+
+
+
+
+# lineageos 代码下载
+
+需要访问google
+```sh
+curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+chmod a+x ~/bin/repo 
+
+
+
+sudo git config --global user.email "xxx@xxx.com"
+sudo git config --global user.name "xxx"
+
+
+sudo ~/bin/repo init -u https://github.com/LineageOS/android.git -b lineage-19.1
+
+sudo ~/bin/repo sync -j12
+```
+
+
+
+
+
+
+https://zhuanlan.zhihu.com/p/570745179?utm_id=0
+
+
+
+[LineageOS Download](https://download.lineageos.org/)
+
+

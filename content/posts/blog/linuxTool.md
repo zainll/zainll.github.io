@@ -154,4 +154,7 @@ https://to.runba.cyou/link/HR6FLUV7z8k7lNyx?clash=1
 https://github.com/esrrhs/pingtunnel/tree/delete
 
 
+```sh
+qwer1234@163.com,qwerasdf@163.com,qwera@163.com,qweras@163.com,qwerasd@163.com,qwerz@163.com,qwers@163.com,qwerd@163.com,qwerf@163.com,qwerx@163.com,qwerc@163.com,qwerv@163.com
 
+```
