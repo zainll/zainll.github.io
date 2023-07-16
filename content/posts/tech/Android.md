@@ -135,5 +135,10 @@ https://zhuanlan.zhihu.com/p/570745179?utm_id=0
 
 
 [LineageOS Download](https://download.lineageos.org/)
+https://mirrors.tuna.tsinghua.edu.cn/help/git-repo/
+https://mirrors.tuna.tsinghua.edu.cn/help/lineageOS/
+
+
+
 
 
