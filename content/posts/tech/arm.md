@@ -89,9 +89,13 @@ https://www.androidauthority.com/arm-cortex-x4-explained-3328008/
 
 [anandtech](https://www.anandtech.com/)
 
+[Chips and Cheese](https://chipsandcheese.com/)
 
+https://chipsandcheese.com/2022/05/29/graviton-3-first-impressions/
 
 
 [芯片性能 & 度量](https://zhuanlan.zhihu.com/p/515915160?utm_id=0)
 [芯片性能 & 度量 -- lmbench&TopDown](https://zhuanlan.zhihu.com/p/528536050)
 
+
+[GoodCommand arm](https://goodcommand.readthedocs.io/zh_CN/latest/index.html)
