@@ -41,6 +41,8 @@ https://cs.android.com/
 
 
 
+[Android APP应用工程师转Android Framework系统工程师(仅此一篇够了)](https://blog.51cto.com/u_15455614/5997341)
+
 # ptrace
 
 
