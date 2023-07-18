@@ -130,9 +130,9 @@ sudo ~/bin/repo sync -j12
 
 
 
+[lineageOS编译aosp源码并刷入小米](https://zhuanlan.zhihu.com/p/570745179)
 
 
-https://zhuanlan.zhihu.com/p/570745179?utm_id=0
 
 
 
