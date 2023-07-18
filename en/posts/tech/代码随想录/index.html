@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>代码随想录 | zain&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="代码随想录网站 https://programmercarl.com/ https://github.com/youngyangyang04/leetcode-master 一.数组 1.数组基础 数组是存放在连续内存空间上的相同类型数据的集合 数组下标都是从0开始的。 数组内存空间的地址是连续的 数组的">
+<meta name="author" content="
+&nbsp;Zain">
+<link rel="canonical" href="https://liuz0123.gitee.io/zain/en/posts/tech/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/">
+<link crossorigin="anonymous" href="/zain/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/zain/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="icon" type="image/png" sizes="16x16" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="icon" type="image/png" sizes="32x32" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="apple-touch-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="mask-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="代码随想录" />
+<meta property="og:description" content="代码随想录网站 https://programmercarl.com/ https://github.com/youngyangyang04/leetcode-master 一.数组 1.数组基础 数组是存放在连续内存空间上的相同类型数据的集合 数组下标都是从0开始的。 数组内存空间的地址是连续的 数组的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liuz0123.gitee.io/zain/en/posts/tech/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-01-05T00:17:58&#43;08:00" />
+<meta property="article:modified_time" content="2023-01-05T00:17:58&#43;08:00" /><meta property="og:site_name" content="(〃&#39;▽&#39;〃)" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="代码随想录"/>
+<meta name="twitter:description" content="代码随想录网站 https://programmercarl.com/ https://github.com/youngyangyang04/leetcode-master 一.数组 1.数组基础 数组是存放在连续内存空间上的相同类型数据的集合 数组下标都是从0开始的。 数组内存空间的地址是连续的 数组的"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "👨🏻‍💻 技术",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/tech/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "代码随想录",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/tech/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "代码随想录",
+  "name": "代码随想录",
+  "description": "代码随想录网站 https://programmercarl.com/ https://github.com/youngyangyang04/leetcode-master 一.数组 1.数组基础 数组是存放在连续内存空间上的相同类型数据的集合 数组下标都是从0开始的。 数组内存空间的地址是连续的 数组的",
+  "keywords": [
+    ""
+  ],
+  "articleBody": " 代码随想录网站 https://programmercarl.com/ https://github.com/youngyangyang04/leetcode-master 一.数组 1.数组基础 数组是存放在连续内存空间上的相同类型数据的集合\n数组下标都是从0开始的。 数组内存空间的地址是连续的 数组的在内存空间的地址是连续的，在删除或者增添元素的时候，就要移动其他元素的地址 2.704.二分查找 给定一个 n 个元素有序的（升序）整型数组 nums 和一个目标值 target ，写一个函数搜索 nums 中的 target，如果目标值存在返回下标，否则返回 -1 \\\n思路 有序数组，数组中无重复元素 -\u003e 使用二分法的前提条件 二分查找区间的定义就是不变量，在while寻找中每一次边界的处理都要坚持根据区间的定义来操作，这就是循环不变量规则 区间的定义一般为两种，左闭右闭即[left, right]，或者左闭右开即[left, right)\n左闭右闭\nwhile (left \u003c= right) 要使用 \u003c= ，left == right有意义，使用 \u003c= if（nums[middle] \u003e target）right赋值 middle-1，当前nums[target]不是target，查找区间结束下标位置是middle-1 // 版本一 class Solution { public: int search(vector\u003cint\u003e\u0026 nums, int target) { int left = 0; int right = nums.size() - 1; // 定义target在左闭右闭的区间里，[left, right] while (left \u003c= right) { // 当left==right，区间[left, right]依然有效，所以用 \u003c= int middle = left + ((right - left) / 2);// 防止溢出 等同于(left + right)/2 if (nums[middle] \u003e target) { right = middle - 1; // target 在左区间，所以[left, middle - 1] } else if (nums[middle] \u003c target) { left = middle + 1; // target 在右区间，所以[middle + 1, right] } else { // nums[middle] == target return middle; // 数组中找到目标值，直接返回下标 } } // 未找到目标值 return -1; } }; 左闭右开\nwhile（left \u003c right）使用 \u003c，left == right 在区间[left, right]没有意义 if（nums[middle] \u003e target）right更新为 middle，即下一个查询区间不会比较nums[middle] // 版本二 class Solution { public: int search(vector\u003cint\u003e\u0026 nums, int target) { int left = 0; int right = nums.size(); // 定义target在左闭右开的区间里，即：[left, right) while (left \u003c right) { // 因为left == right的时候，在[left, right)是无效的空间，所以使用 \u003c int middle = left + ((right - left) \u003e\u003e 1); if (nums[middle] \u003e target) { right = middle; // target 在左区间，在[left, middle)中 } else if (nums[middle] \u003c target) { left = middle + 1; // target 在右区间，在[middle + 1, right)中 } else { // nums[middle] == target return middle; // 数组中找到目标值，直接返回下标 } } // 未找到目标值 return -1; } }; 总结 区间定义理解，在循环中检查根据查找区间的定义来做边界处理 区间定义是不变量，在循环中坚持根据查找区间的定义来做边界处理，即循环不变规则 \\\n相关题目 35.搜索插入位置 34.在排序数组中查找元素的第一个和最后一个位置 69.x 的平方根 367.有效的完全平方数 c:\n// 左闭右闭[left, right] int search(int *nums, int numsSize, int target) { int left = 0; int right = numsSize - 1; int middle = 0; // left 小于 target，说明区间中元素不为0 while(left \u003c= right) { // 更新查找小毕middle值 middle = (left + right) / 2; // taget 可能在 [left, middle - 1]区间 if (nums[middle] \u003e target) { right = middle - 1; } else if (nums[middle] \u003c target) ( // target肯在[middle + 1, right]区间 left = middle + 1; ) else if (nums[middle] == target) { return middle; } } // 未找到taget元素 返回-1 return -1; } 左闭右开区间 [left, right) int search(int* nums, int numsSize, int target){ int length = numsSize; int left = 0; int right = length;\t//定义target在左闭右开的区间里，即：[left, right) int middle = 0; while(left \u003c right){ // left == right时，区间[left, right)属于空集，所以用 \u003c 避免该情况 int middle = left + (right - left) / 2; if(nums[middle] \u003c target){ //target位于(middle , right) 中为保证集合区间的左闭右开性，可等价为[middle + 1,right) left = middle + 1; }else if(nums[middle] \u003e target){ //target位于[left, middle)中 right = middle ; }else{\t// nums[middle] == target ，找到目标值target return middle; } } //未找到目标值，返回-1 return -1; } 3.27.移除元素 给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度 \\\n思路 数组的元素在内存地址中是连续的，不能单独删除数组中的某个元素，只能覆盖 \\\n暴力解法 两层for循环，一个for循环遍历数组元素，第二个for循环更新数组\nint removeElement(int* nums, int numsSize, int val){ int i = 0, j = 0; for (; i \u003c numsSize; i++) { if (nums[i] == val) { // 发现需要移除的元素，就将数组集体向前移动一位 for (j = i + 1; j \u003c numsSize; j++) { nums[j-1] = nums[j]; } i--; // 因为下标i以后的数值都向前移动了一位，所以i也向前移动一位 numsSize--; // 此时数组的大小-1 } } return numsSize; } 双指针 双指针(快慢指针)：一个块指针和慢指针在一个for循环下完成两个for循环工作 定义快慢指针\n快指针：寻找新数组的元素，新数组是不含有目标元素的数组 慢指针：指向更新 新数组 下标的位置 考察数组、链表、字符串等操作的面试题，都使用双指针法 \\\nint removeElement(int* nums, int numsSize, int val){ int fast = 0, slow = 0; for (fast = 0; fast \u003c numsSize; fast++) { if (nums[fast] != val) { nums[slow] = nums[fast]; slow++; } } return slow; } 相关题目 26.删除排序数组中的重复项 283.移动零 844.比较含退格的字符串 977.有序数组的平方 4.977.有序数组的平方 一个按 非递减顺序 排序的整数数组 nums，返回 每个数字的平方 组成的新数组，要求也按 非递减顺序 排序 \\\n思路 暴力排序 先求平方，再排序\n// 暴力排序的解法O(n + nlog n) int cmp(void* a, void* b) { return *(int *)a - *(int *)b; } int* sortedSquares(int* nums, int numsSize, int* returnSize){ *returnSize = numsSize; for (int i = 0; i \u003c numsSize; i++) { nums[i] = nums[i] * nums[i]; } qsort(nums, numsSize, sizeof(int), cmp); return nums; } 双指针法 组平方的最大值就在数组的两端，不是最左边就是最右边，不可能是中间 双指针法，i指向起始位置，j指向终止位置 如果A[i] * A[i] \u003c A[j] * A[j] 那么result[k–] = A[j] * A[j]; 如果A[i] * A[i] \u003e= A[j] * A[j] 那么result[k–] = A[i] * A[i]; \\\n// 时间复杂度为O(n) int* sortedSquares(int* nums, int numsSize, int* returnSize){ int k = numsSize - 1; int* res = (int *)malloc(sizeof(int) * numsSize); int i = 0; int j = numsSize - 1; while (i \u003c= j) { if (nums[i] * nums[i] \u003c nums[j] * nums[j]) { res[k--] = nums[j] * nums[j]; j--; } else { res[k--] = nums[i] * nums[i]; i++; } } *returnSize = numsSize; return res; } 5.209.长度最小的子数组 给定一个含有 n 个正整数的数组和一个正整数 s ，找出该数组中满足其和 ≥ s 的长度最小的 连续 子数组，并返回其长度。如果不存在符合条件的子数组，返回 0\n思路 暴力解法 两个for循环，不断的寻找符合条件的子序列，时间复杂度是O(n^2)，空间复杂度O(1)\n// 超时 int minSubArrayLen(int target, int* nums, int numsSize){ int res = INT_MAX; int sum = 0; int subLen = 0; for (int i = 0; i \u003c numsSize; i++) { sum = 0; for (int j = i; j \u003c numsSize; j++) { sum += nums[j]; if (sum \u003e= target) { subLen = j - i + 1; res = res \u003c subLen ? res : subLen; break; } } } return res == INT_MAX ? 0 : res; } class Solution { public: int minSubArrayLen(int s, vector\u003cint\u003e\u0026 nums) { int result = INT32_MAX; // 最终的结果 int sum = 0; // 子序列的数值之和 int subLength = 0; // 子序列的长度 for (int i = 0; i \u003c nums.size(); i++) { // 设置子序列起点为i sum = 0; for (int j = i; j \u003c nums.size(); j++) { // 设置子序列终止位置为j sum += nums[j]; if (sum \u003e= s) { // 一旦发现子序列和超过了s，更新result subLength = j - i + 1; // 取子序列的长度 result = result \u003c subLength ? result : subLength; break; // 因为我们是找符合条件最短的子序列，所以一旦符合条件就break } } } // 如果result没有被赋值的话，就返回0，说明没有符合条件的子序列 return result == INT32_MAX ? 0 : result; } }; 滑动窗口 断的调节子序列的起始位置和终止位置，从而得出我们要想的结果 用一个for循环，那么这个循环的索引，一定是表示 滑动窗口的终止位置 时间复杂度:O(n) 空间复杂度：O(1)\nint minSubArrayLen(int target, int* nums, int numsSize){ int res = INT_MAX; int sum = 0; int i = 0; int subLen = 0; for (int j = 0; j \u003c numsSize; j++){ sum += nums[j]; while (sum \u003e= target) { subLen = (j - i + 1); res = res \u003c subLen ? res : subLen; sum -= nums[i++]; } } return res == INT_MAX ? 0 : res; } class Solution { public: int minSubArrayLen(int s, vector\u003cint\u003e\u0026 nums) { int result = INT32_MAX; int sum = 0; // 滑动窗口数值之和 int i = 0; // 滑动窗口起始位置 int subLength = 0; // 滑动窗口的长度 for (int j = 0; j \u003c nums.size(); j++) { sum += nums[j]; // 注意这里使用while，每次更新 i（起始位置），并不断比较子序列是否符合条件 while (sum \u003e= s) { subLength = (j - i + 1); // 取子序列的长度 result = result \u003c subLength ? result : subLength; sum -= nums[i++]; // 这里体现出滑动窗口的精髓之处，不断变更i（子序列的起始位置） } } // 如果result没有被赋值的话，就返回0，说明没有符合条件的子序列 return result == INT32_MAX ? 0 : result; } }; 6.59.螺旋矩阵II 给定一个正整数n，生成一个包含1到n^2所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵 \\\n思路 坚持循环不变量原则 模拟顺时针画矩阵过程 \\\n填充上行从左到右 填充右列从上到下 填充下行从右到左 填充左列从下到上 int** generateMatrix(int n, int* returnSize, int** returnColumnSizes){ //初始化返回的结果数组的大小 *returnSize = n; *returnColumnSizes = (int*)malloc(sizeof(int) * n); //初始化返回结果数组ans int** ans = (int**)malloc(sizeof(int*) * n); int i; for(i = 0; i \u003c n; i++) { ans[i] = (int*)malloc(sizeof(int) * n); (*returnColumnSizes)[i] = n; } //设置每次循环的起始位置 int startX = 0; int startY = 0; //设置二维数组的中间值，若n为奇数。需要最后在中间填入数字 int mid = n / 2; //循环圈数 int loop = n / 2; //偏移数 int offset = 1; //当前要添加的元素 int count = 1; while(loop) { int i = startX; int j = startY; //模拟上侧从左到右 for(; j \u003c startY + n - offset; j++) { ans[startX][j] = count++; } //模拟右侧从上到下 for(; i \u003c startX + n - offset; i++) { ans[i][j] = count++; } //模拟下侧从右到左 for(; j \u003e startY; j--) { ans[i][j] = count++; } //模拟左侧从下到上 for(; i \u003e startX; i--) { ans[i][j] = count++; } //偏移值每次加2 offset+=2; //遍历起始位置每次+1 startX++; startY++; loop--; } //若n为奇数需要单独给矩阵中间赋值 if(n%2) ans[mid][mid] = count; return ans; } 类似题目 54.螺旋矩阵 剑指Offer 29.顺时针打印矩阵 7.总结 数组是存放在连续内存空间上的相同类型数据的集合 数组的在内存空间的地址是连续的，在删除或者增添元素的时，要移动其他元素的地址 数组的元素是不能删的，只能覆盖 \\\n二分法 循环不变量原则，只有在循环中坚持对区间的定义 \\\n双指针法 双指针法（快慢指针法）：通过一个快指针和慢指针在一个for循环下完成两个for循环的工作 数组和链表的操作中常见 \\\n滑动窗口 滑动窗口如何移动 窗口起始位置，达到动态更新窗口大小的，从而得出长度最小的符合条件的长度 滑动窗口根据当前子序列和大小的情况，不断调节子序列的起始位置。从而将O(n^2)的暴力解法降为O(n) \\\n模拟行为 循环不变量原则 边界调节超多，一波接着一波的判断，找边界 \\\n二、链表 1.链表理论基础 链表通过指针串联在一起的线性结构，每个节点由两部分组成，一个数据域一个指针域(存放指向下一个节点指针)，最后一个节点指针域指向null(空指针) 链表入口节点称为链表的头结点head \\\n链表类型 单链表 单链表中的指针域只能指向节点的下一个节点\n双链表 双链表：每一个节点有两个指针域，一个指向下一个节点，一个指向上一个节点 \\\n循环链表 循环链表，链表首尾相连 数组是在内存中是连续分布的，但是链表在内存中可不是连续分布的 \\\n// 单链表 struct ListNode { int val; // 节点上存储的元素 ListNode *next; // 指向下一个节点的指针 ListNode(int x) : val(x), next(NULL) {} // 节点的构造函数 }; 链表操作 删除节点 添加节点 \\\n2.203.移除链表元素 删除链表中等于给定值val的所有节点\n思路 链表操作的两种方式 直接使用原理链表进程删除操作 ： 头结点移除，将头结点向后移动一位，移除头结点 和 移除其他节点的操作方式是不一样 设置一个虚拟头节点进行删除操作： 设置一个虚拟头结点，原链表的所有节点都按照统一的方式进行移除 \\\nstruct ListNode* removeElements(struct ListNode* head, int val){ while (head \u0026\u0026 head-\u003eval == val) { head = head-\u003enext; } struct ListNode* cur = head; struct ListNode* temp = head; while (cur \u0026\u0026 (temp = cur-\u003enext)) { if (temp-\u003eval == val) { cur-\u003enext = temp-\u003enext; } else { cur = cur-\u003enext; } } return head; } struct ListNode* removeElements(struct ListNode* head, int val){ typedef struct ListNode ListNode; ListNode *shead; shead = (ListNode *)malloc(sizeof(ListNode)); shead-\u003enext = head; ListNode *cur = shead; while(cur-\u003enext != NULL){ if (cur-\u003enext-\u003eval == val){ ListNode *tmp = cur-\u003enext; cur-\u003enext = cur-\u003enext-\u003enext; free(tmp); } else { cur = cur-\u003enext; } } head = shead-\u003enext; free(shead); return head; } 3.707.设计链表 链表实现功能\nget(index)：获取链表中爹index个节点值，如索引无效，返回-1 addAtHead(val)：在链表第一个元素之前添加一个值为val节点，插入后，新节点为链表的第一个节点 addAtTail(val)：将值val的节点追加到链表的最后一个元素 addAtIndex(index, val)：在链表中第index个节点之前添加值为val节点，如index等于链表的长度，则添加到链表尾部，如index大于链表长度，则不插入节点，如index小于0，则在头部插入节点 deleteAtIndex(index)：如索引index有效，则删除链表中第index个节点 思路 设计链表的五个接口：\n获取链表第index个节点的数值 在链表的最前面插入一个节点 在链表的最后面插入一个节点 在链表第index个节点前面插入一个节点 删除链表的第index个节点 链表操作两种方式：\n1.直接使用原理链表进行操作 2.设置一个虚拟头节点进行操作 typedef struct MyLinkedList { int val; struct MyLinkedList* next; }MyLinkedList; /** Initialize your data structure here. */ MyLinkedList* myLinkedListCreate() { //这个题必须用虚拟头指针,参数都是一级指针,头节点确定后没法改指向了!!! MyLinkedList* head = (MyLinkedList *)malloc(sizeof (MyLinkedList)); head-\u003enext = NULL; return head; } /** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */ int myLinkedListGet(MyLinkedList* obj, int index) { MyLinkedList *cur = obj-\u003enext; for (int i = 0; cur != NULL; i++){ if (i == index){ return cur-\u003eval; } else{ cur = cur-\u003enext; } } return -1; } /** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */ void myLinkedListAddAtHead(MyLinkedList* obj, int val) { MyLinkedList *nhead = (MyLinkedList *)malloc(sizeof (MyLinkedList)); nhead-\u003eval = val; nhead-\u003enext = obj-\u003enext; obj-\u003enext = nhead; } /** Append a node of value val to the last element of the linked list. */ void myLinkedListAddAtTail(MyLinkedList* obj, int val) { MyLinkedList *cur = obj; while(cur-\u003enext != NULL){ cur = cur-\u003enext; } MyLinkedList *ntail = (MyLinkedList *)malloc(sizeof (MyLinkedList)); ntail-\u003eval = val; ntail-\u003enext = NULL; cur-\u003enext = ntail; } /** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */ void myLinkedListAddAtIndex(MyLinkedList* obj, int index, int val) { if (index == 0){ myLinkedListAddAtHead(obj, val); return; } MyLinkedList *cur = obj-\u003enext; for (int i = 1 ;cur != NULL; i++){ if (i == index){ MyLinkedList* newnode = (MyLinkedList *)malloc(sizeof (MyLinkedList)); newnode-\u003eval = val; newnode-\u003enext = cur-\u003enext; cur-\u003enext = newnode; return; } else{ cur = cur-\u003enext; } } } /** Delete the index-th node in the linked list, if the index is valid. */ void myLinkedListDeleteAtIndex(MyLinkedList* obj, int index) { if (index == 0){ MyLinkedList *tmp = obj-\u003enext; if (tmp != NULL){ obj-\u003enext = tmp-\u003enext; free(tmp); } return; } MyLinkedList *cur = obj-\u003enext; for (int i = 1 ;cur != NULL \u0026\u0026 cur-\u003enext != NULL; i++){ if (i == index){ MyLinkedList *tmp = cur-\u003enext; if (tmp != NULL) { cur-\u003enext = tmp-\u003enext; free(tmp); } return; } else{ cur = cur-\u003enext; } } } void myLinkedListFree(MyLinkedList* obj) { while(obj != NULL){ MyLinkedList *tmp = obj; obj = obj-\u003enext; free(tmp); } } /** * Your MyLinkedList struct will be instantiated and called as such: * MyLinkedList* obj = myLinkedListCreate(); * int param_1 = myLinkedListGet(obj, index); * myLinkedListAddAtHead(obj, val); * myLinkedListAddAtTail(obj, val); * myLinkedListAddAtIndex(obj, index, val); * myLinkedListDeleteAtIndex(obj, index); * myLinkedListFree(obj); */ 4.206.反转链表 反转一个单链表 \\\n思路 首先定义一个cur指针，指向头结点，再定义一个pre指针，初始化为null 开始反转，把cur-\u003enext节点用tmp指针保存，即保存这个节点 改变cur-\u003enext 的指向，将 cur-\u003enext 指向 pre，此时已经反转了第一个节点 循环代码逻辑，继续移动 pre 和 cur 指针 最后，cur 指针指向null，循环结束，链表反转完成，返回 pre 指针，pre指针指向新的头结点 \\\n双指针 // 双指针 struct ListNode* reverseList(struct ListNode* head){ struct ListNode* res = NULL; struct ListNode* pre; while (head) { pre = head; head = head-\u003enext; pre-\u003enext = res; res = pre; } return res; } 递归法 struct ListNode* reverse(struct ListNode* pre, struct ListNode* cur) { if(!cur) return pre; struct ListNode* temp = cur-\u003enext; cur-\u003enext = pre; //将cur作为pre传入下一层 //将temp作为cur传入下一层，改变其指针指向当前cur return reverse(cur, temp); } struct ListNode* reverseList(struct ListNode* head){ return reverse(NULL, head); } 5.24.两两交换链表中的节点 给定一个链表，两两交换其中相邻的节点，并返回交换后的链表\n思路 使用虚拟头结点，不单独处理头结点 \\\n递归 //递归版本 struct ListNode* swapPairs(struct ListNode* head){ //递归结束条件：头节点不存在或头节点的下一个节点不存在。此时不需要交换，直接返回head if(!head || !head-\u003enext) return head; //创建一个节点指针类型保存头结点下一个节点 struct ListNode *newHead = head-\u003enext; //更改头结点+2位节点后的值，并将头结点的next指针指向这个更改过的list head-\u003enext = swapPairs(newHead-\u003enext); //将新的头结点的next指针指向老的头节点 newHead-\u003enext = head; return newHead; } 迭代 /迭代版本 struct ListNode* swapPairs(struct ListNode* head){ //使用双指针避免使用中间变量 typedef struct ListNode ListNode; ListNode *fakehead = (ListNode *)malloc(sizeof(ListNode)); fakehead-\u003enext = head; ListNode* right = fakehead-\u003enext; ListNode* left = fakehead; while(left \u0026\u0026 right \u0026\u0026 right-\u003enext ){ left-\u003enext = right-\u003enext; right-\u003enext = left-\u003enext-\u003enext; left-\u003enext-\u003enext = right; left = right; right = left-\u003enext; } return fakehead-\u003enext; } 6.19.删除链表的倒数第N个节点 一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点 \\\n思路 双指针的经典应用，如果要删除倒数第n个节点，让fast移动n步，然后让fast和slow同时移动，直到fast指向链表末尾。删掉slow所指向的节点\nstruct ListNode* removeNthFromEnd(struct ListNode* head, int n){ struct ListNode* dummyHead = (struct ListNode*)malloc(sizeof(struct ListNode)); dummyHead-\u003enext = head; struct ListNode* fast = dummyHead; struct ListNode* slow = dummyHead; for (int i = 0; i \u003c n; i++) { fast = fast-\u003enext; } // fast再提前走一步，因为需要让slow指向删除节点的上一个节点 fast = fast-\u003enext; while (fast) { fast = fast-\u003enext; slow = slow-\u003enext; } slow-\u003enext = slow-\u003enext-\u003enext; return dummyHead-\u003enext; } 7.160.链表相交 两个单链表的头节点 headA 和 headB ，找出并返回两个单链表相交的起始节点 \\\n思路 交点不是数值相等，而是指针相等 求出两个链表的长度，并求出两个链表长度的差值，然后让curA移动到，和curB 末尾对齐的位置 比较curA和curB是否相同，如果不相同，同时向后移动curA和curB，如果遇到curA == curB，则找到交点 否则循环退出返回空指针 \\\n// 时间复杂度：O(n + m) 空间复杂度：O(1) struct ListNode *getIntersectionNode(struct ListNode *headA, struct ListNode *headB) { struct ListNode* curA = headA; struct ListNode* curB = headB; int lenA = 0; int lenB = 0; while (curA != NULL) { // 求链表A的长度 lenA++; curA = curA-\u003enext; } while (curB != NULL) { // 求链表B的长度 lenB++; curB = curB-\u003enext; } curA = headA; curB = headB; // 让curA为最长链表的头，lenA为其长度 if (lenB \u003e lenA) { int tmp = lenA; lenA = lenB; lenB = tmp; struct ListNode* cur_tmp = curA; curA = curB; curB = cur_tmp; } // 求长度差 int gap = lenA - lenB; // 让curA和curB在同一起点上（末尾位置对齐） while (gap--) { curA = curA-\u003enext; } // 遍历curA 和 curB，遇到相同则直接返回 while (curA != NULL) { if (curA == curB) { return curA; } curA = curA-\u003enext; curB = curB-\u003enext; } return NULL; } 8.142.环形链表II 给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null \\\n思路 考察两知识点：\n判断链表是否环 如果有环，如何找到这个环的入口 判断有环 快慢指针法，分别定义 fast 和 slow 指针，从头结点出发，fast指针每次移动两个节点，slow指针每次移动一个节点，如果 fast 和 slow指针在途中相遇 ，说明这个链表有环 \\\n有环，如何找到这个环的入口 从头结点出发一个指针，从相遇节点 也出发一个指针，这两个指针每次只走一个节点， 那么当这两个指针相遇的时候就是 环形入口的节点 \\\nstruct ListNode *detectCycle(struct ListNode *head) { struct ListNode* fast = head; struct ListNode* slow = head; while(fast != NULL \u0026\u0026 fast-\u003enext != NULL) { slow = slow-\u003enext; fast = fast-\u003enext-\u003enext; // 快慢指针相遇，此时从head 和 相遇点，同时查找直至相遇 if (slow == fast) { struct ListNode* index1 = fast; struct ListNode* index2 = head; while (index1 != index2) { index1 = index1-\u003enext; index2 = index2-\u003enext; } return index2; // 返回环的入口 } } return NULL; } 三、哈希表 1.哈希表基础 ",
+  "wordCount" : "6793",
+  "inLanguage": "en",
+  "datePublished": "2023-01-05T00:17:58+08:00",
+  "dateModified": "2023-01-05T00:17:58+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Zain"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://liuz0123.gitee.io/zain/en/posts/tech/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "zain's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://liuz0123.gitee.io/zain/img/Q.gif"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://liuz0123.gitee.io/zain/en/" accesskey="h" title="Zain&#39;s Blog (Alt + H)">
+            <img src="https://liuz0123.gitee.io/zain/img/Q.gif" alt="logo" aria-label="logo"
+                 height="35">Zain&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/en/zain/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/archives/" title="⏱ 时间轴">
+                <span>⏱ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/links" title="🤝 闲言俗语">
+                <span>🤝 闲言俗语</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://liuz0123.gitee.io/zain/en/">主页</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/en/posts/tech/">👨🏻‍💻 技术</a></div>
+            <h1 class="post-title">
+                代码随想录
+            </h1>
+            <div class="post-meta">Create:&nbsp;<span title='2023-01-05 00:17:58 +0800 CST'>2023-01-05</span>&nbsp;|&nbsp;Update:&nbsp;2023-01-05&nbsp;|&nbsp;Words:&nbsp;6793&nbsp;|&nbsp;&nbsp;14 min&nbsp;|&nbsp;
+&nbsp;Zain
+
+
+
+                &nbsp;|&nbsp;tags: &nbsp;
+                <ul class="post-tags-meta">
+                    <a href="https://liuz0123.gitee.io/zain/en/tags/leetcode/">leetcode</a>
+                </ul>
+
+                
+                <span id="busuanzi_container_page_pv">
+                &nbsp;| Viewers: <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+</div>
+        </header> 
+        <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">文章目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%b8%80%e6%95%b0%e7%bb%84" aria-label="一.数组">一.数组</a><ul>
+                        
+                <li>
+                    <a href="#1%e6%95%b0%e7%bb%84%e5%9f%ba%e7%a1%80" aria-label="1.数组基础">1.数组基础</a></li>
+                <li>
+                    <a href="#2704%e4%ba%8c%e5%88%86%e6%9f%a5%e6%89%behttpsleetcodecnproblemsbinary-search" aria-label="2.704.二分查找">2.<a href="https://leetcode.cn/problems/binary-search/">704.二分查找</a></a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%9d%e8%b7%af" aria-label="思路">思路</a></li>
+                <li>
+                    <a href="#%e6%80%bb%e7%bb%93" aria-label="总结">总结</a></li>
+                <li>
+                    <a href="#%e7%9b%b8%e5%85%b3%e9%a2%98%e7%9b%ae" aria-label="相关题目">相关题目</a></li></ul>
+                </li>
+                <li>
+                    <a href="#327%e7%a7%bb%e9%99%a4%e5%85%83%e7%b4%a0httpsleetcodecnproblemsremove-element" aria-label="3.27.移除元素">3.<a href="https://leetcode.cn/problems/remove-element/">27.移除元素</a></a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%9d%e8%b7%af-1" aria-label="思路">思路</a></li>
+                <li>
+                    <a href="#%e7%9b%b8%e5%85%b3%e9%a2%98%e7%9b%ae-1" aria-label="相关题目">相关题目</a></li></ul>
+                </li>
+                <li>
+                    <a href="#4977%e6%9c%89%e5%ba%8f%e6%95%b0%e7%bb%84%e7%9a%84%e5%b9%b3%e6%96%b9httpsleetcodecnproblemssquares-of-a-sorted-array" aria-label="4.977.有序数组的平方">4.<a href="https://leetcode.cn/problems/squares-of-a-sorted-array/">977.有序数组的平方</a></a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%9d%e8%b7%af-2" aria-label="思路">思路</a></li></ul>
+                </li>
+                <li>
+                    <a href="#5209%e9%95%bf%e5%ba%a6%e6%9c%80%e5%b0%8f%e7%9a%84%e5%ad%90%e6%95%b0%e7%bb%84httpsleetcodecnproblemsminimum-size-subarray-sum" aria-label="5.209.长度最小的子数组">5.<a href="https://leetcode.cn/problems/minimum-size-subarray-sum/">209.长度最小的子数组</a></a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%9d%e8%b7%af-3" aria-label="思路">思路</a></li>
+                <li>
+                    <a href="#%e6%9a%b4%e5%8a%9b%e8%a7%a3%e6%b3%95-br" aria-label="暴力解法 "><strong>暴力解法</strong> <br></a></li>
+                <li>
+                    <a href="#%e6%bb%91%e5%8a%a8%e7%aa%97%e5%8f%a3-br" aria-label="滑动窗口 "><strong>滑动窗口</strong> <br></a></li></ul>
+                </li>
+                <li>
+                    <a href="#659%e8%9e%ba%e6%97%8b%e7%9f%a9%e9%98%b5iihttpsleetcodecnproblemsspiral-matrix-ii" aria-label="6.59.螺旋矩阵II">6.<a href="https://leetcode.cn/problems/spiral-matrix-ii/">59.螺旋矩阵II</a></a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%9d%e8%b7%af-4" aria-label="思路">思路</a></li>
+                <li>
+                    <a href="#%e7%b1%bb%e4%bc%bc%e9%a2%98%e7%9b%ae" aria-label="类似题目">类似题目</a></li></ul>
+                </li>
+                <li>
+                    <a href="#7%e6%80%bb%e7%bb%93" aria-label="7.总结">7.总结</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%ba%8c%e9%93%be%e8%a1%a8" aria-label="二、链表">二、链表</a><ul>
+                        
+                <li>
+                    <a href="#1%e9%93%be%e8%a1%a8%e7%90%86%e8%ae%ba%e5%9f%ba%e7%a1%80" aria-label="1.链表理论基础">1.链表理论基础</a><ul>
+                        
+                <li>
+                    <a href="#%e9%93%be%e8%a1%a8%e7%b1%bb%e5%9e%8b" aria-label="链表类型">链表类型</a></li>
+                <li>
+                    <a href="#%e9%93%be%e8%a1%a8%e6%93%8d%e4%bd%9c" aria-label="链表操作">链表操作</a></li></ul>
+                </li>
+                <li>
+                    <a href="#2203%e7%a7%bb%e9%99%a4%e9%93%be%e8%a1%a8%e5%85%83%e7%b4%a0httpsleetcodecnproblemsremove-linked-list-elements" aria-label="2.203.移除链表元素">2.<a href="https://leetcode.cn/problems/remove-linked-list-elements/">203.移除链表元素</a></a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%9d%e8%b7%af-5" aria-label="思路">思路</a></li></ul>
+                </li>
+                <li>
+                    <a href="#3707%e8%ae%be%e8%ae%a1%e9%93%be%e8%a1%a8httpsleetcodecnproblemsdesign-linked-list" aria-label="3.707.设计链表">3.<a href="https://leetcode.cn/problems/design-linked-list/">707.设计链表</a></a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%9d%e8%b7%af-6" aria-label="思路">思路</a></li></ul>
+                </li>
+                <li>
+                    <a href="#4206%e5%8f%8d%e8%bd%ac%e9%93%be%e8%a1%a8httpsleetcodecnproblemsreverse-linked-list" aria-label="4.206.反转链表">4.<a href="https://leetcode.cn/problems/reverse-linked-list/">206.反转链表</a></a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%9d%e8%b7%af-7" aria-label="思路">思路</a></li>
+                <li>
+                    <a href="#%e5%8f%8c%e6%8c%87%e9%92%88" aria-label="双指针">双指针</a></li>
+                <li>
+                    <a href="#%e9%80%92%e5%bd%92%e6%b3%95" aria-label="递归法">递归法</a></li></ul>
+                </li>
+                <li>
+                    <a href="#524%e4%b8%a4%e4%b8%a4%e4%ba%a4%e6%8d%a2%e9%93%be%e8%a1%a8%e4%b8%ad%e7%9a%84%e8%8a%82%e7%82%b9httpsleetcodecnproblemsswap-nodes-in-pairs" aria-label="5.24.两两交换链表中的节点">5.<a href="https://leetcode.cn/problems/swap-nodes-in-pairs/">24.两两交换链表中的节点</a></a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%9d%e8%b7%af-8" aria-label="思路">思路</a></li>
+                <li>
+                    <a href="#%e9%80%92%e5%bd%92" aria-label="递归">递归</a></li>
+                <li>
+                    <a href="#%e8%bf%ad%e4%bb%a3" aria-label="迭代">迭代</a></li></ul>
+                </li>
+                <li>
+                    <a href="#619%e5%88%a0%e9%99%a4%e9%93%be%e8%a1%a8%e7%9a%84%e5%80%92%e6%95%b0%e7%ac%acn%e4%b8%aa%e8%8a%82%e7%82%b9httpsleetcodecnproblemsremove-nth-node-from-end-of-list" aria-label="6.19.删除链表的倒数第N个节点">6.<a href="https://leetcode.cn/problems/remove-nth-node-from-end-of-list/">19.删除链表的倒数第N个节点</a></a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%9d%e8%b7%af-9" aria-label="思路">思路</a></li></ul>
+                </li>
+                <li>
+                    <a href="#7160%e9%93%be%e8%a1%a8%e7%9b%b8%e4%ba%a4httpsleetcodecnproblemsintersection-of-two-linked-lists-lcci" aria-label="7.160.链表相交">7.<a href="https://leetcode.cn/problems/intersection-of-two-linked-lists-lcci/">160.链表相交</a></a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%9d%e8%b7%af-10" aria-label="思路">思路</a></li></ul>
+                </li>
+                <li>
+                    <a href="#8142%e7%8e%af%e5%bd%a2%e9%93%be%e8%a1%a8iihttpsleetcodecnproblemslinked-list-cycle-ii" aria-label="8.142.环形链表II">8.<a href="https://leetcode.cn/problems/linked-list-cycle-ii/">142.环形链表II</a></a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%9d%e8%b7%af-11" aria-label="思路">思路</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%b8%89%e5%93%88%e5%b8%8c%e8%a1%a8" aria-label="三、哈希表">三、哈希表</a><ul>
+                        
+                <li>
+                    <a href="#1%e5%93%88%e5%b8%8c%e8%a1%a8%e5%9f%ba%e7%a1%80" aria-label="1.哈希表基础">1.哈希表基础</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        
+        <div class="post-content"><ul>
+<li>代码随想录网站 <a href="https://programmercarl.com/">https://programmercarl.com/</a></li>
+<li><a href="https://github.com/youngyangyang04/leetcode-master">https://github.com/youngyangyang04/leetcode-master</a></li>
+</ul>
+<h1 id="一数组">一.数组<a hidden class="anchor" aria-hidden="true" href="#一数组">#</a></h1>
+<h2 id="1数组基础">1.数组基础<a hidden class="anchor" aria-hidden="true" href="#1数组基础">#</a></h2>
+<p> 数组是存放在连续内存空间上的相同类型数据的集合</p>
+<ul>
+<li>数组下标都是从0开始的。</li>
+<li>数组内存空间的地址是连续的
+ 数组的在内存空间的地址是连续的，在删除或者增添元素的时候，就要移动其他元素的地址</li>
+</ul>
+<h2 id="2704二分查找httpsleetcodecnproblemsbinary-search">2.<a href="https://leetcode.cn/problems/binary-search/">704.二分查找</a><a hidden class="anchor" aria-hidden="true" href="#2704二分查找httpsleetcodecnproblemsbinary-search">#</a></h2>
+<p> 给定一个 n 个元素有序的（升序）整型数组 nums 和一个目标值 target  ，写一个函数搜索 nums 中的 target，如果目标值存在返回下标，否则返回 -1  \</p>
+<h3 id="思路">思路<a hidden class="anchor" aria-hidden="true" href="#思路">#</a></h3>
+<p> <strong>有序数组</strong>，<strong>数组中无重复元素</strong> -&gt; 使用二分法的前提条件  <br>
+ 二分查找区间的定义就是不变量，在while寻找中每一次边界的处理都要坚持根据区间的定义来操作，这就是循环不变量规则 <br>
+ 区间的定义一般为两种，<strong>左闭右闭即[left, right]</strong>，或者<strong>左闭右开即[left, right)</strong></p>
+<p> <strong>左闭右闭</strong></p>
+<ul>
+<li>while (left &lt;= right) 要使用 &lt;= ，left == right有意义，使用 &lt;=</li>
+<li>if（nums[middle] &gt; target）right赋值 <strong>middle-1</strong>，当前nums[target]不是target，查找区间结束下标位置是middle-1</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 版本一
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>class Solution {
+</span></span><span style="display:flex;"><span>public:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">search</span>(vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&amp;</span> nums, <span style="color:#66d9ef">int</span> target) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> right <span style="color:#f92672">=</span> nums.<span style="color:#a6e22e">size</span>() <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>; <span style="color:#75715e">// 定义target在左闭右闭的区间里，[left, right]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> (left <span style="color:#f92672">&lt;=</span> right) { <span style="color:#75715e">// 当left==right，区间[left, right]依然有效，所以用 &lt;=
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> middle <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> ((right <span style="color:#f92672">-</span> left) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>);<span style="color:#75715e">// 防止溢出 等同于(left + right)/2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (nums[middle] <span style="color:#f92672">&gt;</span> target) {
+</span></span><span style="display:flex;"><span>                right <span style="color:#f92672">=</span> middle <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>; <span style="color:#75715e">// target 在左区间，所以[left, middle - 1]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (nums[middle] <span style="color:#f92672">&lt;</span> target) {
+</span></span><span style="display:flex;"><span>                left <span style="color:#f92672">=</span> middle <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>; <span style="color:#75715e">// target 在右区间，所以[middle + 1, right]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            } <span style="color:#66d9ef">else</span> { <span style="color:#75715e">// nums[middle] == target
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> middle; <span style="color:#75715e">// 数组中找到目标值，直接返回下标
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 未找到目标值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p> <strong>左闭右开</strong></p>
+<ul>
+<li>while（left &lt; right）使用 &lt;，left == right 在区间[left, right]没有意义</li>
+<li>if（nums[middle] &gt; target）right更新为 <strong>middle</strong>，即下一个查询区间不会比较nums[middle]</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 版本二
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>class Solution {
+</span></span><span style="display:flex;"><span>public:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">search</span>(vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&amp;</span> nums, <span style="color:#66d9ef">int</span> target) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> right <span style="color:#f92672">=</span> nums.<span style="color:#a6e22e">size</span>(); <span style="color:#75715e">// 定义target在左闭右开的区间里，即：[left, right)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> (left <span style="color:#f92672">&lt;</span> right) { <span style="color:#75715e">// 因为left == right的时候，在[left, right)是无效的空间，所以使用 &lt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> middle <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> ((right <span style="color:#f92672">-</span> left) <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (nums[middle] <span style="color:#f92672">&gt;</span> target) {
+</span></span><span style="display:flex;"><span>                right <span style="color:#f92672">=</span> middle; <span style="color:#75715e">// target 在左区间，在[left, middle)中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (nums[middle] <span style="color:#f92672">&lt;</span> target) {
+</span></span><span style="display:flex;"><span>                left <span style="color:#f92672">=</span> middle <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>; <span style="color:#75715e">// target 在右区间，在[middle + 1, right)中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            } <span style="color:#66d9ef">else</span> { <span style="color:#75715e">// nums[middle] == target
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> middle; <span style="color:#75715e">// 数组中找到目标值，直接返回下标
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 未找到目标值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><h3 id="总结">总结<a hidden class="anchor" aria-hidden="true" href="#总结">#</a></h3>
+<p> 区间定义理解，在循环中检查根据查找区间的定义来做边界处理 <br>
+ 区间定义是不变量，在循环中坚持根据查找区间的定义来做边界处理，即循环不变规则  \</p>
+<h3 id="相关题目">相关题目<a hidden class="anchor" aria-hidden="true" href="#相关题目">#</a></h3>
+<ul>
+<li>35.<a href="https://programmercarl.com/0035.%E6%90%9C%E7%B4%A2%E6%8F%92%E5%85%A5%E4%BD%8D%E7%BD%AE.html#%E6%80%9D%E8%B7%AF">搜索插入位置</a></li>
+<li>34.<a href="https://programmercarl.com/0034.%E5%9C%A8%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E6%9F%A5%E6%89%BE%E5%85%83%E7%B4%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%92%8C%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E4%BD%8D%E7%BD%AE.html">在排序数组中查找元素的第一个和最后一个位置</a></li>
+<li>69.x 的平方根</li>
+<li>367.有效的完全平方数</li>
+</ul>
+<p>c:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 左闭右闭[left, right]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">search</span>(<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>nums, <span style="color:#66d9ef">int</span> numsSize, <span style="color:#66d9ef">int</span> target) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> right <span style="color:#f92672">=</span> numsSize <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> middle <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// left 小于 target，说明区间中元素不为0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span>(left <span style="color:#f92672">&lt;=</span> right) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 更新查找小毕middle值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        middle <span style="color:#f92672">=</span> (left <span style="color:#f92672">+</span> right) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// taget 可能在 [left, middle - 1]区间
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (nums[middle] <span style="color:#f92672">&gt;</span> target) {
+</span></span><span style="display:flex;"><span>            right <span style="color:#f92672">=</span> middle <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (nums[middle] <span style="color:#f92672">&lt;</span> target) ( <span style="color:#75715e">// target肯在[middle + 1, right]区间
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            left <span style="color:#f92672">=</span> middle <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        ) <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (nums[middle] <span style="color:#f92672">==</span> target) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> middle;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 未找到taget元素 返回-1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">左闭右开区间</span> [left, right)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">search</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> nums, <span style="color:#66d9ef">int</span> numsSize, <span style="color:#66d9ef">int</span> target){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> numsSize;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> right <span style="color:#f92672">=</span> length;	<span style="color:#75715e">//定义target在左闭右开的区间里，即：[left, right)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> middle <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(left <span style="color:#f92672">&lt;</span> right){  <span style="color:#75715e">// left == right时，区间[left, right)属于空集，所以用 &lt; 避免该情况
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> middle <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> (right <span style="color:#f92672">-</span> left) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span>(nums[middle] <span style="color:#f92672">&lt;</span> target){
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//target位于(middle , right) 中为保证集合区间的左闭右开性，可等价为[middle + 1,right)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            left <span style="color:#f92672">=</span> middle <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        }<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>(nums[middle] <span style="color:#f92672">&gt;</span> target){
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//target位于[left, middle)中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            right <span style="color:#f92672">=</span> middle ;
+</span></span><span style="display:flex;"><span>        }<span style="color:#66d9ef">else</span>{	<span style="color:#75715e">// nums[middle] == target ，找到目标值target
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> middle;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//未找到目标值，返回-1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="327移除元素httpsleetcodecnproblemsremove-element">3.<a href="https://leetcode.cn/problems/remove-element/">27.移除元素</a><a hidden class="anchor" aria-hidden="true" href="#327移除元素httpsleetcodecnproblemsremove-element">#</a></h2>
+<p> 给你一个数组 nums 和一个值 val，你需要 <strong>原地</strong> 移除所有数值等于 val 的元素，并返回移除后数组的新长度  \</p>
+<h3 id="思路-1">思路<a hidden class="anchor" aria-hidden="true" href="#思路-1">#</a></h3>
+<p> 数组的元素在内存地址中是连续的，不能单独删除数组中的某个元素，只能<strong>覆盖</strong>  \</p>
+<p> <strong>暴力解法</strong>  <br>
+ 两层for循环，一个for循环遍历数组元素，第二个for循环更新数组</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">removeElement</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> nums, <span style="color:#66d9ef">int</span> numsSize, <span style="color:#66d9ef">int</span> val){ 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (; i <span style="color:#f92672">&lt;</span> numsSize; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (nums[i] <span style="color:#f92672">==</span> val) { <span style="color:#75715e">// 发现需要移除的元素，就将数组集体向前移动一位
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">for</span> (j <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>; j <span style="color:#f92672">&lt;</span> numsSize; j<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                nums[j<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> nums[j];
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        i<span style="color:#f92672">--</span>; <span style="color:#75715e">// 因为下标i以后的数值都向前移动了一位，所以i也向前移动一位
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        numsSize<span style="color:#f92672">--</span>; <span style="color:#75715e">// 此时数组的大小-1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> numsSize;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p> <strong>双指针</strong>  <br>
+ 双指针(快慢指针)：一个块指针和慢指针在一个for循环下完成两个for循环工作 <br>
+ 定义快慢指针</p>
+<ul>
+<li>快指针：寻找新数组的元素，新数组是不含有目标元素的数组</li>
+<li>慢指针：指向更新 新数组 下标的位置</li>
+</ul>
+<p> 考察数组、链表、字符串等操作的面试题，都使用双指针法 \</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">removeElement</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> nums, <span style="color:#66d9ef">int</span> numsSize, <span style="color:#66d9ef">int</span> val){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> fast <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, slow <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (fast <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; fast <span style="color:#f92672">&lt;</span> numsSize; fast<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (nums[fast] <span style="color:#f92672">!=</span> val) {
+</span></span><span style="display:flex;"><span>            nums[slow] <span style="color:#f92672">=</span> nums[fast];
+</span></span><span style="display:flex;"><span>            slow<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> slow;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="相关题目-1">相关题目<a hidden class="anchor" aria-hidden="true" href="#相关题目-1">#</a></h3>
+<ul>
+<li>26.删除排序数组中的重复项</li>
+<li>283.移动零</li>
+<li>844.比较含退格的字符串</li>
+<li>977.有序数组的平方</li>
+</ul>
+<h2 id="4977有序数组的平方httpsleetcodecnproblemssquares-of-a-sorted-array">4.<a href="https://leetcode.cn/problems/squares-of-a-sorted-array/">977.有序数组的平方</a><a hidden class="anchor" aria-hidden="true" href="#4977有序数组的平方httpsleetcodecnproblemssquares-of-a-sorted-array">#</a></h2>
+<p> 一个按 非递减顺序 排序的整数数组 nums，返回 每个数字的平方 组成的新数组，要求也按 非递减顺序 排序 \</p>
+<h3 id="思路-2">思路<a hidden class="anchor" aria-hidden="true" href="#思路-2">#</a></h3>
+<p> <strong>暴力排序</strong> <br>
+ 先求平方，再排序</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 暴力排序的解法O(n + nlog n)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">cmp</span>(<span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> a, <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> b) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span>(<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>)a <span style="color:#f92672">-</span> <span style="color:#f92672">*</span>(<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>)b;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">sortedSquares</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> nums, <span style="color:#66d9ef">int</span> numsSize, <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> returnSize){
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>returnSize <span style="color:#f92672">=</span> numsSize;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> numsSize; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        nums[i] <span style="color:#f92672">=</span> nums[i] <span style="color:#f92672">*</span> nums[i];
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">qsort</span>(nums, numsSize, <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>), cmp);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> nums;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p> <strong>双指针法</strong> <br></p>
+<p> 组平方的最大值就在数组的两端，不是最左边就是最右边，不可能是中间 <br>
+ 双指针法，i指向起始位置，j指向终止位置 <br>
+ 如果A[i] * A[i] &lt; A[j] * A[j] 那么result[k&ndash;] = A[j] * A[j];  <br>
+ 如果A[i] * A[i] &gt;= A[j] * A[j] 那么result[k&ndash;] = A[i] * A[i];  \</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 时间复杂度为O(n)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> <span style="color:#a6e22e">sortedSquares</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> nums, <span style="color:#66d9ef">int</span> numsSize, <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> returnSize){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> numsSize <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> res <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span> <span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span> numsSize);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> numsSize <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (i <span style="color:#f92672">&lt;=</span> j) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (nums[i] <span style="color:#f92672">*</span> nums[i] <span style="color:#f92672">&lt;</span> nums[j] <span style="color:#f92672">*</span> nums[j]) {
+</span></span><span style="display:flex;"><span>            res[k<span style="color:#f92672">--</span>] <span style="color:#f92672">=</span> nums[j] <span style="color:#f92672">*</span> nums[j];
+</span></span><span style="display:flex;"><span>            j<span style="color:#f92672">--</span>;
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            res[k<span style="color:#f92672">--</span>] <span style="color:#f92672">=</span> nums[i] <span style="color:#f92672">*</span> nums[i];
+</span></span><span style="display:flex;"><span>            i<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>returnSize <span style="color:#f92672">=</span> numsSize;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> res;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="5209长度最小的子数组httpsleetcodecnproblemsminimum-size-subarray-sum">5.<a href="https://leetcode.cn/problems/minimum-size-subarray-sum/">209.长度最小的子数组</a><a hidden class="anchor" aria-hidden="true" href="#5209长度最小的子数组httpsleetcodecnproblemsminimum-size-subarray-sum">#</a></h2>
+<p> 给定一个含有 n 个正整数的数组和一个正整数 s ，找出该数组中满足其和 ≥ s 的长度最小的 连续 子数组，并返回其长度。如果不存在符合条件的子数组，返回 0</p>
+<h3 id="思路-3">思路<a hidden class="anchor" aria-hidden="true" href="#思路-3">#</a></h3>
+<h3 id="暴力解法-br"><strong>暴力解法</strong> <br><a hidden class="anchor" aria-hidden="true" href="#暴力解法-br">#</a></h3>
+<p> 两个for循环，不断的寻找符合条件的子序列，时间复杂度是O(n^2)，空间复杂度O(1)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 超时
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minSubArrayLen</span>(<span style="color:#66d9ef">int</span> target, <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> nums, <span style="color:#66d9ef">int</span> numsSize){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> INT_MAX;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> subLen <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> numsSize; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i; j <span style="color:#f92672">&lt;</span> numsSize; j<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            sum <span style="color:#f92672">+=</span> nums[j];
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (sum <span style="color:#f92672">&gt;=</span> target) {
+</span></span><span style="display:flex;"><span>                subLen <span style="color:#f92672">=</span> j <span style="color:#f92672">-</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>                res <span style="color:#f92672">=</span> res <span style="color:#f92672">&lt;</span> subLen <span style="color:#f92672">?</span> res : subLen;
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> res <span style="color:#f92672">==</span> INT_MAX <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> res;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> minSubArrayLen(<span style="color:#66d9ef">int</span> s, vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&amp;</span> nums) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> result <span style="color:#f92672">=</span> INT32_MAX; <span style="color:#75715e">// 最终的结果
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// 子序列的数值之和
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> subLength <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// 子序列的长度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> nums.size(); i<span style="color:#f92672">++</span>) { <span style="color:#75715e">// 设置子序列起点为i
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i; j <span style="color:#f92672">&lt;</span> nums.size(); j<span style="color:#f92672">++</span>) { <span style="color:#75715e">// 设置子序列终止位置为j
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                sum <span style="color:#f92672">+=</span> nums[j];
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (sum <span style="color:#f92672">&gt;=</span> s) { <span style="color:#75715e">// 一旦发现子序列和超过了s，更新result
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    subLength <span style="color:#f92672">=</span> j <span style="color:#f92672">-</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>; <span style="color:#75715e">// 取子序列的长度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    result <span style="color:#f92672">=</span> result <span style="color:#f92672">&lt;</span> subLength <span style="color:#f92672">?</span> result : subLength;
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">break</span>; <span style="color:#75715e">// 因为我们是找符合条件最短的子序列，所以一旦符合条件就break
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 如果result没有被赋值的话，就返回0，说明没有符合条件的子序列
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> result <span style="color:#f92672">==</span> INT32_MAX <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> result;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><h3 id="滑动窗口-br"><strong>滑动窗口</strong> <br><a hidden class="anchor" aria-hidden="true" href="#滑动窗口-br">#</a></h3>
+<p> 断的调节子序列的起始位置和终止位置，从而得出我们要想的结果 <br>
+ 用一个for循环，那么这个循环的索引，一定是表示 滑动窗口的终止位置 <br>
+ 时间复杂度:O(n) 空间复杂度：O(1)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minSubArrayLen</span>(<span style="color:#66d9ef">int</span> target, <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> nums, <span style="color:#66d9ef">int</span> numsSize){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> INT_MAX;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> subLen <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> numsSize; j<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>        sum <span style="color:#f92672">+=</span> nums[j];
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (sum <span style="color:#f92672">&gt;=</span> target) {
+</span></span><span style="display:flex;"><span>            subLen <span style="color:#f92672">=</span> (j <span style="color:#f92672">-</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>            res <span style="color:#f92672">=</span> res <span style="color:#f92672">&lt;</span> subLen <span style="color:#f92672">?</span> res : subLen;
+</span></span><span style="display:flex;"><span>            sum <span style="color:#f92672">-=</span> nums[i<span style="color:#f92672">++</span>];
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> res <span style="color:#f92672">==</span> INT_MAX <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> res;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> minSubArrayLen(<span style="color:#66d9ef">int</span> s, vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;&amp;</span> nums) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> result <span style="color:#f92672">=</span> INT32_MAX;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// 滑动窗口数值之和
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// 滑动窗口起始位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> subLength <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// 滑动窗口的长度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> nums.size(); j<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            sum <span style="color:#f92672">+=</span> nums[j];
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 注意这里使用while，每次更新 i（起始位置），并不断比较子序列是否符合条件
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">while</span> (sum <span style="color:#f92672">&gt;=</span> s) {
+</span></span><span style="display:flex;"><span>                subLength <span style="color:#f92672">=</span> (j <span style="color:#f92672">-</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>); <span style="color:#75715e">// 取子序列的长度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                result <span style="color:#f92672">=</span> result <span style="color:#f92672">&lt;</span> subLength <span style="color:#f92672">?</span> result : subLength;
+</span></span><span style="display:flex;"><span>                sum <span style="color:#f92672">-=</span> nums[i<span style="color:#f92672">++</span>]; <span style="color:#75715e">// 这里体现出滑动窗口的精髓之处，不断变更i（子序列的起始位置）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 如果result没有被赋值的话，就返回0，说明没有符合条件的子序列
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> result <span style="color:#f92672">==</span> INT32_MAX <span style="color:#f92672">?</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">:</span> result;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><h2 id="659螺旋矩阵iihttpsleetcodecnproblemsspiral-matrix-ii">6.<a href="https://leetcode.cn/problems/spiral-matrix-ii/">59.螺旋矩阵II</a><a hidden class="anchor" aria-hidden="true" href="#659螺旋矩阵iihttpsleetcodecnproblemsspiral-matrix-ii">#</a></h2>
+<p> 给定一个正整数n，生成一个包含1到n^2所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵  \</p>
+<h3 id="思路-4">思路<a hidden class="anchor" aria-hidden="true" href="#思路-4">#</a></h3>
+<p> 坚持循环不变量原则  <br>
+ 模拟顺时针画矩阵过程  \</p>
+<ul>
+<li>填充上行从左到右</li>
+<li>填充右列从上到下</li>
+<li>填充下行从右到左</li>
+<li>填充左列从下到上</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span><span style="color:#f92672">**</span> <span style="color:#a6e22e">generateMatrix</span>(<span style="color:#66d9ef">int</span> n, <span style="color:#66d9ef">int</span><span style="color:#f92672">*</span> returnSize, <span style="color:#66d9ef">int</span><span style="color:#f92672">**</span> returnColumnSizes){
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//初始化返回的结果数组的大小
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">*</span>returnSize <span style="color:#f92672">=</span> n;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>returnColumnSizes <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span> n);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//初始化返回结果数组ans
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">**</span> ans <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span><span style="color:#f92672">**</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span>) <span style="color:#f92672">*</span> n);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span>(i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> n; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        ans[i] <span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span><span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span> n);
+</span></span><span style="display:flex;"><span>        (<span style="color:#f92672">*</span>returnColumnSizes)[i] <span style="color:#f92672">=</span> n;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//设置每次循环的起始位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> startX <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> startY <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//设置二维数组的中间值，若n为奇数。需要最后在中间填入数字
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> n <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//循环圈数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> loop <span style="color:#f92672">=</span> n <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//偏移数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> offset <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//当前要添加的元素
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(loop) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> startX;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> startY;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//模拟上侧从左到右
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span>(; j <span style="color:#f92672">&lt;</span> startY <span style="color:#f92672">+</span> n <span style="color:#f92672">-</span> offset; j<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            ans[startX][j] <span style="color:#f92672">=</span> count<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//模拟右侧从上到下
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span>(; i <span style="color:#f92672">&lt;</span> startX <span style="color:#f92672">+</span> n <span style="color:#f92672">-</span> offset; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            ans[i][j] <span style="color:#f92672">=</span> count<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//模拟下侧从右到左
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span>(; j <span style="color:#f92672">&gt;</span> startY; j<span style="color:#f92672">--</span>) {
+</span></span><span style="display:flex;"><span>            ans[i][j] <span style="color:#f92672">=</span> count<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//模拟左侧从下到上
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span>(; i <span style="color:#f92672">&gt;</span> startX; i<span style="color:#f92672">--</span>) {
+</span></span><span style="display:flex;"><span>            ans[i][j] <span style="color:#f92672">=</span> count<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//偏移值每次加2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        offset<span style="color:#f92672">+=</span><span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//遍历起始位置每次+1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        startX<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        startY<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        loop<span style="color:#f92672">--</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//若n为奇数需要单独给矩阵中间赋值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span>(n<span style="color:#f92672">%</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>        ans[mid][mid] <span style="color:#f92672">=</span> count;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> ans;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="类似题目">类似题目<a hidden class="anchor" aria-hidden="true" href="#类似题目">#</a></h3>
+<ul>
+<li>54.螺旋矩阵</li>
+<li>剑指Offer 29.顺时针打印矩阵</li>
+</ul>
+<h2 id="7总结">7.总结<a hidden class="anchor" aria-hidden="true" href="#7总结">#</a></h2>
+<p> 数组是存放在连续内存空间上的相同类型数据的集合 <br>
+ 数组的在内存空间的地址是连续的，在删除或者增添元素的时，要移动其他元素的地址 <br>
+ 数组的元素是不能删的，只能覆盖  \</p>
+<p> <strong>二分法</strong> <br>
+ 循环不变量原则，只有在循环中坚持对区间的定义  \</p>
+<p> <strong>双指针法</strong> <br>
+ 双指针法（快慢指针法）：通过一个快指针和慢指针在一个for循环下完成两个for循环的工作 <br>
+ 数组和链表的操作中常见 \</p>
+<p> <strong>滑动窗口</strong>  <br>
+ 滑动窗口如何移动 窗口起始位置，达到动态更新窗口大小的，从而得出长度最小的符合条件的长度  <br>
+ 滑动窗口根据当前子序列和大小的情况，不断调节子序列的起始位置。从而将O(n^2)的暴力解法降为O(n)  \</p>
+<p> <strong>模拟行为</strong>  <br>
+ <em><strong>循环不变量原则</strong></em>  <br>
+ 边界调节超多，一波接着一波的判断，找边界  \</p>
+<h1 id="二链表">二、链表<a hidden class="anchor" aria-hidden="true" href="#二链表">#</a></h1>
+<h2 id="1链表理论基础">1.链表理论基础<a hidden class="anchor" aria-hidden="true" href="#1链表理论基础">#</a></h2>
+<p> 链表通过指针串联在一起的线性结构，每个节点由两部分组成，一个数据域一个指针域(存放指向下一个节点指针)，最后一个节点指针域指向null(空指针)  <br>
+ 链表入口节点称为链表的头结点head  \</p>
+<h3 id="链表类型">链表类型<a hidden class="anchor" aria-hidden="true" href="#链表类型">#</a></h3>
+<p> <strong>单链表</strong>  <br></p>
+<p> 单链表中的指针域只能指向节点的下一个节点</p>
+<p> <strong>双链表</strong> <br></p>
+<p> 双链表：每一个节点有两个指针域，一个指向下一个节点，一个指向上一个节点  \</p>
+<p> <strong>循环链表</strong> <br>
+ 循环链表，链表首尾相连  <br>
+ 数组是在内存中是连续分布的，但是链表在内存中可不是连续分布的  \</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">// 单链表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">ListNode</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> val;  <span style="color:#75715e">// 节点上存储的元素
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    ListNode <span style="color:#f92672">*</span>next;  <span style="color:#75715e">// 指向下一个节点的指针
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    ListNode(<span style="color:#66d9ef">int</span> x) <span style="color:#f92672">:</span> val(x), next(NULL) {}  <span style="color:#75715e">// 节点的构造函数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span></code></pre></div><h3 id="链表操作">链表操作<a hidden class="anchor" aria-hidden="true" href="#链表操作">#</a></h3>
+<p> <strong>删除节点</strong>  <br>
+ <strong>添加节点</strong>  \</p>
+<h2 id="2203移除链表元素httpsleetcodecnproblemsremove-linked-list-elements">2.<a href="https://leetcode.cn/problems/remove-linked-list-elements/">203.移除链表元素</a><a hidden class="anchor" aria-hidden="true" href="#2203移除链表元素httpsleetcodecnproblemsremove-linked-list-elements">#</a></h2>
+<p> 删除链表中等于给定值val的所有节点</p>
+<h3 id="思路-5">思路<a hidden class="anchor" aria-hidden="true" href="#思路-5">#</a></h3>
+<p> 链表操作的两种方式 <br>
+ <strong>直接使用原理链表进程删除操作</strong> ： 头结点移除，将头结点向后移动一位，移除头结点 和 移除其他节点的操作方式是不一样 <br>
+ <strong>设置一个虚拟头节点进行删除操作</strong>： 设置一个虚拟头结点，原链表的所有节点都按照统一的方式进行移除 \</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> <span style="color:#a6e22e">removeElements</span>(<span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> head, <span style="color:#66d9ef">int</span> val){
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (head <span style="color:#f92672">&amp;&amp;</span> head<span style="color:#f92672">-&gt;</span>val <span style="color:#f92672">==</span> val) {
+</span></span><span style="display:flex;"><span>        head <span style="color:#f92672">=</span> head<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> cur <span style="color:#f92672">=</span> head;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> temp <span style="color:#f92672">=</span> head;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (cur <span style="color:#f92672">&amp;&amp;</span> (temp <span style="color:#f92672">=</span> cur<span style="color:#f92672">-&gt;</span>next)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (temp<span style="color:#f92672">-&gt;</span>val <span style="color:#f92672">==</span> val) {
+</span></span><span style="display:flex;"><span>            cur<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> temp<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            cur <span style="color:#f92672">=</span> cur<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> head;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> <span style="color:#a6e22e">removeElements</span>(<span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> head, <span style="color:#66d9ef">int</span> val){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> ListNode ListNode;
+</span></span><span style="display:flex;"><span>    ListNode <span style="color:#f92672">*</span>shead;
+</span></span><span style="display:flex;"><span>    shead <span style="color:#f92672">=</span> (ListNode <span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span>(ListNode));
+</span></span><span style="display:flex;"><span>    shead<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> head;
+</span></span><span style="display:flex;"><span>    ListNode <span style="color:#f92672">*</span>cur <span style="color:#f92672">=</span> shead;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(cur<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">!=</span> NULL){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (cur<span style="color:#f92672">-&gt;</span>next<span style="color:#f92672">-&gt;</span>val <span style="color:#f92672">==</span> val){
+</span></span><span style="display:flex;"><span>            ListNode <span style="color:#f92672">*</span>tmp <span style="color:#f92672">=</span> cur<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>            cur<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> cur<span style="color:#f92672">-&gt;</span>next<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">free</span>(tmp);
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            cur <span style="color:#f92672">=</span> cur<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    head <span style="color:#f92672">=</span> shead<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">free</span>(shead);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> head;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="3707设计链表httpsleetcodecnproblemsdesign-linked-list">3.<a href="https://leetcode.cn/problems/design-linked-list/">707.设计链表</a><a hidden class="anchor" aria-hidden="true" href="#3707设计链表httpsleetcodecnproblemsdesign-linked-list">#</a></h2>
+<p> 链表实现功能</p>
+<ul>
+<li>get(index)：获取链表中爹index个节点值，如索引无效，返回-1</li>
+<li>addAtHead(val)：在链表第一个元素之前添加一个值为val节点，插入后，新节点为链表的第一个节点</li>
+<li>addAtTail(val)：将值val的节点追加到链表的最后一个元素</li>
+<li>addAtIndex(index, val)：在链表中第index个节点之前添加值为val节点，如index等于链表的长度，则添加到链表尾部，如index大于链表长度，则不插入节点，如index小于0，则在头部插入节点</li>
+<li>deleteAtIndex(index)：如索引index有效，则删除链表中第index个节点</li>
+</ul>
+<h3 id="思路-6">思路<a hidden class="anchor" aria-hidden="true" href="#思路-6">#</a></h3>
+<p> 设计链表的五个接口：</p>
+<ul>
+<li>获取链表第index个节点的数值</li>
+<li>在链表的最前面插入一个节点</li>
+<li>在链表的最后面插入一个节点</li>
+<li>在链表第index个节点前面插入一个节点</li>
+<li>删除链表的第index个节点</li>
+</ul>
+<p> <strong>链表操作两种方式</strong>：</p>
+<ul>
+<li>1.直接使用原理链表进行操作</li>
+<li>2.设置一个虚拟头节点进行操作</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> MyLinkedList {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> val;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> MyLinkedList<span style="color:#f92672">*</span> next;
+</span></span><span style="display:flex;"><span>}MyLinkedList;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/** Initialize your data structure here. */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>MyLinkedList<span style="color:#f92672">*</span> <span style="color:#a6e22e">myLinkedListCreate</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//这个题必须用虚拟头指针,参数都是一级指针,头节点确定后没法改指向了!!!
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    MyLinkedList<span style="color:#f92672">*</span> head <span style="color:#f92672">=</span> (MyLinkedList <span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span> (MyLinkedList));
+</span></span><span style="display:flex;"><span>    head<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> head;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">myLinkedListGet</span>(MyLinkedList<span style="color:#f92672">*</span> obj, <span style="color:#66d9ef">int</span> index) {
+</span></span><span style="display:flex;"><span>    MyLinkedList <span style="color:#f92672">*</span>cur <span style="color:#f92672">=</span> obj<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; cur <span style="color:#f92672">!=</span> NULL; i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">==</span> index){
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> cur<span style="color:#f92672">-&gt;</span>val;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>{
+</span></span><span style="display:flex;"><span>            cur <span style="color:#f92672">=</span> cur<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">myLinkedListAddAtHead</span>(MyLinkedList<span style="color:#f92672">*</span> obj, <span style="color:#66d9ef">int</span> val) {
+</span></span><span style="display:flex;"><span>    MyLinkedList <span style="color:#f92672">*</span>nhead <span style="color:#f92672">=</span> (MyLinkedList <span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span> (MyLinkedList));
+</span></span><span style="display:flex;"><span>    nhead<span style="color:#f92672">-&gt;</span>val <span style="color:#f92672">=</span> val;
+</span></span><span style="display:flex;"><span>    nhead<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> obj<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    obj<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> nhead;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/** Append a node of value val to the last element of the linked list. */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">myLinkedListAddAtTail</span>(MyLinkedList<span style="color:#f92672">*</span> obj, <span style="color:#66d9ef">int</span> val) {
+</span></span><span style="display:flex;"><span>    MyLinkedList <span style="color:#f92672">*</span>cur <span style="color:#f92672">=</span> obj;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(cur<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">!=</span> NULL){
+</span></span><span style="display:flex;"><span>        cur <span style="color:#f92672">=</span> cur<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    MyLinkedList <span style="color:#f92672">*</span>ntail <span style="color:#f92672">=</span> (MyLinkedList <span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span> (MyLinkedList));
+</span></span><span style="display:flex;"><span>    ntail<span style="color:#f92672">-&gt;</span>val <span style="color:#f92672">=</span> val;
+</span></span><span style="display:flex;"><span>    ntail<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>    cur<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> ntail;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">myLinkedListAddAtIndex</span>(MyLinkedList<span style="color:#f92672">*</span> obj, <span style="color:#66d9ef">int</span> index, <span style="color:#66d9ef">int</span> val) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (index <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>){
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">myLinkedListAddAtHead</span>(obj, val);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    MyLinkedList <span style="color:#f92672">*</span>cur <span style="color:#f92672">=</span> obj<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> ;cur <span style="color:#f92672">!=</span> NULL; i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">==</span> index){
+</span></span><span style="display:flex;"><span>            MyLinkedList<span style="color:#f92672">*</span> newnode <span style="color:#f92672">=</span> (MyLinkedList <span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span> (MyLinkedList));
+</span></span><span style="display:flex;"><span>            newnode<span style="color:#f92672">-&gt;</span>val <span style="color:#f92672">=</span> val;
+</span></span><span style="display:flex;"><span>            newnode<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> cur<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>            cur<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> newnode;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>{
+</span></span><span style="display:flex;"><span>            cur <span style="color:#f92672">=</span> cur<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/** Delete the index-th node in the linked list, if the index is valid. */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">myLinkedListDeleteAtIndex</span>(MyLinkedList<span style="color:#f92672">*</span> obj, <span style="color:#66d9ef">int</span> index) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (index <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>){
+</span></span><span style="display:flex;"><span>        MyLinkedList <span style="color:#f92672">*</span>tmp <span style="color:#f92672">=</span> obj<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (tmp <span style="color:#f92672">!=</span> NULL){
+</span></span><span style="display:flex;"><span>            obj<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">free</span>(tmp);     
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    MyLinkedList <span style="color:#f92672">*</span>cur <span style="color:#f92672">=</span> obj<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> ;cur <span style="color:#f92672">!=</span> NULL <span style="color:#f92672">&amp;&amp;</span> cur<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">!=</span> NULL; i<span style="color:#f92672">++</span>){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">==</span> index){
+</span></span><span style="display:flex;"><span>            MyLinkedList <span style="color:#f92672">*</span>tmp <span style="color:#f92672">=</span> cur<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (tmp <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>                cur<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> tmp<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">free</span>(tmp);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>{
+</span></span><span style="display:flex;"><span>            cur <span style="color:#f92672">=</span> cur<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">myLinkedListFree</span>(MyLinkedList<span style="color:#f92672">*</span> obj) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(obj <span style="color:#f92672">!=</span> NULL){
+</span></span><span style="display:flex;"><span>        MyLinkedList <span style="color:#f92672">*</span>tmp <span style="color:#f92672">=</span> obj;
+</span></span><span style="display:flex;"><span>        obj <span style="color:#f92672">=</span> obj<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">free</span>(tmp);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Your MyLinkedList struct will be instantiated and called as such:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * MyLinkedList* obj = myLinkedListCreate();
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * int param_1 = myLinkedListGet(obj, index);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * myLinkedListAddAtHead(obj, val);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * myLinkedListAddAtTail(obj, val);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * myLinkedListAddAtIndex(obj, index, val);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * myLinkedListDeleteAtIndex(obj, index);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * myLinkedListFree(obj);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
+</span></span></code></pre></div><h2 id="4206反转链表httpsleetcodecnproblemsreverse-linked-list">4.<a href="https://leetcode.cn/problems/reverse-linked-list/">206.反转链表</a><a hidden class="anchor" aria-hidden="true" href="#4206反转链表httpsleetcodecnproblemsreverse-linked-list">#</a></h2>
+<p> 反转一个单链表  \</p>
+<h3 id="思路-7">思路<a hidden class="anchor" aria-hidden="true" href="#思路-7">#</a></h3>
+<p> 首先定义一个cur指针，指向头结点，再定义一个pre指针，初始化为null <br>
+ 开始反转，把cur-&gt;next节点用tmp指针保存，即保存这个节点  <br>
+ 改变cur-&gt;next 的指向，将 cur-&gt;next 指向 pre，此时已经反转了第一个节点 <br>
+ 循环代码逻辑，继续移动 pre 和 cur 指针  <br>
+ 最后，cur 指针指向null，循环结束，链表反转完成，返回 pre 指针，pre指针指向新的头结点  \</p>
+<h3 id="双指针">双指针<a hidden class="anchor" aria-hidden="true" href="#双指针">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 双指针
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> <span style="color:#a6e22e">reverseList</span>(<span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> head){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> res <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> pre;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (head) {
+</span></span><span style="display:flex;"><span>        pre <span style="color:#f92672">=</span> head;
+</span></span><span style="display:flex;"><span>        head <span style="color:#f92672">=</span> head<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        pre<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> res;
+</span></span><span style="display:flex;"><span>        res <span style="color:#f92672">=</span> pre;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> res;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="递归法">递归法<a hidden class="anchor" aria-hidden="true" href="#递归法">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> <span style="color:#a6e22e">reverse</span>(<span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> pre, <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> cur) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span>cur)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> pre;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> temp <span style="color:#f92672">=</span> cur<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    cur<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> pre;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//将cur作为pre传入下一层
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">//将temp作为cur传入下一层，改变其指针指向当前cur
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">reverse</span>(cur, temp);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> <span style="color:#a6e22e">reverseList</span>(<span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> head){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">reverse</span>(NULL, head);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="524两两交换链表中的节点httpsleetcodecnproblemsswap-nodes-in-pairs">5.<a href="https://leetcode.cn/problems/swap-nodes-in-pairs/">24.两两交换链表中的节点</a><a hidden class="anchor" aria-hidden="true" href="#524两两交换链表中的节点httpsleetcodecnproblemsswap-nodes-in-pairs">#</a></h2>
+<p> 给定一个链表，两两交换其中相邻的节点，并返回交换后的链表</p>
+<h3 id="思路-8">思路<a hidden class="anchor" aria-hidden="true" href="#思路-8">#</a></h3>
+<p> 使用虚拟头结点，不单独处理头结点 \</p>
+<h3 id="递归">递归<a hidden class="anchor" aria-hidden="true" href="#递归">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">//递归版本
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> <span style="color:#a6e22e">swapPairs</span>(<span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> head){
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//递归结束条件：头节点不存在或头节点的下一个节点不存在。此时不需要交换，直接返回head
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span>head <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>head<span style="color:#f92672">-&gt;</span>next)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> head;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//创建一个节点指针类型保存头结点下一个节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> ListNode <span style="color:#f92672">*</span>newHead <span style="color:#f92672">=</span> head<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//更改头结点+2位节点后的值，并将头结点的next指针指向这个更改过的list
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    head<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> <span style="color:#a6e22e">swapPairs</span>(newHead<span style="color:#f92672">-&gt;</span>next);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//将新的头结点的next指针指向老的头节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    newHead<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> head;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> newHead;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="迭代">迭代<a hidden class="anchor" aria-hidden="true" href="#迭代">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#f92672">/</span><span style="color:#960050;background-color:#1e0010">迭代版本</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> <span style="color:#a6e22e">swapPairs</span>(<span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> head){
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//使用双指针避免使用中间变量
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> ListNode ListNode;
+</span></span><span style="display:flex;"><span>    ListNode <span style="color:#f92672">*</span>fakehead <span style="color:#f92672">=</span> (ListNode <span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span>(ListNode));
+</span></span><span style="display:flex;"><span>    fakehead<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> head;
+</span></span><span style="display:flex;"><span>    ListNode<span style="color:#f92672">*</span> right <span style="color:#f92672">=</span> fakehead<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    ListNode<span style="color:#f92672">*</span> left <span style="color:#f92672">=</span> fakehead;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(left <span style="color:#f92672">&amp;&amp;</span> right <span style="color:#f92672">&amp;&amp;</span> right<span style="color:#f92672">-&gt;</span>next ){
+</span></span><span style="display:flex;"><span>        left<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> right<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        right<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> left<span style="color:#f92672">-&gt;</span>next<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        left<span style="color:#f92672">-&gt;</span>next<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> right;
+</span></span><span style="display:flex;"><span>        left <span style="color:#f92672">=</span> right;
+</span></span><span style="display:flex;"><span>        right <span style="color:#f92672">=</span> left<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> fakehead<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="619删除链表的倒数第n个节点httpsleetcodecnproblemsremove-nth-node-from-end-of-list">6.<a href="https://leetcode.cn/problems/remove-nth-node-from-end-of-list/">19.删除链表的倒数第N个节点</a><a hidden class="anchor" aria-hidden="true" href="#619删除链表的倒数第n个节点httpsleetcodecnproblemsremove-nth-node-from-end-of-list">#</a></h2>
+<p> 一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点 \</p>
+<h3 id="思路-9">思路<a hidden class="anchor" aria-hidden="true" href="#思路-9">#</a></h3>
+<p> 双指针的经典应用，如果要删除倒数第n个节点，让fast移动n步，然后让fast和slow同时移动，直到fast指向链表末尾。删掉slow所指向的节点</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> <span style="color:#a6e22e">removeNthFromEnd</span>(<span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> head, <span style="color:#66d9ef">int</span> n){
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> dummyHead <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span>)<span style="color:#a6e22e">malloc</span>(<span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> ListNode));
+</span></span><span style="display:flex;"><span>    dummyHead<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> head;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> fast <span style="color:#f92672">=</span> dummyHead;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> slow <span style="color:#f92672">=</span> dummyHead;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> n; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        fast <span style="color:#f92672">=</span> fast<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// fast再提前走一步，因为需要让slow指向删除节点的上一个节点
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    fast <span style="color:#f92672">=</span> fast<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (fast) {
+</span></span><span style="display:flex;"><span>        fast <span style="color:#f92672">=</span> fast<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        slow <span style="color:#f92672">=</span> slow<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    slow<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">=</span> slow<span style="color:#f92672">-&gt;</span>next<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> dummyHead<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="7160链表相交httpsleetcodecnproblemsintersection-of-two-linked-lists-lcci">7.<a href="https://leetcode.cn/problems/intersection-of-two-linked-lists-lcci/">160.链表相交</a><a hidden class="anchor" aria-hidden="true" href="#7160链表相交httpsleetcodecnproblemsintersection-of-two-linked-lists-lcci">#</a></h2>
+<p> 两个单链表的头节点 headA 和 headB ，找出并返回两个单链表相交的起始节点 \</p>
+<h3 id="思路-10">思路<a hidden class="anchor" aria-hidden="true" href="#思路-10">#</a></h3>
+<p> 交点不是数值相等，而是指针相等 <br>
+ 求出两个链表的长度，并求出两个链表长度的差值，然后让curA移动到，和curB 末尾对齐的位置 <br>
+ 比较curA和curB是否相同，如果不相同，同时向后移动curA和curB，如果遇到curA == curB，则找到交点 <br>
+ 否则循环退出返回空指针 \</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 时间复杂度：O(n + m)  空间复杂度：O(1)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> ListNode <span style="color:#f92672">*</span><span style="color:#a6e22e">getIntersectionNode</span>(<span style="color:#66d9ef">struct</span> ListNode <span style="color:#f92672">*</span>headA, <span style="color:#66d9ef">struct</span> ListNode <span style="color:#f92672">*</span>headB) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> curA <span style="color:#f92672">=</span> headA;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> curB <span style="color:#f92672">=</span> headB;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> lenA <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> lenB <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (curA <span style="color:#f92672">!=</span> NULL) { <span style="color:#75715e">// 求链表A的长度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        lenA<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        curA <span style="color:#f92672">=</span> curA<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (curB <span style="color:#f92672">!=</span> NULL) { <span style="color:#75715e">// 求链表B的长度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        lenB<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        curB <span style="color:#f92672">=</span> curB<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    curA <span style="color:#f92672">=</span> headA;
+</span></span><span style="display:flex;"><span>    curB <span style="color:#f92672">=</span> headB;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 让curA为最长链表的头，lenA为其长度
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (lenB <span style="color:#f92672">&gt;</span> lenA) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> tmp <span style="color:#f92672">=</span> lenA;
+</span></span><span style="display:flex;"><span>        lenA <span style="color:#f92672">=</span> lenB;
+</span></span><span style="display:flex;"><span>        lenB <span style="color:#f92672">=</span> tmp;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> cur_tmp <span style="color:#f92672">=</span> curA;
+</span></span><span style="display:flex;"><span>        curA <span style="color:#f92672">=</span> curB;
+</span></span><span style="display:flex;"><span>        curB <span style="color:#f92672">=</span> cur_tmp;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 求长度差
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> gap <span style="color:#f92672">=</span> lenA <span style="color:#f92672">-</span> lenB;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 让curA和curB在同一起点上（末尾位置对齐）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> (gap<span style="color:#f92672">--</span>) {
+</span></span><span style="display:flex;"><span>        curA <span style="color:#f92672">=</span> curA<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 遍历curA 和 curB，遇到相同则直接返回
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> (curA <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (curA <span style="color:#f92672">==</span> curB) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> curA;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        curA <span style="color:#f92672">=</span> curA<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        curB <span style="color:#f92672">=</span> curB<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="8142环形链表iihttpsleetcodecnproblemslinked-list-cycle-ii">8.<a href="https://leetcode.cn/problems/linked-list-cycle-ii/">142.环形链表II</a><a hidden class="anchor" aria-hidden="true" href="#8142环形链表iihttpsleetcodecnproblemslinked-list-cycle-ii">#</a></h2>
+<p> 给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null \</p>
+<h3 id="思路-11">思路<a hidden class="anchor" aria-hidden="true" href="#思路-11">#</a></h3>
+<p>考察两知识点：</p>
+<ul>
+<li>判断链表是否环</li>
+<li>如果有环，如何找到这个环的入口</li>
+</ul>
+<p> 判断有环 <br>
+ 快慢指针法，分别定义 fast 和 slow 指针，从头结点出发，fast指针每次移动两个节点，slow指针每次移动一个节点，如果 fast 和 slow指针在途中相遇 ，说明这个链表有环 \</p>
+<p> 有环，如何找到这个环的入口 <br>
+ 从头结点出发一个指针，从相遇节点 也出发一个指针，这两个指针每次只走一个节点， 那么当这两个指针相遇的时候就是 环形入口的节点  \</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> ListNode <span style="color:#f92672">*</span><span style="color:#a6e22e">detectCycle</span>(<span style="color:#66d9ef">struct</span> ListNode <span style="color:#f92672">*</span>head) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> fast <span style="color:#f92672">=</span> head;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> slow <span style="color:#f92672">=</span> head;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span>(fast <span style="color:#f92672">!=</span> NULL <span style="color:#f92672">&amp;&amp;</span> fast<span style="color:#f92672">-&gt;</span>next <span style="color:#f92672">!=</span> NULL) {
+</span></span><span style="display:flex;"><span>        slow <span style="color:#f92672">=</span> slow<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        fast <span style="color:#f92672">=</span> fast<span style="color:#f92672">-&gt;</span>next<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 快慢指针相遇，此时从head 和 相遇点，同时查找直至相遇
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (slow <span style="color:#f92672">==</span> fast) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> index1 <span style="color:#f92672">=</span> fast;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">struct</span> ListNode<span style="color:#f92672">*</span> index2 <span style="color:#f92672">=</span> head;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span> (index1 <span style="color:#f92672">!=</span> index2) {
+</span></span><span style="display:flex;"><span>                index1 <span style="color:#f92672">=</span> index1<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>                index2 <span style="color:#f92672">=</span> index2<span style="color:#f92672">-&gt;</span>next;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> index2; <span style="color:#75715e">// 返回环的入口
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> NULL; 
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230203003107.png" alt="20230203003107"  />
+</p>
+<h1 id="三哈希表">三、哈希表<a hidden class="anchor" aria-hidden="true" href="#三哈希表">#</a></h1>
+<h2 id="1哈希表基础">1.哈希表基础<a hidden class="anchor" aria-hidden="true" href="#1哈希表基础">#</a></h2>
+
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://liuz0123.gitee.io/zain/img/wechat_pay.jpg" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://liuz0123.gitee.io/zain/img/alipay.jpg" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="next" href="https://liuz0123.gitee.io/zain/en/posts/read/read/ebookwebsite/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>电子书网站</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+
+
+<div>
+    <div class="pagination__title">
+        <span class="pagination__title-h" style="font-size: 20px;">💬评论</span>
+        <hr />
+    </div>
+
+    <div id="tcomment"></div>
+
+    <script src="https://cdn.staticfile.org/twikoo/1.6.7/twikoo.all.min.js">
+    </script>
+    
+
+    
+
+    <script>
+        twikoo.init({
+            envId: "https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2", 
+            el: "#tcomment",
+            lang: 'zh-CN',
+            region: 'ap-guangzhou', 
+            path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+            
+            
+            
+            
+            
+            
+            
+        });
+    </script>
+
+</div>
+</article>
+</main>
+
+
+<script async src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2020-2023 
+        <a href="https://liuz0123.gitee.io/zain/en/" style="color:#939393;">zain&#39;s Blog</a>
+         All Rights Reserved
+    </span>
+
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">备案号申请中</a>&nbsp;
+
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="填自己的公安图标链接" style="float:left;margin: 0px 5px 0px 0px;"/>
+             公网安备
+        </a>
+    </span>
+
+    <span id="busuanzi_container">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        总访客数: <span id="busuanzi_value_site_uv"></span>
+        总访问量: <span id="busuanzi_value_site_pv"></span>
+    </span>
+    
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {
+            }
+            ;
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

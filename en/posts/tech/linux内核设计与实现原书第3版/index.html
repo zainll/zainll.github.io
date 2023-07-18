@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Linux内核设计与实现原书第3版) | zain&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="Linux内核设计与实现 基于Linux 2.6.34, 主要内容：进程管理、进程调度、时间管理好定时器、系统调用接口、内存寻址、内存管理和页缓存、VFS、内">
+<meta name="author" content="
+&nbsp;Zain">
+<link rel="canonical" href="https://liuz0123.gitee.io/zain/en/posts/tech/linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E5%8E%9F%E4%B9%A6%E7%AC%AC3%E7%89%88/">
+<link crossorigin="anonymous" href="/zain/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/zain/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="icon" type="image/png" sizes="16x16" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="icon" type="image/png" sizes="32x32" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="apple-touch-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="mask-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="Linux内核设计与实现原书第3版)" />
+<meta property="og:description" content="Linux内核设计与实现 基于Linux 2.6.34, 主要内容：进程管理、进程调度、时间管理好定时器、系统调用接口、内存寻址、内存管理和页缓存、VFS、内" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liuz0123.gitee.io/zain/en/posts/tech/linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E5%8E%9F%E4%B9%A6%E7%AC%AC3%E7%89%88/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-01-05T00:18:23&#43;08:00" />
+<meta property="article:modified_time" content="2023-01-05T00:18:23&#43;08:00" /><meta property="og:site_name" content="(〃&#39;▽&#39;〃)" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Linux内核设计与实现原书第3版)"/>
+<meta name="twitter:description" content="Linux内核设计与实现 基于Linux 2.6.34, 主要内容：进程管理、进程调度、时间管理好定时器、系统调用接口、内存寻址、内存管理和页缓存、VFS、内"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "👨🏻‍💻 技术",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/tech/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Linux内核设计与实现原书第3版)",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/tech/linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E5%8E%9F%E4%B9%A6%E7%AC%AC3%E7%89%88/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Linux内核设计与实现原书第3版)",
+  "name": "Linux内核设计与实现原书第3版)",
+  "description": "Linux内核设计与实现 基于Linux 2.6.34, 主要内容：进程管理、进程调度、时间管理好定时器、系统调用接口、内存寻址、内存管理和页缓存、VFS、内",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "Linux内核设计与实现 基于Linux 2.6.34, 主要内容：进程管理、进程调度、时间管理好定时器、系统调用接口、内存寻址、内存管理和页缓存、VFS、内核同步及调试技术。Linux 2.6内核特色内容：CFS调度程序、抢占式内核、块I/O层及I/O调度程序 《Understanding the Linux kernel》、《Linux Devices Drivers》 www.kerneltravel.net\n第1章 Linux内核 BSD：伯克利Unix系统 Unix特点：\n1）系统调用少且明确 2）抽象为文件，统一文件系统调用函数 3）C语言 4）进程创建fork系统调用 5）进程间通信 操作系统应该包括的部分：内核、设备驱动程序、启动引导程序、明后shell或其他用户界面、基本文件管理工具和系统工具 内核负责：响应中断的中断服务程序、管理过高接触分享处理器时间的调度程序、管理检查地址空间的内存管理程序和网络、进程间通信等系统服务程序 内核空间和用户空间 应用程序通过系统调用与内核通信，应用程序-\u003e库函数-\u003e系统调用，应用程序通过系统调用陷入内核，内核运行于进程上下文中 内核管理硬件，中断机制，硬件设备通过中断信号与系统通信，中断号对应存在中断服务程序，响应和处理中断，中断不在进程上下文中执行，在中断上下文中运行 ![2023-03-04_19-31](https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/2023-03-04_19-31.png 单内核与微内核：\n单内核：内核在同一地址空间，直接系统调用，Unix、Linux 微内核：系统服务独立运行各自地址空间，消息传递处理内核通信，系统采用进程间通信(IPC)系统，Windows、Mac Linux与传统Unix差异： Linux支持动态加载内核模块 Linux支持多处理(SMP)机制 Linux内核可抢占 LInux内核不区分线程和其他一般进程 Linux提供设备类的面向对象设备模型 第2章 从内核出发 Linux内核官网：http://www.kernel.org\n# git下载代码 git clone # 解压 tar xvjf linux.....tar.bz2 tar xvzf linux.....tar.gz # 使用补丁 patch -p1 \u003c ../patch-x.y.z 内核源码树 目录 描述 arch 体系结构源码 block 块设备I/O层 crypto 加密API Documentation 内核源码文档 drivers 设备驱动程序 firmaware 模型驱动需要的设备固件 fs VFS和各种文件系统 include 内核头文件 init 内核引导和初始化 ipc 进程间通信代码 kernel 调度程序等核心子系统 lib 通用内核函数 mm 内存管理子系统和VM net 网络子系统 samples 示例代码 scripts 编译内核脚本 security 安全模块 sound 语言子系统 usr 用户空间代码 tools 开放工具 virt 虚拟化结构 编译内核 ",
+  "wordCount" : "944",
+  "inLanguage": "en",
+  "datePublished": "2023-01-05T00:18:23+08:00",
+  "dateModified": "2023-01-05T00:18:23+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Zain"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://liuz0123.gitee.io/zain/en/posts/tech/linux%E5%86%85%E6%A0%B8%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0%E5%8E%9F%E4%B9%A6%E7%AC%AC3%E7%89%88/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "zain's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://liuz0123.gitee.io/zain/img/Q.gif"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://liuz0123.gitee.io/zain/en/" accesskey="h" title="Zain&#39;s Blog (Alt + H)">
+            <img src="https://liuz0123.gitee.io/zain/img/Q.gif" alt="logo" aria-label="logo"
+                 height="35">Zain&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/en/zain/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/archives/" title="⏱ 时间轴">
+                <span>⏱ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/links" title="🤝 闲言俗语">
+                <span>🤝 闲言俗语</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://liuz0123.gitee.io/zain/en/">主页</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/en/posts/tech/">👨🏻‍💻 技术</a></div>
+            <h1 class="post-title">
+                Linux内核设计与实现原书第3版)
+            </h1>
+            <div class="post-meta">Create:&nbsp;<span title='2023-01-05 00:18:23 +0800 CST'>2023-01-05</span>&nbsp;|&nbsp;Update:&nbsp;2023-01-05&nbsp;|&nbsp;Words:&nbsp;944&nbsp;|&nbsp;&nbsp;2 min&nbsp;|&nbsp;
+&nbsp;Zain
+
+
+
+                &nbsp;|&nbsp;tags: &nbsp;
+                <ul class="post-tags-meta">
+                    <a href="https://liuz0123.gitee.io/zain/en/tags/linux/">linux</a>
+                </ul>
+
+                
+                <span id="busuanzi_container_page_pv">
+                &nbsp;| Viewers: <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+</div>
+        </header> 
+        <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">文章目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#linux%e5%86%85%e6%a0%b8%e8%ae%be%e8%ae%a1%e4%b8%8e%e5%ae%9e%e7%8e%b0" aria-label="Linux内核设计与实现">Linux内核设计与实现</a></li>
+                <li>
+                    <a href="#%e7%ac%ac1%e7%ab%a0-linux%e5%86%85%e6%a0%b8" aria-label="第1章 Linux内核">第1章 Linux内核</a></li>
+                <li>
+                    <a href="#%e7%ac%ac2%e7%ab%a0-%e4%bb%8e%e5%86%85%e6%a0%b8%e5%87%ba%e5%8f%91" aria-label="第2章 从内核出发">第2章 从内核出发</a><ul>
+                        
+                <li>
+                    <a href="#%e5%86%85%e6%a0%b8%e6%ba%90%e7%a0%81%e6%a0%91" aria-label="内核源码树">内核源码树</a></li>
+                <li>
+                    <a href="#%e7%bc%96%e8%af%91%e5%86%85%e6%a0%b8" aria-label="编译内核">编译内核</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        
+        <div class="post-content"><h1 id="linux内核设计与实现">Linux内核设计与实现<a hidden class="anchor" aria-hidden="true" href="#linux内核设计与实现">#</a></h1>
+<p> 基于Linux 2.6.34, 主要内容：进程管理、进程调度、时间管理好定时器、系统调用接口、内存寻址、内存管理和页缓存、VFS、内核同步及调试技术。Linux 2.6内核特色内容：CFS调度程序、抢占式内核、块I/O层及I/O调度程序 <br>
+ 《Understanding the Linux kernel》、《Linux Devices Drivers》 <br>
+ www.kerneltravel.net</p>
+<h1 id="第1章-linux内核">第1章 Linux内核<a hidden class="anchor" aria-hidden="true" href="#第1章-linux内核">#</a></h1>
+<p> BSD：伯克利Unix系统 <br>
+ Unix特点：</p>
+<ul>
+<li>1）系统调用少且明确</li>
+<li>2）抽象为文件，统一文件系统调用函数</li>
+<li>3）C语言</li>
+<li>4）进程创建fork系统调用</li>
+<li>5）进程间通信</li>
+</ul>
+<p> 操作系统应该包括的部分：内核、设备驱动程序、启动引导程序、明后shell或其他用户界面、基本文件管理工具和系统工具 <br>
+ 内核负责：响应中断的中断服务程序、管理过高接触分享处理器时间的调度程序、管理检查地址空间的内存管理程序和网络、进程间通信等系统服务程序 <br>
+ 内核空间和用户空间 <br>
+ 应用程序通过系统调用与内核通信，应用程序-&gt;库函数-&gt;系统调用，应用程序通过系统调用陷入内核，内核运行于进程上下文中 <br>
+ 内核管理硬件，中断机制，硬件设备通过中断信号与系统通信，中断号对应存在中断服务程序，响应和处理中断，中断不在进程上下文中执行，在中断上下文中运行 <br></p>
+<p>![2023-03-04_19-31](<a href="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/2023-03-04_19-31.png">https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/2023-03-04_19-31.png</a>
+ 单内核与微内核：</p>
+<ul>
+<li>单内核：内核在同一地址空间，直接系统调用，Unix、Linux</li>
+<li>微内核：系统服务独立运行各自地址空间，消息传递处理内核通信，系统采用进程间通信(IPC)系统，Windows、Mac
+ Linux与传统Unix差异：</li>
+<li>Linux支持动态加载内核模块</li>
+<li>Linux支持多处理(SMP)机制</li>
+<li>Linux内核可抢占</li>
+<li>LInux内核不区分线程和其他一般进程</li>
+<li>Linux提供设备类的面向对象设备模型</li>
+</ul>
+<h1 id="第2章-从内核出发">第2章 从内核出发<a hidden class="anchor" aria-hidden="true" href="#第2章-从内核出发">#</a></h1>
+<p> Linux内核官网：http://www.kernel.org</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># git下载代码</span>
+</span></span><span style="display:flex;"><span>git clone 
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 解压</span>
+</span></span><span style="display:flex;"><span>tar xvjf linux.....tar.bz2
+</span></span><span style="display:flex;"><span>tar xvzf linux.....tar.gz
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 使用补丁</span>
+</span></span><span style="display:flex;"><span>patch -p1 &lt; ../patch-x.y.z
+</span></span></code></pre></div><h2 id="内核源码树">内核源码树<a hidden class="anchor" aria-hidden="true" href="#内核源码树">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>arch</td>
+<td>体系结构源码</td>
+</tr>
+<tr>
+<td>block</td>
+<td>块设备I/O层</td>
+</tr>
+<tr>
+<td>crypto</td>
+<td>加密API</td>
+</tr>
+<tr>
+<td>Documentation</td>
+<td>内核源码文档</td>
+</tr>
+<tr>
+<td>drivers</td>
+<td>设备驱动程序</td>
+</tr>
+<tr>
+<td>firmaware</td>
+<td>模型驱动需要的设备固件</td>
+</tr>
+<tr>
+<td>fs</td>
+<td>VFS和各种文件系统</td>
+</tr>
+<tr>
+<td>include</td>
+<td>内核头文件</td>
+</tr>
+<tr>
+<td>init</td>
+<td>内核引导和初始化</td>
+</tr>
+<tr>
+<td>ipc</td>
+<td>进程间通信代码</td>
+</tr>
+<tr>
+<td>kernel</td>
+<td>调度程序等核心子系统</td>
+</tr>
+<tr>
+<td>lib</td>
+<td>通用内核函数</td>
+</tr>
+<tr>
+<td>mm</td>
+<td>内存管理子系统和VM</td>
+</tr>
+<tr>
+<td>net</td>
+<td>网络子系统</td>
+</tr>
+<tr>
+<td>samples</td>
+<td>示例代码</td>
+</tr>
+<tr>
+<td>scripts</td>
+<td>编译内核脚本</td>
+</tr>
+<tr>
+<td>security</td>
+<td>安全模块</td>
+</tr>
+<tr>
+<td>sound</td>
+<td>语言子系统</td>
+</tr>
+<tr>
+<td>usr</td>
+<td>用户空间代码</td>
+</tr>
+<tr>
+<td>tools</td>
+<td>开放工具</td>
+</tr>
+<tr>
+<td>virt</td>
+<td>虚拟化结构</td>
+</tr>
+</tbody>
+</table>
+<h2 id="编译内核">编译内核<a hidden class="anchor" aria-hidden="true" href="#编译内核">#</a></h2>
+
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://liuz0123.gitee.io/zain/img/wechat_pay.jpg" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://liuz0123.gitee.io/zain/img/alipay.jpg" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://liuz0123.gitee.io/zain/en/posts/tech/top-down/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>top-down</span>
+  </a>
+  <a class="next" href="https://liuz0123.gitee.io/zain/en/posts/tech/docker/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>docker</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+
+
+<div>
+    <div class="pagination__title">
+        <span class="pagination__title-h" style="font-size: 20px;">💬评论</span>
+        <hr />
+    </div>
+
+    <div id="tcomment"></div>
+
+    <script src="https://cdn.staticfile.org/twikoo/1.6.7/twikoo.all.min.js">
+    </script>
+    
+
+    
+
+    <script>
+        twikoo.init({
+            envId: "https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2", 
+            el: "#tcomment",
+            lang: 'zh-CN',
+            region: 'ap-guangzhou', 
+            path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+            
+            
+            
+            
+            
+            
+            
+        });
+    </script>
+
+</div>
+</article>
+</main>
+
+
+<script async src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2020-2023 
+        <a href="https://liuz0123.gitee.io/zain/en/" style="color:#939393;">zain&#39;s Blog</a>
+         All Rights Reserved
+    </span>
+
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">备案号申请中</a>&nbsp;
+
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="填自己的公安图标链接" style="float:left;margin: 0px 5px 0px 0px;"/>
+             公网安备
+        </a>
+    </span>
+
+    <span id="busuanzi_container">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        总访客数: <span id="busuanzi_value_site_uv"></span>
+        总访问量: <span id="busuanzi_value_site_pv"></span>
+    </span>
+    
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {
+            }
+            ;
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

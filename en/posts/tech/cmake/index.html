@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>cmake | zain&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="1.cmake简述
+ CMake是跨平台编译管理工具,为第三方依赖和引入,创建编译系统,程序测试及安装.Cmake工具使用CMakeLists.txt文件,跨平台执行相同编译命令,生成对应平台的可执行程序或者链接库.">
+<meta name="author" content="
+&nbsp;Zain">
+<link rel="canonical" href="https://liuz0123.gitee.io/zain/en/posts/tech/cmake/">
+<link crossorigin="anonymous" href="/zain/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/zain/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="icon" type="image/png" sizes="16x16" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="icon" type="image/png" sizes="32x32" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="apple-touch-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="mask-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="cmake" />
+<meta property="og:description" content="1.cmake简述
+ CMake是跨平台编译管理工具,为第三方依赖和引入,创建编译系统,程序测试及安装.Cmake工具使用CMakeLists.txt文件,跨平台执行相同编译命令,生成对应平台的可执行程序或者链接库." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liuz0123.gitee.io/zain/en/posts/tech/cmake/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-05-17T00:17:58&#43;08:00" />
+<meta property="article:modified_time" content="2022-05-18T00:17:58&#43;08:00" /><meta property="og:site_name" content="(〃&#39;▽&#39;〃)" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="cmake"/>
+<meta name="twitter:description" content="1.cmake简述
+ CMake是跨平台编译管理工具,为第三方依赖和引入,创建编译系统,程序测试及安装.Cmake工具使用CMakeLists.txt文件,跨平台执行相同编译命令,生成对应平台的可执行程序或者链接库."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "👨🏻‍💻 技术",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/tech/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "cmake",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/tech/cmake/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "cmake",
+  "name": "cmake",
+  "description": "1.cmake简述 CMake是跨平台编译管理工具,为第三方依赖和引入,创建编译系统,程序测试及安装.Cmake工具使用CMakeLists.txt文件,跨平台执行相同编译命令,生成对应平台的可执行程序或者链接库.\n",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "1.cmake简述 CMake是跨平台编译管理工具,为第三方依赖和引入,创建编译系统,程序测试及安装.Cmake工具使用CMakeLists.txt文件,跨平台执行相同编译命令,生成对应平台的可执行程序或者链接库.\nCMake工程简单例子\ncmake_minimum_required(VERSION 3.12) project(myproj) find_package(Poco REQUIRED COMPONENTS Net Util) add_executable(MyExe) target_source(MyExe PRIVATE \"main.cpp\") target_link_library(MyExe PRIVATE Poco::Net PocoUtil) target_complie_definition(MyExe PRIVATE std_cxx_14) 2.Target 和围绕 Target 的配置 C/C++工程通常都是为了生成可执行程序或者链接库，在现代 CMake 里他们被统称为target，创建命令分别是add_library()和add_executable()。其中链接库的类型又分为很多种，最常用的就是SHARED以及STATIC，在命令中加入关键词进行声明：add_library(MyLib SHARED)，第一个参数为target的名称，后续的配置都需要用到这个名字。 指定target的源文件：\ntarget_source(MyLib PRVIATE \"main.cpp\" \"func.cpp\") PRIVATE关键词用于描述参数的“应用范围”，此外还有INTERFACE和PUBLIC两种可能的值\n较多的源文件，可以使用 CMake 的file命令进行遍历拿到全部的源文件\nfile(GLOB_RECURSE SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp) 命令第一个参数GLOB_RECURSE表明递归的查找子文件夹，第二个参数SRCS则是存储结果的变量名，第三个参数为目标文件的匹配模式，找到符合条件的 cpp 文件后，他们的路径会以字符串数组的形式保存在 SRCS 变量中，使用方式如下：\ntarget_source(MyLib PRIVATE ${SRCS}) 配置target时通常还需要指定头文件目录：\ntarget_include_directories(MyLib PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/) 编译时需要的语言特性：\ntarget_compile_features(MyLib PRIVATE std_cxx_14) 编译时的宏定义：\ntarget_compile_definitions(MyLib PRIVATE LogLevel=3) 参数想直接传给底层的编译器（比如 gcc, clang, cl），可以使用\ntarget_compile_options(MyLib PRIVATE -Werror -Wall -Wextra) 3.Build Specification 和 Usage Requirement C/C++通过 include 头文件的方式引入依赖，在动态或静态链接后可以调用依赖实现。一个可执行程序可能会依赖链接库，链接库也同样可能依赖其他的链接库 CMake 提供的解决方案是，在对 target 进行配置时，可以规定配置的类型，分为 build specification 和 usage requirement 两类，会影响配置的应用范围。Build specification 类型的配置仅在编译的时候需要满足，通过PRIVATE关键字声明；Usage requirement 类型的配置则是在使用时需要满足，即在其他项目里，使用本项目已编译好的 target 时需要满足，这种类型的配置使用INTERFACE关键词声明。在实际工程中，有很多配置在编译时以及被使用时都需要被满足的，这种配置通过PUBLIC关键词进行声明。\n一个 library，在编译时静态链接了 Boost，在我们的实现文件中使用了 c++14 的特性，并用到了 Boost 的头文件和函数。随后我们对外发布了这个库，其中有头文件和预编译好的动态链接库。尽管我们的实现代码里用了 C++14，但在对外提供的头文件中只用到 C++03 的语法，也没有引入任何 Boost 的代码。这种情况下，当其他工程在使用我们的 library 时，其使用的编译器不需要开启 C++14 的支持，开发环境下也不需要安装 Boost。我们 library 的 CMake 配置中可以这么写：\ntarget_compile_features(MyLib PRIVATE cxx_std_14) target_link_libraries(MyLib PRIVATE Boost::Format) PRIVATE 说明 c++14 的支持只在编译时需要用到，Boost 库的链接也仅在编译时需要。但如果我们对外提供的头文件中也使用了 C++14，那么就需要使用 PUBLIC 修饰，改为：\ntarget_compile_features(MyLib PUBLIC cxx_std_14) target_link_libraries(MyLib PRIVATE Boost::Format) 当 library 是 header-only 时，我们的工程是不需要单独编译的，因此也就没有 build specification，通过INTERFACE修饰配置即可\narget_compile_features(MyLib INTERFACE cxx_std_14) Usage requirement 类型的配置，即通过INTERFACE或是PUBLIC修饰的配置是会传递的，比如 LibA 依赖 LibB 后，会继承 LibB 的 usage requirement，此后 LibC 依赖 LibB 时，LibA 和 libB 的 usage requirement 都会继承下来，\n4.寻找和使用链接库 C/C++标准没有规范库的安装位置和安装形式，通过 CMake 提供的方案寻找依赖，不光可以定位到头文件目录和链接库路径，还能够获取到库的 usage requirement。 在 CMake 中寻找第三方库的命令为find_package，其背后的工作方式有两种，一种基于 Config File 的查找，另一种则是基于 Find File 的查找。在执行find_package时，实际上 CMake 都是在找这两类文件，找到后从中获取关于库的信息。\n4.1 通过 Config file 找到依赖 Config File 是依赖的开发者提供的 cmake 脚本，通常会随预编译好的二进制一起发布，供下游的使用者使用。在 Config file 里，会对库里包含的 target 进行描述，说明版本信息以及头文件路径、链接库路径、编译选项等 usage requirement\nCMake 对 Config file 的命名是有规定的，对于find_package(ABC)这样一条命令，CMake 只会去寻找ABCConfig.cmake或是abc-config.cmake。CMake 默认寻找的路径和平台有关，在 Linux 下寻找路径包括/usr/lib/cmake以及/usr/lib/local/cmake，在这两个路径下可以发现大量的 Config File，一般在安装某个库时，其自带的 Config file 会被放到这里来。\n4.2 通过 Find file 找到依赖 对于find_package(ABC)命令，如果 CMake 没有找到 Config file，他还会去试着寻找FindABC.cmake。Find file 在功能上和 Config file 相同，区别在于 Find file 是由其他人编写的，而非库的开发者。如果你使用的某个库没有提供 Config file，你可以去网上搜搜 Find file 或者自己写一个，然后加入到你的 CMake 工程中。\nCMake 官方为我们写好了很多 Find file，在CMake Documentation这一页面可以看到，OpenGL，OpenMP，SDL 这些知名的库官方都为我们写好了 Find 脚本，因此直接调用 find_package 命令即可。但由于库的安装位置并不是固定的，这些 Find 脚本不一定能找到库，此时根据 CMake 报错的提示设置对应变量即可，通常是需要提供安装路径，这样就可以通过 Find file 获取到库的 usage requirement。不论是 Config file 还是 Find file，其目的都不只是找到库这么简单，而是告诉 CMake 如何使用这个库。 库 CMake 官方也没有提供 Find file，这时候就要自己写了或者靠搜索了，写好后放到本项目的目录下，修改CMAKE_MODULE_PATH这个 CMAKE 变量：\nlist(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake) ${CMAKE_SOURCE_DIR}/cmake目录下的 Find file 就可以被 CMake 找到了。 通过 CMake 的find_library和find_path两个命令就可以完成任务：\nfind_library(MPI_LIBRARY NAMES mpi HINTS \"${CMAKE_PREFIX_PATH}/lib\" ${MPI_LIB_PATH} # 如果默认路径没找到libmpi.so，还会去MPI_LIB_PATH找，下游使用者可以设置这个变量值 ) find_path(MPI_INCLUDE_DIR NAMES mpi.h PATHS \"${CMAKE_PREFIX_PATH}/include\" ${MPI_INCLUDE_PATH} # 如果默认路径没找到mpi.h，还会去MPI_INCLUDE_PATH找，下游使用者可以设置这个变量值 ) 4.3.find_package 的处理 find_package这个命令，这个命令可以指定很多参数，比如指定版本，指定具体的模块等等。以 SFML 多媒体库为例，其包含了 network 模块，audio 模块，graphic 模块等等，但我很多时候只用到 graphic 模块，那么其他的模块对应的链接库不需要被链接，于是 CMake 脚本可以这么写：\n# 要求大版本号为2的SFML库的graphic模块 find_package(SFML 2 COMPONENTS graphics REQUIRED) # SFML提供的target名字为sfml-graphics target_link_libraries(MyEXE PRIVATE sfml-graphics) 5.使用 CMake 来编译 CMake 生成好编译环境后，底层的 make, ninja, MSBuild 编译命令都是不一样的，但 CMake 提供了一个统一的方法进行编译：\ncmake --build . 使用–buildflag，CMake 就会调用底层的编译命令，在跨平台时十分方便。 对于 Visual Studio，其 Debug 和 Release 环境是基于 configuration 的，因此CMAKE_BUILD_TYPE变量无效，需要在 build 时指定：\ncmake --build . --config Release CPM 使用CPM管理CMake C++工程中的外部依赖库\n参考链接: cmake https://ukabuer.me/blog/more-modern-cmake/ Makefile ",
+  "wordCount" : "2856",
+  "inLanguage": "en",
+  "datePublished": "2022-05-17T00:17:58+08:00",
+  "dateModified": "2022-05-18T00:17:58+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Zain"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://liuz0123.gitee.io/zain/en/posts/tech/cmake/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "zain's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://liuz0123.gitee.io/zain/img/Q.gif"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://liuz0123.gitee.io/zain/en/" accesskey="h" title="Zain&#39;s Blog (Alt + H)">
+            <img src="https://liuz0123.gitee.io/zain/img/Q.gif" alt="logo" aria-label="logo"
+                 height="35">Zain&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/en/zain/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/archives/" title="⏱ 时间轴">
+                <span>⏱ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/links" title="🤝 闲言俗语">
+                <span>🤝 闲言俗语</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://liuz0123.gitee.io/zain/en/">主页</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/en/posts/tech/">👨🏻‍💻 技术</a></div>
+            <h1 class="post-title">
+                cmake
+            </h1>
+            <div class="post-meta">Create:&nbsp;<span title='2022-05-17 00:17:58 +0800 CST'>2022-05-17</span>&nbsp;|&nbsp;Update:&nbsp;2022-05-18&nbsp;|&nbsp;Words:&nbsp;2856&nbsp;|&nbsp;&nbsp;6 min&nbsp;|&nbsp;
+&nbsp;Zain
+
+
+
+                &nbsp;|&nbsp;tags: &nbsp;
+                <ul class="post-tags-meta">
+                    <a href="https://liuz0123.gitee.io/zain/en/tags/tech/">tech</a>
+                    <a href="https://liuz0123.gitee.io/zain/en/tags/linux/">、linux</a>
+                </ul>
+
+                
+                <span id="busuanzi_container_page_pv">
+                &nbsp;| Viewers: <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+</div>
+        </header> 
+        <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">文章目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#1cmake%e7%ae%80%e8%bf%b0" aria-label="1.cmake简述">1.cmake简述</a></li>
+                <li>
+                    <a href="#2target-%e5%92%8c%e5%9b%b4%e7%bb%95-target-%e7%9a%84%e9%85%8d%e7%bd%ae" aria-label="2.Target 和围绕 Target 的配置">2.Target 和围绕 Target 的配置</a></li>
+                <li>
+                    <a href="#3build-specification-%e5%92%8c-usage-requirement" aria-label="3.Build Specification 和 Usage Requirement">3.Build Specification 和 Usage Requirement</a></li>
+                <li>
+                    <a href="#4%e5%af%bb%e6%89%be%e5%92%8c%e4%bd%bf%e7%94%a8%e9%93%be%e6%8e%a5%e5%ba%93" aria-label="4.寻找和使用链接库">4.寻找和使用链接库</a><ul>
+                        
+                <li>
+                    <a href="#41-%e9%80%9a%e8%bf%87-config-file-%e6%89%be%e5%88%b0%e4%be%9d%e8%b5%96" aria-label="4.1 通过 Config file 找到依赖">4.1 通过 Config file 找到依赖</a></li>
+                <li>
+                    <a href="#42-%e9%80%9a%e8%bf%87-find-file-%e6%89%be%e5%88%b0%e4%be%9d%e8%b5%96" aria-label="4.2 通过 Find file 找到依赖">4.2 通过 Find file 找到依赖</a></li>
+                <li>
+                    <a href="#43find_package-%e7%9a%84%e5%a4%84%e7%90%86" aria-label="4.3.find_package 的处理">4.3.find_package 的处理</a></li>
+                <li>
+                    <a href="#5%e4%bd%bf%e7%94%a8-cmake-%e6%9d%a5%e7%bc%96%e8%af%91" aria-label="5.使用 CMake 来编译">5.使用 CMake 来编译</a></li></ul>
+                </li>
+                <li>
+                    <a href="#cpm" aria-label="CPM">CPM</a>
+                </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        
+        <div class="post-content"><h2 id="1cmake简述">1.cmake简述<a hidden class="anchor" aria-hidden="true" href="#1cmake简述">#</a></h2>
+<p> CMake是跨平台编译管理工具,为第三方依赖和引入,创建编译系统,程序测试及安装.Cmake工具使用CMakeLists.txt文件,跨平台执行相同编译命令,生成对应平台的可执行程序或者链接库.</p>
+<p> CMake工程简单例子</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake_minimum_required<span style="color:#f92672">(</span>VERSION 3.12<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>project<span style="color:#f92672">(</span>myproj<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>find_package<span style="color:#f92672">(</span>Poco REQUIRED COMPONENTS Net Util<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>add_executable<span style="color:#f92672">(</span>MyExe<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>target_source<span style="color:#f92672">(</span>MyExe PRIVATE <span style="color:#e6db74">&#34;main.cpp&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>target_link_library<span style="color:#f92672">(</span>MyExe PRIVATE Poco::Net PocoUtil<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>target_complie_definition<span style="color:#f92672">(</span>MyExe PRIVATE std_cxx_14<span style="color:#f92672">)</span>
+</span></span></code></pre></div><h2 id="2target-和围绕-target-的配置">2.Target 和围绕 Target 的配置<a hidden class="anchor" aria-hidden="true" href="#2target-和围绕-target-的配置">#</a></h2>
+<p> C/C++工程通常都是为了生成可执行程序或者链接库，在现代 CMake 里他们被统称为<code>target</code>，创建命令分别是<code>add_library()</code>和<code>add_executable()</code>。其中链接库的类型又分为很多种，最常用的就是<code>SHARED</code>以及<code>STATIC</code>，在命令中加入关键词进行声明：add_library(MyLib SHARED)，第一个参数为target的名称，后续的配置都需要用到这个名字。
+ 指定target的源文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>target_source<span style="color:#f92672">(</span>MyLib PRVIATE <span style="color:#e6db74">&#34;main.cpp&#34;</span> <span style="color:#e6db74">&#34;func.cpp&#34;</span><span style="color:#f92672">)</span>
+</span></span></code></pre></div><p> PRIVATE关键词用于描述参数的“应用范围”，此外还有INTERFACE和PUBLIC两种可能的值</p>
+<p> 较多的源文件，可以使用 CMake 的file命令进行遍历拿到全部的源文件</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>file<span style="color:#f92672">(</span>GLOB_RECURSE SRCS <span style="color:#e6db74">${</span>CMAKE_CURRENT_SOURCE_DIR<span style="color:#e6db74">}</span>/*.cpp<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p> 命令第一个参数GLOB_RECURSE表明递归的查找子文件夹，第二个参数SRCS则是存储结果的变量名，第三个参数为目标文件的匹配模式，找到符合条件的 cpp 文件后，他们的路径会以字符串数组的形式保存在 SRCS 变量中，使用方式如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>target_source<span style="color:#f92672">(</span>MyLib PRIVATE <span style="color:#e6db74">${</span>SRCS<span style="color:#e6db74">}</span><span style="color:#f92672">)</span>
+</span></span></code></pre></div><p> 配置target时通常还需要指定头文件目录：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>target_include_directories<span style="color:#f92672">(</span>MyLib PRIVATE <span style="color:#e6db74">${</span>CMAKE_CURRENT_SOURCE_DIR<span style="color:#e6db74">}</span>/include/<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p> 编译时需要的语言特性：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>target_compile_features<span style="color:#f92672">(</span>MyLib PRIVATE std_cxx_14<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p> 编译时的宏定义：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>target_compile_definitions<span style="color:#f92672">(</span>MyLib PRIVATE LogLevel<span style="color:#f92672">=</span>3<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p> 参数想直接传给底层的编译器（比如 gcc, clang, cl），可以使用</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>target_compile_options<span style="color:#f92672">(</span>MyLib PRIVATE -Werror -Wall -Wextra<span style="color:#f92672">)</span>
+</span></span></code></pre></div><h2 id="3build-specification-和-usage-requirement">3.Build Specification 和 Usage Requirement<a hidden class="anchor" aria-hidden="true" href="#3build-specification-和-usage-requirement">#</a></h2>
+<p> C/C++通过 include 头文件的方式引入依赖，在动态或静态链接后可以调用依赖实现。一个可执行程序可能会依赖链接库，链接库也同样可能依赖其他的链接库
+ CMake 提供的解决方案是，在对 target 进行配置时，可以规定配置的类型，分为 build specification 和 usage requirement 两类，会影响配置的应用范围。Build specification 类型的配置仅在编译的时候需要满足，通过PRIVATE关键字声明；Usage requirement 类型的配置则是在使用时需要满足，即在其他项目里，使用本项目已编译好的 target 时需要满足，这种类型的配置使用INTERFACE关键词声明。在实际工程中，有很多配置在编译时以及被使用时都需要被满足的，这种配置通过PUBLIC关键词进行声明。</p>
+<p> 一个 library，在编译时静态链接了 Boost，在我们的实现文件中使用了 c++14 的特性，并用到了 Boost 的头文件和函数。随后我们对外发布了这个库，其中有头文件和预编译好的动态链接库。尽管我们的实现代码里用了 C++14，但在对外提供的头文件中只用到 C++03 的语法，也没有引入任何 Boost 的代码。这种情况下，当其他工程在使用我们的 library 时，其使用的编译器不需要开启 C++14 的支持，开发环境下也不需要安装 Boost。我们 library 的 CMake 配置中可以这么写：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>target_compile_features<span style="color:#f92672">(</span>MyLib PRIVATE cxx_std_14<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>target_link_libraries<span style="color:#f92672">(</span>MyLib PRIVATE Boost::Format<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p> PRIVATE 说明 c++14 的支持只在编译时需要用到，Boost 库的链接也仅在编译时需要。但如果我们对外提供的头文件中也使用了 C++14，那么就需要使用 PUBLIC 修饰，改为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>target_compile_features<span style="color:#f92672">(</span>MyLib PUBLIC cxx_std_14<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>target_link_libraries<span style="color:#f92672">(</span>MyLib PRIVATE Boost::Format<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p> 当 library 是 header-only 时，我们的工程是不需要单独编译的，因此也就没有 build specification，通过INTERFACE修饰配置即可</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>arget_compile_features<span style="color:#f92672">(</span>MyLib INTERFACE cxx_std_14<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p> Usage requirement 类型的配置，即通过INTERFACE或是PUBLIC修饰的配置是会传递的，比如 LibA 依赖 LibB 后，会继承 LibB 的 usage requirement，此后 LibC 依赖 LibB 时，LibA 和 libB 的 usage requirement 都会继承下来，</p>
+<h2 id="4寻找和使用链接库">4.寻找和使用链接库<a hidden class="anchor" aria-hidden="true" href="#4寻找和使用链接库">#</a></h2>
+<p> C/C++标准没有规范库的安装位置和安装形式，通过 CMake 提供的方案寻找依赖，不光可以定位到头文件目录和链接库路径，还能够获取到库的 usage requirement。
+ 在 CMake 中寻找第三方库的命令为find_package，其背后的工作方式有两种，一种基于 Config File 的查找，另一种则是基于 Find File 的查找。在执行find_package时，实际上 CMake 都是在找这两类文件，找到后从中获取关于库的信息。</p>
+<h3 id="41-通过-config-file-找到依赖">4.1 通过 Config file 找到依赖<a hidden class="anchor" aria-hidden="true" href="#41-通过-config-file-找到依赖">#</a></h3>
+<p> Config File 是依赖的开发者提供的 cmake 脚本，通常会随预编译好的二进制一起发布，供下游的使用者使用。在 Config file 里，会对库里包含的 target 进行描述，说明版本信息以及头文件路径、链接库路径、编译选项等 usage requirement</p>
+<p> CMake 对 Config file 的命名是有规定的，对于find_package(ABC)这样一条命令，CMake 只会去寻找ABCConfig.cmake或是abc-config.cmake。CMake 默认寻找的路径和平台有关，在 Linux 下寻找路径包括/usr/lib/cmake以及/usr/lib/local/cmake，在这两个路径下可以发现大量的 Config File，一般在安装某个库时，其自带的 Config file 会被放到这里来。</p>
+<h3 id="42-通过-find-file-找到依赖">4.2 通过 Find file 找到依赖<a hidden class="anchor" aria-hidden="true" href="#42-通过-find-file-找到依赖">#</a></h3>
+<p> 对于find_package(ABC)命令，如果 CMake 没有找到 Config file，他还会去试着寻找FindABC.cmake。Find file 在功能上和 Config file 相同，区别在于 Find file 是由其他人编写的，而非库的开发者。如果你使用的某个库没有提供 Config file，你可以去网上搜搜 Find file 或者自己写一个，然后加入到你的 CMake 工程中。</p>
+<p> CMake 官方为我们写好了很多 Find file，在CMake Documentation这一页面可以看到，OpenGL，OpenMP，SDL 这些知名的库官方都为我们写好了 Find 脚本，因此直接调用 find_package 命令即可。但由于库的安装位置并不是固定的，这些 Find 脚本不一定能找到库，此时根据 CMake 报错的提示设置对应变量即可，通常是需要提供安装路径，这样就可以通过 Find file 获取到库的 usage requirement。不论是 Config file 还是 Find file，其目的都不只是找到库这么简单，而是告诉 CMake 如何使用这个库。
+库 CMake 官方也没有提供 Find file，这时候就要自己写了或者靠搜索了，写好后放到本项目的目录下，修改CMAKE_MODULE_PATH这个 CMAKE 变量：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>list<span style="color:#f92672">(</span>INSERT CMAKE_MODULE_PATH <span style="color:#ae81ff">0</span> <span style="color:#e6db74">${</span>CMAKE_SOURCE_DIR<span style="color:#e6db74">}</span>/cmake<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p> ${CMAKE_SOURCE_DIR}/cmake目录下的 Find file 就可以被 CMake 找到了。
+ 通过 CMake 的find_library和find_path两个命令就可以完成任务：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>find_library<span style="color:#f92672">(</span>MPI_LIBRARY
+</span></span><span style="display:flex;"><span>  NAMES mpi
+</span></span><span style="display:flex;"><span>  HINTS <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CMAKE_PREFIX_PATH<span style="color:#e6db74">}</span><span style="color:#e6db74">/lib&#34;</span> <span style="color:#e6db74">${</span>MPI_LIB_PATH<span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 如果默认路径没找到libmpi.so，还会去MPI_LIB_PATH找，下游使用者可以设置这个变量值</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>find_path<span style="color:#f92672">(</span>MPI_INCLUDE_DIR
+</span></span><span style="display:flex;"><span>  NAMES mpi.h
+</span></span><span style="display:flex;"><span>  PATHS <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>CMAKE_PREFIX_PATH<span style="color:#e6db74">}</span><span style="color:#e6db74">/include&#34;</span> <span style="color:#e6db74">${</span>MPI_INCLUDE_PATH<span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 如果默认路径没找到mpi.h，还会去MPI_INCLUDE_PATH找，下游使用者可以设置这个变量值</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">)</span>
+</span></span></code></pre></div><h3 id="43find_package-的处理">4.3.find_package 的处理<a hidden class="anchor" aria-hidden="true" href="#43find_package-的处理">#</a></h3>
+<p> find_package这个命令，这个命令可以指定很多参数，比如指定版本，指定具体的模块等等。以 SFML 多媒体库为例，其包含了 network 模块，audio 模块，graphic 模块等等，但我很多时候只用到 graphic 模块，那么其他的模块对应的链接库不需要被链接，于是 CMake 脚本可以这么写：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 要求大版本号为2的SFML库的graphic模块</span>
+</span></span><span style="display:flex;"><span>find_package<span style="color:#f92672">(</span>SFML <span style="color:#ae81ff">2</span> COMPONENTS graphics REQUIRED<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># SFML提供的target名字为sfml-graphics</span>
+</span></span><span style="display:flex;"><span>target_link_libraries<span style="color:#f92672">(</span>MyEXE PRIVATE sfml-graphics<span style="color:#f92672">)</span>
+</span></span></code></pre></div><h3 id="5使用-cmake-来编译">5.使用 CMake 来编译<a hidden class="anchor" aria-hidden="true" href="#5使用-cmake-来编译">#</a></h3>
+<p> CMake 生成好编译环境后，底层的 make, ninja, MSBuild 编译命令都是不一样的，但 CMake 提供了一个统一的方法进行编译：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake --build .
+</span></span></code></pre></div><p> 使用&ndash;buildflag，CMake 就会调用底层的编译命令，在跨平台时十分方便。
+ 对于 Visual Studio，其 Debug 和 Release 环境是基于 configuration 的，因此CMAKE_BUILD_TYPE变量无效，需要在 build 时指定：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake --build . --config Release
+</span></span></code></pre></div><h2 id="cpm">CPM<a hidden class="anchor" aria-hidden="true" href="#cpm">#</a></h2>
+<p><a href="https://blog.csdn.net/davidhopper/article/details/121030549">使用CPM管理CMake C++工程中的外部依赖库</a></p>
+<ul>
+<li>参考链接:
+cmake
+<a href="https://ukabuer.me/blog/more-modern-cmake/">https://ukabuer.me/blog/more-modern-cmake/</a>
+Makefile</li>
+</ul>
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://liuz0123.gitee.io/zain/img/wechat_pay.jpg" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://liuz0123.gitee.io/zain/img/alipay.jpg" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://liuz0123.gitee.io/zain/en/posts/tech/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>深入理解计算机系统</span>
+  </a>
+  <a class="next" href="https://liuz0123.gitee.io/zain/en/posts/blog/%E8%8B%B1%E8%AF%AD%E8%AF%AD%E6%B3%95%E4%B8%80/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>英语语法一</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+
+
+<div>
+    <div class="pagination__title">
+        <span class="pagination__title-h" style="font-size: 20px;">💬评论</span>
+        <hr />
+    </div>
+
+    <div id="tcomment"></div>
+
+    <script src="https://cdn.staticfile.org/twikoo/1.6.7/twikoo.all.min.js">
+    </script>
+    
+
+    
+
+    <script>
+        twikoo.init({
+            envId: "https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2", 
+            el: "#tcomment",
+            lang: 'zh-CN',
+            region: 'ap-guangzhou', 
+            path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+            
+            
+            
+            
+            
+            
+            
+        });
+    </script>
+
+</div>
+</article>
+</main>
+
+
+<script async src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2020-2023 
+        <a href="https://liuz0123.gitee.io/zain/en/" style="color:#939393;">zain&#39;s Blog</a>
+         All Rights Reserved
+    </span>
+
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">备案号申请中</a>&nbsp;
+
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="填自己的公安图标链接" style="float:left;margin: 0px 5px 0px 0px;"/>
+             公网安备
+        </a>
+    </span>
+
+    <span id="busuanzi_container">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        总访客数: <span id="busuanzi_value_site_uv"></span>
+        总访问量: <span id="busuanzi_value_site_pv"></span>
+    </span>
+    
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {
+            }
+            ;
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

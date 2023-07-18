@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>精通Linux内核：智能设备开发核心技术  | zain&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="知识储备篇介绍了Linux的数据结构、中断处理、内核同步和时间计算等 内存管理篇、文件系统篇、进程管理篇、介绍Linux的三大核心模块 Linu">
+<meta name="author" content="
+&nbsp;Zain">
+<link rel="canonical" href="https://liuz0123.gitee.io/zain/en/posts/tech/%E7%B2%BE%E9%80%9Alinux%E5%86%85%E6%A0%B8%E6%99%BA%E8%83%BD%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF-/">
+<link crossorigin="anonymous" href="/zain/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/zain/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="icon" type="image/png" sizes="16x16" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="icon" type="image/png" sizes="32x32" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="apple-touch-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="mask-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="精通Linux内核：智能设备开发核心技术 " />
+<meta property="og:description" content="知识储备篇介绍了Linux的数据结构、中断处理、内核同步和时间计算等 内存管理篇、文件系统篇、进程管理篇、介绍Linux的三大核心模块 Linu" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liuz0123.gitee.io/zain/en/posts/tech/%E7%B2%BE%E9%80%9Alinux%E5%86%85%E6%A0%B8%E6%99%BA%E8%83%BD%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF-/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-06-05T00:21:58&#43;08:00" />
+<meta property="article:modified_time" content="2023-06-06T00:21:58&#43;08:00" /><meta property="og:site_name" content="(〃&#39;▽&#39;〃)" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="精通Linux内核：智能设备开发核心技术 "/>
+<meta name="twitter:description" content="知识储备篇介绍了Linux的数据结构、中断处理、内核同步和时间计算等 内存管理篇、文件系统篇、进程管理篇、介绍Linux的三大核心模块 Linu"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "👨🏻‍💻 技术",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/tech/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "精通Linux内核：智能设备开发核心技术 ",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/tech/%E7%B2%BE%E9%80%9Alinux%E5%86%85%E6%A0%B8%E6%99%BA%E8%83%BD%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF-/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "精通Linux内核：智能设备开发核心技术 ",
+  "name": "精通Linux内核：智能设备开发核心技术 ",
+  "description": "知识储备篇介绍了Linux的数据结构、中断处理、内核同步和时间计算等 内存管理篇、文件系统篇、进程管理篇、介绍Linux的三大核心模块 Linu",
+  "keywords": [
+    ""
+  ],
+  "articleBody": " 知识储备篇介绍了Linux的数据结构、中断处理、内核同步和时间计算等 内存管理篇、文件系统篇、进程管理篇、介绍Linux的三大核心模块 Linux内核开发在操作系统、智能设备、驱动、通信、芯片以及人工智能等 \\\n书分为以下五个部分: 知识储备篇： 数据结构、时间、中断处理和内核同步 内存管理篇： 内存寻址、物理内存和线性内存空间的管理及缺页异常 文件系统篇： VFS流程，sysfs、proc和devtmpfs文件系统实现，ext4文件系统 进程管理篇： 进程原理、进程调度、信号处理、进程通信和程序执行。掌握进程间的关系、进程调度的过程、进程通信原理、信号处理过程 升华篇： I/O多路复用、input子系统、V4L2架构、Linux设备驱动模型、Binder通信和驱动实现 \\\n第1章 基于Linux内核的操作系统 1.1 处理器、平台和操作系统 基于Linux内核的操作系统，一般包括： (1)BootLoader: 如GRUB和SYSLINUX，负责加载内核到内存，在系统上电或BIOS初始化完成后执行加载 (2)init程序：负责启动系统的服务和操作系统的核心程序 (3)软件库：如加载elf文件的ld-linux-so、支持C程序的库、如GUN C Library(glibc)、Android的Bionic (4)命令和工具：如Shell命令和GNU coreutils \\\n1.2 以安卓为例剖析操作系统 1.2.1 安卓的整体架构 Android操作系统架构图 Linux内核是整个架构的基础，它负责管理内存、电源、文件系统和进程等核心模块，提供系统的设备驱动\n三个进程，APP1、APP2和Service，APP和Service之间传递控制和数据都需要通过进程通信实现，Service将控制传递至HAL，最终到设备驱动，HAL得到驱动产生的数据，报告至Service，由Service分发给APP1和APP2 \\\n操作系统的核心功能看Android与内核的关系 进程管理： 进程这个概念本身是由内核实现的，还包括进程调度、进程通信。\nAndroid利用Pthread等实现了它的进程、线程，是对内核系统调用的封装。Android引入Binder通信，Binder不仅需要用户空间，还需要驱动 内存管理： 内存、内存映射和内存分配、回收等内核都已实现 Android实现了特有的ION内存管理机制，使用它在用户空间申请大段连续的物理内存 文件系统： 内核实现了文件系统的框架和常用的文件系统 文件系统不仅关乎数据存储，进程、内存和设备，Linux一切皆文件 用户界面： Android开发了一套控件（View）,一套完整的显示架构，用户界面： Android开发了一套控件（View） 设备驱动： 设备驱动由内核提供,随系统启动而运行的设备驱动，一般在内核启动过程中加载，某些在特定情况下才会使用的设备驱动\n1.2.2 Linux内核的核心作用 开机后，内核由bootloader加载进入内存执行，它是创建系统的第一个进程，初始化时钟、内存、中断等核心功能，然后执行init程序。init程序是基于Linux内核的操作系统，在用户空间的起点，它启动核心服务，挂载文件系统，更改文件权限，由后续的服务一步步初始化整个操作系统\n内核实现了内存管理、文件系统、进程管理和网络管理等核心模块，将用户空间封装内核提供的系统调用作为类库，供其他部分使用\n1.3 内核整体架构 1.3.1 内核代码目录结构 内核代码一级目录： Documentation目录：存放说明文档 arch目录：arch是architecture，体系结构相关代码，体系结构相关，如内存页表和进程上下文等 kernel目录：内核核心部分，包括进程调度、中断处理和时钟等模块的核心代码，与体系结构相关代码存在arch/xx/kernel下 drivers目录：设备驱动代码 mm目录：mm是memory managemnt缩写，包括内存管理相关代码 fs目录：fs是file system文件系统代码，文件系统架构(VFS)和系统支持各种文件系统，一个子目录至少对应一种文件系统 ipc目录：inter process communication，包括消息队列、共享内存和信号量等进程通信方式 block目录：块设备管理的代码，块设备与字符设备。块设备支持随机访问，SD卡和硬盘是块设备；字符设备只能顺序访问，键盘和串口是字符设备 lib目录：公用的库函数，比如红黑树和字符串操作，内核处在C语言库(glibc等)下一层，glibc是由封装内核的系统调用实现的 init目录：内核初始化代码，main.c定义内核启动的入口start_kernel函数 firmware目录：包括运行在芯片内的固件 scripts目录：辅助内核配置脚本，如make menuconfig命令配置 net：网络、crypto：加密、certs：证书、security：安全、tools：工具、virt：虚拟化 \\\n1.3.2 内核的核心模块及关联 中断模块不仅在设备驱动中频繁使用，内存管理和进程调度等也需要它的支持，内存管理需要缺页中断，进程调度则需要时钟中断和处理器间中断 内核同步模块贯穿整个内核，如果没有同步机制，错综复杂的执行流访问临界区域就会失去保护，系统瞬间瘫痪 内存管理、文件管理和进程管理 内存管理模块涉及内存寻址、映射、虚拟内存和物理内存空间的管理、缓存和异常 文件系统的重要性从“一切皆文件”，硬件的控制、数据的传递和存储，几乎都与文件有关 进程管理模块涉及进程的实现、创建、退出和进程通信等，进程本身是管理资源的载体，管理的资源包括内存、文件、I/O设备等 设备驱动模块,每一个设备驱动都是一个小型的系统，电源管理、内存申请、释放、控制、数据，复杂一些的还会涉及进程调度 \\\n1.4 实例分析 由芯片开始，经过操作系统的传递，数据到达应用，然后计算并刷新屏幕\n第 2 章 数据结构使用 2.1 关系型数据结构 程序=数据结构+算法，数据结构指的是数据与数据之间的逻辑关系，算法指的是解决特定问题的步骤和方法\n2.1.1 一对一关系 两个结构体之间的一对一关系有指针和内嵌（包含）两种表达方式 内嵌，通过container_of宏（内核定义好的）可以由b计算出a的位置 \\\n// 指针 struct entity_a { struct entity_b *b; }; struct entity_b { (struct entity_a *;) }; // 内嵌(包含) struct entity_a { struct entity_b b; } 2.1.2 一对多关系 一对多关系在内核中一般由链表或树实现，链表实现有多种常用方式，包括list_head、hlist_head/hlist_node、rb_root/rb_node（红黑树）等数据结构 \\\n// 单链表 struct branch { // others struct leaf *head; }; struct leaf { // others struct leaf *next; }; // 双链表 struct branch { // others struct list_head head; }; struct leaf { // others struct list_head node; }; struct list_head { struct list_head *next, *prev; } hlist_head表示链表头，hlist_node表示链表元素\nstruct hlist_head { struct hlist_node *first; }； struct hlist_node { struct hlist_node *next, **pprev; } 2.1.3 多对多关系 input子系统的三个关键结构体input_dev、input_handler、input_handle是多对多几个\n2.2 位操作数据结构 位图(bitmap)，以每一位(bit)来存放或表示某种状态，一个字节(byte)就可以表示8个元素的状态，节省内存 find_first_zero_bit和find_first_bit的第二个参数size是以位(bit)为单位的，find_next_zero_bit和find_next_bit从第offset位(包含offset)开始查找为0和为1的位置，找不到则返回size\n2.3 模块和内核参数传递 2.3.1 内嵌通用数据结构 inode是一个典型的例子，内核使用inode对象\nstruct my_inode { struct inode inode; // others } 传递参数给内核的时候，传递my_inode的inode的地址ptr；从内核获得的inode地址，通过container_of(ptr, my_inode, inode)宏就可以获得my_inode对象\n2.3.2 通用结构的私有变量 内核中很多数据结构都定义了类型为void*的私有数据字段，模块可以将它特有的数据赋值给该字段，通过引用该字段就可以获取它的数据。file结构体的private_data、device结构体的driver_data都是这种用法\n2.4 实例分析 2.4.1 模块的封装 以inode结构体为例，它主要适用VFS和具体文件系统的实现两种场景。其他模块，比如一个设备驱动一般是不会直接访问它的，而是访问file结构体\n2.4.2 火眼金睛：看破数据结构 首先要理清模块内的数据结构，数据结构是灵魂，函数是表现\n第 3 章 时间的衡量和计算 内核时间以滴答(jiffy)来计算\n3.1 数据结构 gettimeofday系统调用获取当前时间，结果以timeval和timezone(时区)结构体形式返回 内核先通过ktime_get_real_ts64获得timespec表示当前时间，然后转化为timeval形式，timespec64的tv_sec以秒为单位，tv_nsec以纳秒为单位\nvoid ktime_get_real_ts64(struct timespec64 *ts) { struct timekeeper *tk = \u0026tk_core.timekeeper; u64 nsecs; ts-\u003etv_sec = tk-\u003extime_sec; nsecs = timekeeping_get_ns(\u0026tk-\u003emono); ts-\u003etv_nesc = 0; timespce64 _add_ns(ts, nsecs); } u64 timekeeping_get_ns(const struct tk_read_base *tkr) { struct clocksource *clock = READ_ONCE(tkr-\u003eclock); cycle_now = clock-\u003eread(clock); cycle_delta = (cycle_now - tkr-\u003ecycle_last) \u0026tkr-\u003emask; nsec = cycle_delta * tkr-\u003emult + tkr-\u003extime_nsec; nsec \u003e\u003e= tkr-\u003eshift; return nsec + get_arch_timeoffset(); } 第一个与时间相关的结构体为timekeeper，主要功能是保持或者记录时间，从timekeeping_get_ns函数可以看到，tk的tkr_mono-\u003eclock字段指向clocksource类型的对象，表示当前使用的时钟源 时钟源以clocksource结构体(简称cs)表示\nrating字段代表cs的等级，内核只会选择一个时钟源作为watchdog(即看门狗)，也只会选择一个时钟源作为系统的时钟源(与全局变量tk_core.timekeeper对应)，同等条件下，等级更高的时钟源拥有更高的优先级\n将保持时间的设备称为时钟源，将关注时间事件的设备称为时钟中断设备\nset_state_xxx是切换当前设备状态的回调函数，xxx可以有共有periodic、oneshot、oneshot_stopped和shutdown四种。其中，periodic表示周期性地触发时钟中断，oneshot表示单触发。所谓周期性是指触发一次中断之后自动进入下一次中断计时，单触发是指触发一次中断之后停止。rating字段表示设备的等级，等级越高优先级越高。最常用的设备特性（features字段）有PERIODIC、ONESHOT和C3STOP三种，其中C3STOP表示系统处于C3状态的时候设备停止 时钟中断产生后，内核会调用event_handler字段的回调函数处理中断，该函数完成时钟中断相关的逻辑，还可以回调set_next_event设置下一次时钟中断 内核使用了几个常见的变量和宏定义\nHZ：一秒内的滴答数 jiffies：累计的滴答数 tick_period：ktime_t类型的全局变量，周期性时钟中断的时间间隔 tick_cpu_device：每cpu变量，类型为tick_device，简称td tick_cpu_sched：每cpu变量，类型为tick_sched，简称ts，它与系统调度和更新系统时间有关 3.2 时钟芯片 x86架构上常见的设备 RTC（Real-timeClock）：实时时钟，兼具时钟源和时钟中断两种功能 PIT（Programmable interval timer）：可编程间隔计时器，时钟中断设备 TSC（Time Stamp Counter）：时间戳计数器，是一个64位的寄存器,TSC记录处理器的时钟周期数，程序可以通过RDTSC指令来读取它的值 HPET（High Precision Event Timer）：俗称高精度定时器，兼具时钟源和时钟中断两种功能 APIC（Advanced Programmable Interrupt Controller）：高级可编程中断控制器，用作时钟中断设备 \\\n3.3 从内核的角度看时间 内核维护了多种时间，其中最常用REALTIME、MONOTONIC和BOOTTIME三种 REALTIME时间：WALLTIME（墙上时间）系统时间 MONOTONIC时间：表示系统启动到当前所经历的非休眠时间，不计算系统休眠的时间 BOOTTIME时间：表示系统启动到现在的时间 3.4 周期性和单触发的时钟中断 包含多种时钟中断设备，它们可以支持周期性和单触发的时钟中断，下文以PIT和APICTimer的组合 APIC Timer进入工作（setup_APIC_timer）之后，由于它的rating比PIT高，td的evtdev字段被替换成APIC的evt，此时可以尝试切换至nohz模式 nohz模式（也可称为tickless模式、oneshot模式、动态时钟模式） nohz模式又分为两种模式：高精度模式和低精度模式 \\\n3.5 时间相关的系统调用 3.5.1 获取时间 gettimeofday和settimeofday系统调用外，内核可能还会实现time和stime系统调用，后面二者都是以秒为单位的，兼容POSIX标准的系统调用clock_gettime和clock_settime\n3.5.2 给程序定个闹钟 setitimer，alarm多数情况下会通过调用setitimer实现，后者是一个系统调用，通过它可以设置一个定时器。getitimer与之对应，用来获得定时器的当前时间。setitimer的精度为微秒\n3.6 实例分析 3.6.1 实现智能手机的长按 滑动和长按的区别在于手指移动的距离\n3.6.2 系统的时间并不如你所 第 4 章 中断和中断处理 广义的中断包括中断（interrupt）和异常（exception）两种类型。处理器在执行完一条指令之后，会检查当前的状态，如果发现有事件到来，在执行下一条语句之前，处理事件，然后返回继续执行下一条指令，这就是中断。中断是被动的，陷阱是处理器主动触发的。程序调用系统调用，处理器执行int 0x80，触发系统调用程序，这是主动的 4.1 处理器识别中断 x86处理器的INTR和NMI接受外部中断请求信号，INTR接受可屏蔽中断请求，NMI接受不可屏蔽中断请求。标志寄存器EFLAGS中的IF标志决定是否屏蔽可屏蔽中断请求\n中断控制器与处理器相连，传统的中断控制器为PIC(可编程中断控制器，如8259A)。在SMP架构中，每一个处理器都包含一个IOAPIC（高级可编程中断控制器）\n两个与IF标志相关的函数，local_irq_enable和local_irq_disable，它们通过设置或清楚本地处理器的EFLAGS的IF标志来控制是否使能本地中断\n4.2 处理中断 处理器识别到特定的中断后，跳到指定的中断处理程序处执行\n4.2.1 中断处理程序 中断描述符表（Interrupt Descriptor Table，IDT）。IDT包含了256个中断描述符，实际是内存中的一个数组，由idt_table变量表示 中断描述符由gate_desc结构体表示，有GATE_INTERRUPT、GATE_TRAP、GATE_CALL和GATE_TASK几种类型，idt_table就是gate_desc类型的数组。系统启动过程中，会为idt_table的元素赋值，然后将它的地址写入寄存器。中断发生时，CPU根据该地址和中断号，计算得到对应的中断处理程序地址并执行 内核预定义了多数专用的中断描述符，多由idt_data数组的形式给出，比如early_idts、def_idts和apic_idts等，系统初始化过程中会调用idt_setup_from_table将这些数组的元素信息转换为idt_table对应的元素信息 内核在中断初始化的过程中可以为0x20-0xeb号中断指定具体的中断处理程序，此时由system_vectors位图表示一个中断是否已指定 中断处理必须完成三个任务：保存现场以便处理完毕后返回、调用已注册的中断服务例程（isr）处理中断事件以及返回中断前工作继续执行 中断处理程序包括中断处理的整个过程，中断服务例程是该过程中对产生中断的设备的处理逻辑 \\\n4.2.2 中断服务例程 中断服务例程涉及两个关键的结构体，即irq_desc和irqaction，二者是一对多的关系。Irq_desc与irq号对应，irqaction与一个设备对应，共享同一个irq号的多个设备的irqaction对应同一个irq_desc\nirqaction主要字段 译内核的时候config配置，irq_desc对象在内存中有数组与radix_tree两种组织方式，通过irq_to_desc可以由irq获得对应的irq_desc\nirq只有一个设备，且相关的参数都已设置完毕，irq_desc并不一定需要irqaction。实际上，irq_desc的handle_irq是一定会执行的，irqaction的函数一般由handle_irq调用，它们执行与否完全取决于handle_irq的策略\n使用中断模式的设备，在使能中断之前必须设置触发方式（电平/边沿触发等）、irq号、处理函数等信息。内核提供了request_irq和request_threaded_irq两个函数可以方便地配置这些信息，前者用于调用，而后者用于实现\n第二个参数handler表示对中断的第一步处理，thread_fn表示在独立线程中执行的处理函数，request_irq将thread_fn置位NULL，调用request_threaded_irq表示不在独立线程中进行中断处理，flags表示中断触发方式、中断共享等的标志，dev是设备绑定的数据，用作调用handler和thread_fn时传递的参数\nrequest_threaded_irq函数主要下工作 (1) 根据传递的参数对irqaction对象的字段赋值 (2) 将新的irqaction链接至irq对应的irq_desc (3) 如果thread_fn不等于NULL，则调用setup_irq_thread新建一个线程来处理中断\n中断处理函数handler和thread_fn的编写要遵守以下几个重要原则 中断处理.打断了当前进程的执行，同时需要进行一系列复杂的处理，所以要快速返回，不能在handler中做复杂的操作，中断处理的上半段（Top Half）。一种是在函数中启动工作队列或者软中断（如tasklet）等，由工作队列等来完成时间工作；第二种做法是在thread_fn中执行，这就是所谓的中断处理的下半段（Bottom Half）作。\nhandler中不能进行任何sleep的动作，调用sleep，使用信号量、互斥锁等可能导致sleep的机制都不可行\nrequest_irq通过将request_threaded_irq的thread_fn参数置为NULL来实现，request_irq的handler直接在当前中断上下文中执行，request_threaded_irq的thread_fn在独立的线程中执行 request_threaded_irq创建新线程时，会调用sched_setscheduler_nocheck(t, SCHED_FIFO,…)将线程设置为实时的\n4.2.3 中断处理 ",
+  "wordCount" : "7530",
+  "inLanguage": "en",
+  "datePublished": "2023-06-05T00:21:58+08:00",
+  "dateModified": "2023-06-06T00:21:58+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Zain"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://liuz0123.gitee.io/zain/en/posts/tech/%E7%B2%BE%E9%80%9Alinux%E5%86%85%E6%A0%B8%E6%99%BA%E8%83%BD%E8%AE%BE%E5%A4%87%E5%BC%80%E5%8F%91%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF-/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "zain's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://liuz0123.gitee.io/zain/img/Q.gif"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://liuz0123.gitee.io/zain/en/" accesskey="h" title="Zain&#39;s Blog (Alt + H)">
+            <img src="https://liuz0123.gitee.io/zain/img/Q.gif" alt="logo" aria-label="logo"
+                 height="35">Zain&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/en/zain/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/archives/" title="⏱ 时间轴">
+                <span>⏱ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/links" title="🤝 闲言俗语">
+                <span>🤝 闲言俗语</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://liuz0123.gitee.io/zain/en/">主页</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/en/posts/tech/">👨🏻‍💻 技术</a></div>
+            <h1 class="post-title">
+                精通Linux内核：智能设备开发核心技术 
+            </h1>
+            <div class="post-meta">Create:&nbsp;<span title='2023-06-05 00:21:58 +0800 CST'>2023-06-05</span>&nbsp;|&nbsp;Update:&nbsp;2023-06-06&nbsp;|&nbsp;Words:&nbsp;7530&nbsp;|&nbsp;&nbsp;16 min&nbsp;|&nbsp;
+&nbsp;Zain
+
+
+
+                &nbsp;|&nbsp;tags: &nbsp;
+                <ul class="post-tags-meta">
+                    <a href="https://liuz0123.gitee.io/zain/en/tags/arm/">ARM</a>
+                    <a href="https://liuz0123.gitee.io/zain/en/tags/linux/">、linux</a>
+                </ul>
+
+                
+                <span id="busuanzi_container_page_pv">
+                &nbsp;| Viewers: <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+</div>
+        </header> 
+        <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">文章目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e7%ac%ac1%e7%ab%a0-%e5%9f%ba%e4%ba%8elinux%e5%86%85%e6%a0%b8%e7%9a%84%e6%93%8d%e4%bd%9c%e7%b3%bb%e7%bb%9f" aria-label="第1章 基于Linux内核的操作系统">第1章 基于Linux内核的操作系统</a><ul>
+                        
+                <li>
+                    <a href="#11-%e5%a4%84%e7%90%86%e5%99%a8%e5%b9%b3%e5%8f%b0%e5%92%8c%e6%93%8d%e4%bd%9c%e7%b3%bb%e7%bb%9f" aria-label="1.1 处理器、平台和操作系统">1.1 处理器、平台和操作系统</a></li>
+                <li>
+                    <a href="#12-%e4%bb%a5%e5%ae%89%e5%8d%93%e4%b8%ba%e4%be%8b%e5%89%96%e6%9e%90%e6%93%8d%e4%bd%9c%e7%b3%bb%e7%bb%9f" aria-label="1.2 以安卓为例剖析操作系统">1.2 以安卓为例剖析操作系统</a><ul>
+                        
+                <li>
+                    <a href="#121-%e5%ae%89%e5%8d%93%e7%9a%84%e6%95%b4%e4%bd%93%e6%9e%b6%e6%9e%84" aria-label="1.2.1 安卓的整体架构">1.2.1 安卓的整体架构</a></li>
+                <li>
+                    <a href="#122-linux%e5%86%85%e6%a0%b8%e7%9a%84%e6%a0%b8%e5%bf%83%e4%bd%9c%e7%94%a8" aria-label="1.2.2 Linux内核的核心作用">1.2.2 Linux内核的核心作用</a></li></ul>
+                </li>
+                <li>
+                    <a href="#13-%e5%86%85%e6%a0%b8%e6%95%b4%e4%bd%93%e6%9e%b6%e6%9e%84" aria-label="1.3 内核整体架构">1.3 内核整体架构</a><ul>
+                        
+                <li>
+                    <a href="#131-%e5%86%85%e6%a0%b8%e4%bb%a3%e7%a0%81%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84" aria-label="1.3.1 内核代码目录结构">1.3.1 内核代码目录结构</a></li>
+                <li>
+                    <a href="#132-%e5%86%85%e6%a0%b8%e7%9a%84%e6%a0%b8%e5%bf%83%e6%a8%a1%e5%9d%97%e5%8f%8a%e5%85%b3%e8%81%94" aria-label="1.3.2 内核的核心模块及关联">1.3.2 内核的核心模块及关联</a></li></ul>
+                </li>
+                <li>
+                    <a href="#14-%e5%ae%9e%e4%be%8b%e5%88%86%e6%9e%90" aria-label="1.4 实例分析">1.4 实例分析</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e7%ac%ac-2-%e7%ab%a0-%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e4%bd%bf%e7%94%a8" aria-label="第 2 章 数据结构使用">第 2 章 数据结构使用</a><ul>
+                        
+                <li>
+                    <a href="#21-%e5%85%b3%e7%b3%bb%e5%9e%8b%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" aria-label="2.1 关系型数据结构">2.1 关系型数据结构</a><ul>
+                        
+                <li>
+                    <a href="#211-%e4%b8%80%e5%af%b9%e4%b8%80%e5%85%b3%e7%b3%bb" aria-label="2.1.1 一对一关系">2.1.1 一对一关系</a></li>
+                <li>
+                    <a href="#212-%e4%b8%80%e5%af%b9%e5%a4%9a%e5%85%b3%e7%b3%bb" aria-label="2.1.2 一对多关系">2.1.2 一对多关系</a></li>
+                <li>
+                    <a href="#213-%e5%a4%9a%e5%af%b9%e5%a4%9a%e5%85%b3%e7%b3%bb" aria-label="2.1.3 多对多关系">2.1.3 多对多关系</a></li></ul>
+                </li>
+                <li>
+                    <a href="#22-%e4%bd%8d%e6%93%8d%e4%bd%9c%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" aria-label="2.2 位操作数据结构">2.2 位操作数据结构</a></li>
+                <li>
+                    <a href="#23-%e6%a8%a1%e5%9d%97%e5%92%8c%e5%86%85%e6%a0%b8%e5%8f%82%e6%95%b0%e4%bc%a0%e9%80%92" aria-label="2.3 模块和内核参数传递">2.3 模块和内核参数传递</a><ul>
+                        
+                <li>
+                    <a href="#231-%e5%86%85%e5%b5%8c%e9%80%9a%e7%94%a8%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" aria-label="2.3.1 内嵌通用数据结构">2.3.1 内嵌通用数据结构</a></li>
+                <li>
+                    <a href="#232-%e9%80%9a%e7%94%a8%e7%bb%93%e6%9e%84%e7%9a%84%e7%a7%81%e6%9c%89%e5%8f%98%e9%87%8f" aria-label="2.3.2 通用结构的私有变量">2.3.2 通用结构的私有变量</a></li></ul>
+                </li>
+                <li>
+                    <a href="#24-%e5%ae%9e%e4%be%8b%e5%88%86%e6%9e%90" aria-label="2.4 实例分析">2.4 实例分析</a><ul>
+                        
+                <li>
+                    <a href="#241-%e6%a8%a1%e5%9d%97%e7%9a%84%e5%b0%81%e8%a3%85" aria-label="2.4.1 模块的封装">2.4.1 模块的封装</a></li>
+                <li>
+                    <a href="#242-%e7%81%ab%e7%9c%bc%e9%87%91%e7%9d%9b%e7%9c%8b%e7%a0%b4%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" aria-label="2.4.2 火眼金睛：看破数据结构">2.4.2 火眼金睛：看破数据结构</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#%e7%ac%ac-3-%e7%ab%a0-%e6%97%b6%e9%97%b4%e7%9a%84%e8%a1%a1%e9%87%8f%e5%92%8c%e8%ae%a1%e7%ae%97" aria-label="第 3 章 时间的衡量和计算">第 3 章 时间的衡量和计算</a><ul>
+                        
+                <li>
+                    <a href="#31-%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" aria-label="3.1 数据结构">3.1 数据结构</a></li>
+                <li>
+                    <a href="#32-%e6%97%b6%e9%92%9f%e8%8a%af%e7%89%87" aria-label="3.2 时钟芯片">3.2 时钟芯片</a></li>
+                <li>
+                    <a href="#33-%e4%bb%8e%e5%86%85%e6%a0%b8%e7%9a%84%e8%a7%92%e5%ba%a6%e7%9c%8b%e6%97%b6%e9%97%b4" aria-label="3.3 从内核的角度看时间">3.3 从内核的角度看时间</a></li>
+                <li>
+                    <a href="#34-%e5%91%a8%e6%9c%9f%e6%80%a7%e5%92%8c%e5%8d%95%e8%a7%a6%e5%8f%91%e7%9a%84%e6%97%b6%e9%92%9f%e4%b8%ad%e6%96%ad" aria-label="3.4 周期性和单触发的时钟中断">3.4 周期性和单触发的时钟中断</a></li>
+                <li>
+                    <a href="#35-%e6%97%b6%e9%97%b4%e7%9b%b8%e5%85%b3%e7%9a%84%e7%b3%bb%e7%bb%9f%e8%b0%83%e7%94%a8" aria-label="3.5 时间相关的系统调用">3.5 时间相关的系统调用</a><ul>
+                        
+                <li>
+                    <a href="#351-%e8%8e%b7%e5%8f%96%e6%97%b6%e9%97%b4" aria-label="3.5.1 获取时间">3.5.1 获取时间</a></li>
+                <li>
+                    <a href="#352-%e7%bb%99%e7%a8%8b%e5%ba%8f%e5%ae%9a%e4%b8%aa%e9%97%b9%e9%92%9f" aria-label="3.5.2 给程序定个闹钟">3.5.2 给程序定个闹钟</a></li></ul>
+                </li>
+                <li>
+                    <a href="#36-%e5%ae%9e%e4%be%8b%e5%88%86%e6%9e%90" aria-label="3.6 实例分析">3.6 实例分析</a><ul>
+                        
+                <li>
+                    <a href="#361-%e5%ae%9e%e7%8e%b0%e6%99%ba%e8%83%bd%e6%89%8b%e6%9c%ba%e7%9a%84%e9%95%bf%e6%8c%89" aria-label="3.6.1 实现智能手机的长按">3.6.1 实现智能手机的长按</a></li>
+                <li>
+                    <a href="#362-%e7%b3%bb%e7%bb%9f%e7%9a%84%e6%97%b6%e9%97%b4%e5%b9%b6%e4%b8%8d%e5%a6%82%e4%bd%a0%e6%89%80" aria-label="3.6.2 系统的时间并不如你所">3.6.2 系统的时间并不如你所</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#%e7%ac%ac-4-%e7%ab%a0-%e4%b8%ad%e6%96%ad%e5%92%8c%e4%b8%ad%e6%96%ad%e5%a4%84%e7%90%86" aria-label="第 4 章 中断和中断处理">第 4 章 中断和中断处理</a><ul>
+                        
+                <li>
+                    <a href="#41-%e5%a4%84%e7%90%86%e5%99%a8%e8%af%86%e5%88%ab%e4%b8%ad%e6%96%ad" aria-label="4.1 处理器识别中断">4.1 处理器识别中断</a></li>
+                <li>
+                    <a href="#42-%e5%a4%84%e7%90%86%e4%b8%ad%e6%96%ad" aria-label="4.2 处理中断">4.2 处理中断</a><ul>
+                        
+                <li>
+                    <a href="#421-%e4%b8%ad%e6%96%ad%e5%a4%84%e7%90%86%e7%a8%8b%e5%ba%8f" aria-label="4.2.1 中断处理程序">4.2.1 中断处理程序</a></li>
+                <li>
+                    <a href="#422-%e4%b8%ad%e6%96%ad%e6%9c%8d%e5%8a%a1%e4%be%8b%e7%a8%8b" aria-label="4.2.2 中断服务例程">4.2.2 中断服务例程</a></li>
+                <li>
+                    <a href="#423-%e4%b8%ad%e6%96%ad%e5%a4%84%e7%90%86" aria-label="4.2.3 中断处理">4.2.3 中断处理</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        
+        <div class="post-content"><p> 知识储备篇介绍了Linux的数据结构、中断处理、内核同步和时间计算等  <br>
+ 内存管理篇、文件系统篇、进程管理篇、介绍Linux的三大核心模块   <br>
+ Linux内核开发在操作系统、智能设备、驱动、通信、芯片以及人工智能等 \</p>
+<p> 书分为以下五个部分:  <br>
+ 知识储备篇： 数据结构、时间、中断处理和内核同步 <br>
+ 内存管理篇： 内存寻址、物理内存和线性内存空间的管理及缺页异常  <br>
+ 文件系统篇： VFS流程，sysfs、proc和devtmpfs文件系统实现，ext4文件系统  <br>
+ 进程管理篇： 进程原理、进程调度、信号处理、进程通信和程序执行。掌握进程间的关系、进程调度的过程、进程通信原理、信号处理过程  <br>
+ 升华篇： I/O多路复用、input子系统、V4L2架构、Linux设备驱动模型、Binder通信和驱动实现 \</p>
+<h1 id="第1章-基于linux内核的操作系统">第1章 基于Linux内核的操作系统<a hidden class="anchor" aria-hidden="true" href="#第1章-基于linux内核的操作系统">#</a></h1>
+<h2 id="11-处理器平台和操作系统">1.1 处理器、平台和操作系统<a hidden class="anchor" aria-hidden="true" href="#11-处理器平台和操作系统">#</a></h2>
+<p> 基于Linux内核的操作系统，一般包括： <br>
+ (1)BootLoader: 如GRUB和SYSLINUX，负责加载内核到内存，在系统上电或BIOS初始化完成后执行加载 <br>
+ (2)init程序：负责启动系统的服务和操作系统的核心程序  <br>
+ (3)软件库：如加载elf文件的ld-linux-so、支持C程序的库、如GUN C Library(glibc)、Android的Bionic <br>
+ (4)命令和工具：如Shell命令和GNU coreutils   \</p>
+<h2 id="12-以安卓为例剖析操作系统">1.2 以安卓为例剖析操作系统<a hidden class="anchor" aria-hidden="true" href="#12-以安卓为例剖析操作系统">#</a></h2>
+<h3 id="121-安卓的整体架构">1.2.1 安卓的整体架构<a hidden class="anchor" aria-hidden="true" href="#121-安卓的整体架构">#</a></h3>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230613004743.png" alt="20230613004743"  />
+
+ Android操作系统架构图 <br>
+ Linux内核是整个架构的基础，它负责管理内存、电源、文件系统和进程等核心模块，提供系统的设备驱动</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230613005710.png" alt="20230613005710"  />
+</p>
+<p> 三个进程，APP1、APP2和Service，APP和Service之间传递控制和数据都需要通过进程通信实现，Service将控制传递至HAL，最终到设备驱动，HAL得到驱动产生的数据，报告至Service，由Service分发给APP1和APP2  \</p>
+<p> 操作系统的核心功能看Android与内核的关系 <br>
+ 进程管理： 进程这个概念本身是由内核实现的，还包括进程调度、进程通信。<br>
+  Android利用Pthread等实现了它的进程、线程，是对内核系统调用的封装。Android引入Binder通信，Binder不仅需要用户空间，还需要驱动  <br>
+ 内存管理： 内存、内存映射和内存分配、回收等内核都已实现 <br>
+  Android实现了特有的ION内存管理机制，使用它在用户空间申请大段连续的物理内存  <br>
+ 文件系统： 内核实现了文件系统的框架和常用的文件系统  <br>
+  文件系统不仅关乎数据存储，进程、内存和设备，Linux一切皆文件  <br>
+ 用户界面： Android开发了一套控件（View）,一套完整的显示架构，用户界面： Android开发了一套控件（View） <br>
+ 设备驱动： 设备驱动由内核提供,随系统启动而运行的设备驱动，一般在内核启动过程中加载，某些在特定情况下才会使用的设备驱动</p>
+<h3 id="122-linux内核的核心作用">1.2.2 Linux内核的核心作用<a hidden class="anchor" aria-hidden="true" href="#122-linux内核的核心作用">#</a></h3>
+<p> 开机后，内核由bootloader加载进入内存执行，它是创建系统的第一个进程，初始化时钟、内存、中断等核心功能，然后执行init程序。init程序是基于Linux内核的操作系统，在用户空间的起点，它启动核心服务，挂载文件系统，更改文件权限，由后续的服务一步步初始化整个操作系统</p>
+<p> 内核实现了内存管理、文件系统、进程管理和网络管理等核心模块，将用户空间封装内核提供的系统调用作为类库，供其他部分使用</p>
+<h2 id="13-内核整体架构">1.3 内核整体架构<a hidden class="anchor" aria-hidden="true" href="#13-内核整体架构">#</a></h2>
+<h3 id="131-内核代码目录结构">1.3.1 内核代码目录结构<a hidden class="anchor" aria-hidden="true" href="#131-内核代码目录结构">#</a></h3>
+<p> 内核代码一级目录： <br>
+  Documentation目录：存放说明文档 <br>
+  arch目录：arch是architecture，体系结构相关代码，体系结构相关，如内存页表和进程上下文等 <br>
+  kernel目录：内核核心部分，包括进程调度、中断处理和时钟等模块的核心代码，与体系结构相关代码存在arch/xx/kernel下  <br>
+  drivers目录：设备驱动代码  <br>
+  mm目录：mm是memory managemnt缩写，包括内存管理相关代码 <br>
+  fs目录：fs是file system文件系统代码，文件系统架构(VFS)和系统支持各种文件系统，一个子目录至少对应一种文件系统  <br>
+  ipc目录：inter process communication，包括消息队列、共享内存和信号量等进程通信方式 <br>
+  block目录：块设备管理的代码，块设备与字符设备。块设备支持随机访问，SD卡和硬盘是块设备；字符设备只能顺序访问，键盘和串口是字符设备  <br>
+  lib目录：公用的库函数，比如红黑树和字符串操作，内核处在C语言库(glibc等)下一层，glibc是由封装内核的系统调用实现的  <br>
+  init目录：内核初始化代码，main.c定义内核启动的入口start_kernel函数 <br>
+  firmware目录：包括运行在芯片内的固件  <br>
+  scripts目录：辅助内核配置脚本，如make menuconfig命令配置  <br>
+  net：网络、crypto：加密、certs：证书、security：安全、tools：工具、virt：虚拟化  \</p>
+<h3 id="132-内核的核心模块及关联">1.3.2 内核的核心模块及关联<a hidden class="anchor" aria-hidden="true" href="#132-内核的核心模块及关联">#</a></h3>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230615000241.png" alt="20230615000241"  />
+</p>
+<p> 中断模块不仅在设备驱动中频繁使用，内存管理和进程调度等也需要它的支持，内存管理需要缺页中断，进程调度则需要时钟中断和处理器间中断 <br>
+ 内核同步模块贯穿整个内核，如果没有同步机制，错综复杂的执行流访问临界区域就会失去保护，系统瞬间瘫痪 <br>
+ 内存管理、文件管理和进程管理 <br>
+  内存管理模块涉及内存寻址、映射、虚拟内存和物理内存空间的管理、缓存和异常 <br>
+  文件系统的重要性从“一切皆文件”，硬件的控制、数据的传递和存储，几乎都与文件有关 <br>
+  进程管理模块涉及进程的实现、创建、退出和进程通信等，进程本身是管理资源的载体，管理的资源包括内存、文件、I/O设备等 <br>
+  设备驱动模块,每一个设备驱动都是一个小型的系统，电源管理、内存申请、释放、控制、数据，复杂一些的还会涉及进程调度 \</p>
+<h2 id="14-实例分析">1.4 实例分析<a hidden class="anchor" aria-hidden="true" href="#14-实例分析">#</a></h2>
+<p> 由芯片开始，经过操作系统的传递，数据到达应用，然后计算并刷新屏幕</p>
+<h1 id="第-2-章-数据结构使用">第 2 章 数据结构使用<a hidden class="anchor" aria-hidden="true" href="#第-2-章-数据结构使用">#</a></h1>
+<h2 id="21-关系型数据结构">2.1 关系型数据结构<a hidden class="anchor" aria-hidden="true" href="#21-关系型数据结构">#</a></h2>
+<p> 程序=数据结构+算法，数据结构指的是数据与数据之间的逻辑关系，算法指的是解决特定问题的步骤和方法</p>
+<h3 id="211-一对一关系">2.1.1 一对一关系<a hidden class="anchor" aria-hidden="true" href="#211-一对一关系">#</a></h3>
+<p> 两个结构体之间的一对一关系有指针和内嵌（包含）两种表达方式
+ 内嵌，通过container_of宏（内核定义好的）可以由b计算出a的位置 \</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 指针
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> entity_a {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> entity_b <span style="color:#f92672">*</span>b;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> entity_b {
+</span></span><span style="display:flex;"><span>    (<span style="color:#66d9ef">struct</span> entity_a <span style="color:#f92672">*</span>;)
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 内嵌(包含)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> entity_a {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> entity_b b;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="212-一对多关系">2.1.2 一对多关系<a hidden class="anchor" aria-hidden="true" href="#212-一对多关系">#</a></h3>
+<p> 一对多关系在内核中一般由链表或树实现，链表实现有多种常用方式，包括list_head、hlist_head/hlist_node、rb_root/rb_node（红黑树）等数据结构  \</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 单链表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> branch {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// others
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> leaf <span style="color:#f92672">*</span>head;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> leaf {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// others
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> leaf <span style="color:#f92672">*</span>next;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// 双链表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> branch {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// others
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> list_head head;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> leaf {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// others
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> list_head node;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> list_head {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> list_head <span style="color:#f92672">*</span>next, <span style="color:#f92672">*</span>prev;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230615002624.png" alt="20230615002624"  />
+</p>
+<p> hlist_head表示链表头，hlist_node表示链表元素</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> hlist_head {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> hlist_node <span style="color:#f92672">*</span>first;
+</span></span><span style="display:flex;"><span>}<span style="color:#960050;background-color:#1e0010">；</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> hlist_node {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> hlist_node <span style="color:#f92672">*</span>next, <span style="color:#f92672">**</span>pprev;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230615003851.png" alt="20230615003851"  />
+</p>
+<h3 id="213-多对多关系">2.1.3 多对多关系<a hidden class="anchor" aria-hidden="true" href="#213-多对多关系">#</a></h3>
+<p> input子系统的三个关键结构体input_dev、input_handler、input_handle是多对多几个</p>
+<h2 id="22-位操作数据结构">2.2 位操作数据结构<a hidden class="anchor" aria-hidden="true" href="#22-位操作数据结构">#</a></h2>
+<p> 位图(bitmap)，以每一位(bit)来存放或表示某种状态，一个字节(byte)就可以表示8个元素的状态，节省内存 <br>
+<img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230615004359.png" alt="20230615004359"  />
+</p>
+<p> find_first_zero_bit和find_first_bit的第二个参数size是以位(bit)为单位的，find_next_zero_bit和find_next_bit从第offset位(包含offset)开始查找为0和为1的位置，找不到则返回size</p>
+<h2 id="23-模块和内核参数传递">2.3 模块和内核参数传递<a hidden class="anchor" aria-hidden="true" href="#23-模块和内核参数传递">#</a></h2>
+<h3 id="231-内嵌通用数据结构">2.3.1 内嵌通用数据结构<a hidden class="anchor" aria-hidden="true" href="#231-内嵌通用数据结构">#</a></h3>
+<p> inode是一个典型的例子，内核使用inode对象</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> my_inode {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> inode inode;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// others
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p> 传递参数给内核的时候，传递my_inode的inode的地址ptr；从内核获得的inode地址，通过container_of(ptr, my_inode, inode)宏就可以获得my_inode对象</p>
+<h3 id="232-通用结构的私有变量">2.3.2 通用结构的私有变量<a hidden class="anchor" aria-hidden="true" href="#232-通用结构的私有变量">#</a></h3>
+<p> 内核中很多数据结构都定义了类型为void*的私有数据字段，模块可以将它特有的数据赋值给该字段，通过引用该字段就可以获取它的数据。file结构体的private_data、device结构体的driver_data都是这种用法</p>
+<h2 id="24-实例分析">2.4 实例分析<a hidden class="anchor" aria-hidden="true" href="#24-实例分析">#</a></h2>
+<h3 id="241-模块的封装">2.4.1 模块的封装<a hidden class="anchor" aria-hidden="true" href="#241-模块的封装">#</a></h3>
+<p> 以inode结构体为例，它主要适用VFS和具体文件系统的实现两种场景。其他模块，比如一个设备驱动一般是不会直接访问它的，而是访问file结构体</p>
+<h3 id="242-火眼金睛看破数据结构">2.4.2 火眼金睛：看破数据结构<a hidden class="anchor" aria-hidden="true" href="#242-火眼金睛看破数据结构">#</a></h3>
+<p> 首先要理清模块内的数据结构，数据结构是灵魂，函数是表现</p>
+<h1 id="第-3-章-时间的衡量和计算">第 3 章 时间的衡量和计算<a hidden class="anchor" aria-hidden="true" href="#第-3-章-时间的衡量和计算">#</a></h1>
+<p>  内核时间以滴答(jiffy)来计算</p>
+<h2 id="31-数据结构">3.1 数据结构<a hidden class="anchor" aria-hidden="true" href="#31-数据结构">#</a></h2>
+<p> gettimeofday系统调用获取当前时间，结果以timeval和timezone(时区)结构体形式返回 <br>
+ 内核先通过ktime_get_real_ts64获得timespec表示当前时间，然后转化为timeval形式，timespec64的tv_sec以秒为单位，tv_nsec以纳秒为单位</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">ktime_get_real_ts64</span>(<span style="color:#66d9ef">struct</span> timespec64 <span style="color:#f92672">*</span>ts)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> timekeeper <span style="color:#f92672">*</span>tk <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>tk_core.timekeeper;
+</span></span><span style="display:flex;"><span>    u64 nsecs;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ts<span style="color:#f92672">-&gt;</span>tv_sec <span style="color:#f92672">=</span> tk<span style="color:#f92672">-&gt;</span>xtime_sec;
+</span></span><span style="display:flex;"><span>    nsecs <span style="color:#f92672">=</span> <span style="color:#a6e22e">timekeeping_get_ns</span>(<span style="color:#f92672">&amp;</span>tk<span style="color:#f92672">-&gt;</span>mono);
+</span></span><span style="display:flex;"><span>    ts<span style="color:#f92672">-&gt;</span>tv_nesc <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    timespce64 <span style="color:#a6e22e">_add_ns</span>(ts, nsecs);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>u64 <span style="color:#a6e22e">timekeeping_get_ns</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> tk_read_base <span style="color:#f92672">*</span>tkr)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">struct</span> clocksource <span style="color:#f92672">*</span>clock <span style="color:#f92672">=</span> <span style="color:#a6e22e">READ_ONCE</span>(tkr<span style="color:#f92672">-&gt;</span>clock);
+</span></span><span style="display:flex;"><span>    cycle_now <span style="color:#f92672">=</span> clock<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">read</span>(clock);
+</span></span><span style="display:flex;"><span>    cycle_delta <span style="color:#f92672">=</span> (cycle_now <span style="color:#f92672">-</span> tkr<span style="color:#f92672">-&gt;</span>cycle_last) <span style="color:#f92672">&amp;</span>tkr<span style="color:#f92672">-&gt;</span>mask;
+</span></span><span style="display:flex;"><span>    nsec <span style="color:#f92672">=</span> cycle_delta <span style="color:#f92672">*</span> tkr<span style="color:#f92672">-&gt;</span>mult <span style="color:#f92672">+</span> tkr<span style="color:#f92672">-&gt;</span>xtime_nsec;
+</span></span><span style="display:flex;"><span>    nsec <span style="color:#f92672">&gt;&gt;=</span> tkr<span style="color:#f92672">-&gt;</span>shift;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> nsec <span style="color:#f92672">+</span> <span style="color:#a6e22e">get_arch_timeoffset</span>();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p> 第一个与时间相关的结构体为timekeeper，主要功能是保持或者记录时间，从timekeeping_get_ns函数可以看到，tk的tkr_mono-&gt;clock字段指向clocksource类型的对象，表示当前使用的时钟源  <br>
+ 时钟源以clocksource结构体(简称cs)表示</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230616233307.png" alt="20230616233307"  />
+</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230616233327.png" alt="20230616233327"  />
+</p>
+<p> rating字段代表cs的等级，内核只会选择一个时钟源作为watchdog(即看门狗)，也只会选择一个时钟源作为系统的时钟源(与全局变量tk_core.timekeeper对应)，同等条件下，等级更高的时钟源拥有更高的优先级</p>
+<p> 将保持时间的设备称为时钟源，将关注时间事件的设备称为时钟中断设备</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230616233842.png" alt="20230616233842"  />
+</p>
+<p> set_state_xxx是切换当前设备状态的回调函数，xxx可以有共有periodic、oneshot、oneshot_stopped和shutdown四种。其中，periodic表示周期性地触发时钟中断，oneshot表示单触发。所谓周期性是指触发一次中断之后自动进入下一次中断计时，单触发是指触发一次中断之后停止。rating字段表示设备的等级，等级越高优先级越高。最常用的设备特性（features字段）有PERIODIC、ONESHOT和C3STOP三种，其中C3STOP表示系统处于C3状态的时候设备停止  <br>
+ 时钟中断产生后，内核会调用event_handler字段的回调函数处理中断，该函数完成时钟中断相关的逻辑，还可以回调set_next_event设置下一次时钟中断 <br>
+ 内核使用了几个常见的变量和宏定义</p>
+<ul>
+<li>HZ：一秒内的滴答数</li>
+<li>jiffies：累计的滴答数</li>
+<li>tick_period：ktime_t类型的全局变量，周期性时钟中断的时间间隔</li>
+<li>tick_cpu_device：每cpu变量，类型为tick_device，简称td</li>
+<li>tick_cpu_sched：每cpu变量，类型为tick_sched，简称ts，它与系统调度和更新系统时间有关</li>
+</ul>
+<h2 id="32-时钟芯片">3.2 时钟芯片<a hidden class="anchor" aria-hidden="true" href="#32-时钟芯片">#</a></h2>
+<p> x86架构上常见的设备  <br>
+  RTC（Real-timeClock）：实时时钟，兼具时钟源和时钟中断两种功能  <br>
+  PIT（Programmable interval timer）：可编程间隔计时器，时钟中断设备  <br>
+  TSC（Time Stamp Counter）：时间戳计数器，是一个64位的寄存器,TSC记录处理器的时钟周期数，程序可以通过RDTSC指令来读取它的值 <br>
+  HPET（High Precision Event Timer）：俗称高精度定时器，兼具时钟源和时钟中断两种功能  <br>
+  APIC（Advanced Programmable Interrupt Controller）：高级可编程中断控制器，用作时钟中断设备  \</p>
+<h2 id="33-从内核的角度看时间">3.3 从内核的角度看时间<a hidden class="anchor" aria-hidden="true" href="#33-从内核的角度看时间">#</a></h2>
+<p> 内核维护了多种时间，其中最常用REALTIME、MONOTONIC和BOOTTIME三种 <br>
+ REALTIME时间：WALLTIME（墙上时间）系统时间  <br>
+ MONOTONIC时间：表示系统启动到当前所经历的非休眠时间，不计算系统休眠的时间  <br>
+ BOOTTIME时间：表示系统启动到现在的时间  <br>
+<img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230616234554.png" alt="20230616234554"  />
+</p>
+<h2 id="34-周期性和单触发的时钟中断">3.4 周期性和单触发的时钟中断<a hidden class="anchor" aria-hidden="true" href="#34-周期性和单触发的时钟中断">#</a></h2>
+<p> 包含多种时钟中断设备，它们可以支持周期性和单触发的时钟中断，下文以PIT和APICTimer的组合  <br>
+ APIC Timer进入工作（setup_APIC_timer）之后，由于它的rating比PIT高，td的evtdev字段被替换成APIC的evt，此时可以尝试切换至nohz模式 <br>
+ nohz模式（也可称为tickless模式、oneshot模式、动态时钟模式）  <br>
+ nohz模式又分为两种模式：高精度模式和低精度模式 \</p>
+<h2 id="35-时间相关的系统调用">3.5 时间相关的系统调用<a hidden class="anchor" aria-hidden="true" href="#35-时间相关的系统调用">#</a></h2>
+<h3 id="351-获取时间">3.5.1 获取时间<a hidden class="anchor" aria-hidden="true" href="#351-获取时间">#</a></h3>
+<p> gettimeofday和settimeofday系统调用外，内核可能还会实现time和stime系统调用，后面二者都是以秒为单位的，兼容POSIX标准的系统调用clock_gettime和clock_settime</p>
+<h3 id="352-给程序定个闹钟">3.5.2 给程序定个闹钟<a hidden class="anchor" aria-hidden="true" href="#352-给程序定个闹钟">#</a></h3>
+<p> setitimer，alarm多数情况下会通过调用setitimer实现，后者是一个系统调用，通过它可以设置一个定时器。getitimer与之对应，用来获得定时器的当前时间。setitimer的精度为微秒</p>
+<h2 id="36-实例分析">3.6 实例分析<a hidden class="anchor" aria-hidden="true" href="#36-实例分析">#</a></h2>
+<h3 id="361-实现智能手机的长按">3.6.1 实现智能手机的长按<a hidden class="anchor" aria-hidden="true" href="#361-实现智能手机的长按">#</a></h3>
+<p> 滑动和长按的区别在于手指移动的距离</p>
+<h3 id="362-系统的时间并不如你所">3.6.2 系统的时间并不如你所<a hidden class="anchor" aria-hidden="true" href="#362-系统的时间并不如你所">#</a></h3>
+<h1 id="第-4-章-中断和中断处理">第 4 章 中断和中断处理<a hidden class="anchor" aria-hidden="true" href="#第-4-章-中断和中断处理">#</a></h1>
+<p> 广义的中断包括中断（interrupt）和异常（exception）两种类型。处理器在执行完一条指令之后，会检查当前的状态，如果发现有事件到来，在执行下一条语句之前，处理事件，然后返回继续执行下一条指令，这就是中断。中断是被动的，陷阱是处理器主动触发的。程序调用系统调用，处理器执行int 0x80，触发系统调用程序，这是主动的
+<img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230620001402.png" alt="20230620001402"  />
+</p>
+<h2 id="41-处理器识别中断">4.1 处理器识别中断<a hidden class="anchor" aria-hidden="true" href="#41-处理器识别中断">#</a></h2>
+<p> x86处理器的INTR和NMI接受外部中断请求信号，INTR接受可屏蔽中断请求，NMI接受不可屏蔽中断请求。标志寄存器EFLAGS中的IF标志决定是否屏蔽可屏蔽中断请求</p>
+<p> 中断控制器与处理器相连，传统的中断控制器为PIC(可编程中断控制器，如8259A)。在SMP架构中，每一个处理器都包含一个IOAPIC（高级可编程中断控制器）</p>
+<p> 两个与IF标志相关的函数，local_irq_enable和local_irq_disable，它们通过设置或清楚本地处理器的EFLAGS的IF标志来控制是否使能本地中断</p>
+<h2 id="42-处理中断">4.2 处理中断<a hidden class="anchor" aria-hidden="true" href="#42-处理中断">#</a></h2>
+<p> 处理器识别到特定的中断后，跳到指定的中断处理程序处执行</p>
+<h3 id="421-中断处理程序">4.2.1 中断处理程序<a hidden class="anchor" aria-hidden="true" href="#421-中断处理程序">#</a></h3>
+<p> 中断描述符表（Interrupt Descriptor Table，IDT）。IDT包含了256个中断描述符，实际是内存中的一个数组，由idt_table变量表示  <br>
+ 中断描述符由gate_desc结构体表示，有GATE_INTERRUPT、GATE_TRAP、GATE_CALL和GATE_TASK几种类型，idt_table就是gate_desc类型的数组。系统启动过程中，会为idt_table的元素赋值，然后将它的地址写入寄存器。中断发生时，CPU根据该地址和中断号，计算得到对应的中断处理程序地址并执行 <br>
+ 内核预定义了多数专用的中断描述符，多由idt_data数组的形式给出，比如early_idts、def_idts和apic_idts等，系统初始化过程中会调用idt_setup_from_table将这些数组的元素信息转换为idt_table对应的元素信息 <br>
+ 内核在中断初始化的过程中可以为0x20-0xeb号中断指定具体的中断处理程序，此时由system_vectors位图表示一个中断是否已指定 <br>
+ 中断处理必须完成三个任务：保存现场以便处理完毕后返回、调用已注册的中断服务例程（isr）处理中断事件以及返回中断前工作继续执行 <br>
+ 中断处理程序包括中断处理的整个过程，中断服务例程是该过程中对产生中断的设备的处理逻辑  \</p>
+<h3 id="422-中断服务例程">4.2.2 中断服务例程<a hidden class="anchor" aria-hidden="true" href="#422-中断服务例程">#</a></h3>
+<p> 中断服务例程涉及两个关键的结构体，即irq_desc和irqaction，二者是一对多的关系。Irq_desc与irq号对应，irqaction与一个设备对应，共享同一个irq号的多个设备的irqaction对应同一个irq_desc</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230707234106.png" alt="20230707234106"  />
+</p>
+<p> irqaction主要字段
+<img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230707234224.png" alt="20230707234224"  />
+</p>
+<p> 译内核的时候config配置，irq_desc对象在内存中有数组与radix_tree两种组织方式，通过irq_to_desc可以由irq获得对应的irq_desc</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230707234335.png" alt="20230707234335"  />
+</p>
+<p> irq只有一个设备，且相关的参数都已设置完毕，irq_desc并不一定需要irqaction。实际上，irq_desc的handle_irq是一定会执行的，irqaction的函数一般由handle_irq调用，它们执行与否完全取决于handle_irq的策略</p>
+<p> 使用中断模式的设备，在使能中断之前必须设置触发方式（电平/边沿触发等）、irq号、处理函数等信息。内核提供了request_irq和request_threaded_irq两个函数可以方便地配置这些信息，前者用于调用，而后者用于实现</p>
+<p><img loading="lazy" src="https://raw.githubusercontent.com/zainll/PictureBed/main/blogs/pictures/20230707234450.png" alt="20230707234450"  />
+</p>
+<p> 第二个参数handler表示对中断的第一步处理，thread_fn表示在独立线程中执行的处理函数，request_irq将thread_fn置位NULL，调用request_threaded_irq表示不在独立线程中进行中断处理，flags表示中断触发方式、中断共享等的标志，dev是设备绑定的数据，用作调用handler和thread_fn时传递的参数</p>
+<p> request_threaded_irq函数主要下工作 <br>
+  (1) 根据传递的参数对irqaction对象的字段赋值 <br>
+  (2) 将新的irqaction链接至irq对应的irq_desc <br>
+  (3) 如果thread_fn不等于NULL，则调用setup_irq_thread新建一个线程来处理中断</p>
+<p> 中断处理函数handler和thread_fn的编写要遵守以下几个重要原则
+  中断处理.打断了当前进程的执行，同时需要进行一系列复杂的处理，所以要快速返回，不能在handler中做复杂的操作，中断处理的上半段（Top Half）。一种是在函数中启动工作队列或者软中断（如tasklet）等，由工作队列等来完成时间工作；第二种做法是在thread_fn中执行，这就是所谓的中断处理的下半段（Bottom Half）作。<br>
+ handler中不能进行任何sleep的动作，调用sleep，使用信号量、互斥锁等可能导致sleep的机制都不可行</p>
+<p> request_irq通过将request_threaded_irq的thread_fn参数置为NULL来实现，request_irq的handler直接在当前中断上下文中执行，request_threaded_irq的thread_fn在独立的线程中执行  <br>
+ request_threaded_irq创建新线程时，会调用sched_setscheduler_nocheck(t, SCHED_FIFO,…)将线程设置为实时的</p>
+<h3 id="423-中断处理">4.2.3 中断处理<a hidden class="anchor" aria-hidden="true" href="#423-中断处理">#</a></h3>
+
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://liuz0123.gitee.io/zain/img/wechat_pay.jpg" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://liuz0123.gitee.io/zain/img/alipay.jpg" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://liuz0123.gitee.io/zain/en/posts/tech/arm/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>ARM</span>
+  </a>
+  <a class="next" href="https://liuz0123.gitee.io/zain/en/posts/tech/%E7%BC%96%E8%AF%91%E5%99%A8/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>编译器</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+
+
+<div>
+    <div class="pagination__title">
+        <span class="pagination__title-h" style="font-size: 20px;">💬评论</span>
+        <hr />
+    </div>
+
+    <div id="tcomment"></div>
+
+    <script src="https://cdn.staticfile.org/twikoo/1.6.7/twikoo.all.min.js">
+    </script>
+    
+
+    
+
+    <script>
+        twikoo.init({
+            envId: "https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2", 
+            el: "#tcomment",
+            lang: 'zh-CN',
+            region: 'ap-guangzhou', 
+            path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+            
+            
+            
+            
+            
+            
+            
+        });
+    </script>
+
+</div>
+</article>
+</main>
+
+
+<script async src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2020-2023 
+        <a href="https://liuz0123.gitee.io/zain/en/" style="color:#939393;">zain&#39;s Blog</a>
+         All Rights Reserved
+    </span>
+
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">备案号申请中</a>&nbsp;
+
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="填自己的公安图标链接" style="float:left;margin: 0px 5px 0px 0px;"/>
+             公网安备
+        </a>
+    </span>
+
+    <span id="busuanzi_container">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        总访客数: <span id="busuanzi_value_site_uv"></span>
+        总访问量: <span id="busuanzi_value_site_pv"></span>
+    </span>
+    
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {
+            }
+            ;
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

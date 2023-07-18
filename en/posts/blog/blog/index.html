@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>hexo-&gt;hugo迁移 | zain&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="hugo运行 hugo -F --cleanDestinationDir # 本地预览 hugo server 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 https://blog.csdn.net/qq_45975757/article/details/108923612 mongodb&#43;srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true&amp;w=majority {&#34;code&#34;:100,&#34;message&#34;:&#34;Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置&#34;,&#34;version&#3">
+<meta name="author" content="
+&nbsp;Zain">
+<link rel="canonical" href="https://liuz0123.gitee.io/zain/en/posts/blog/blog/">
+<link crossorigin="anonymous" href="/zain/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/zain/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="icon" type="image/png" sizes="16x16" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="icon" type="image/png" sizes="32x32" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="apple-touch-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<link rel="mask-icon" href="https://liuz0123.gitee.io/zain/img/Q.gif">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="hexo-&gt;hugo迁移" />
+<meta property="og:description" content="hugo运行 hugo -F --cleanDestinationDir # 本地预览 hugo server 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 https://blog.csdn.net/qq_45975757/article/details/108923612 mongodb&#43;srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true&amp;w=majority {&#34;code&#34;:100,&#34;message&#34;:&#34;Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置&#34;,&#34;version&#3" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://liuz0123.gitee.io/zain/en/posts/blog/blog/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-05-05T00:18:23&#43;08:00" />
+<meta property="article:modified_time" content="2022-05-05T00:18:23&#43;08:00" /><meta property="og:site_name" content="(〃&#39;▽&#39;〃)" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="hexo-&gt;hugo迁移"/>
+<meta name="twitter:description" content="hugo运行 hugo -F --cleanDestinationDir # 本地预览 hugo server 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 https://blog.csdn.net/qq_45975757/article/details/108923612 mongodb&#43;srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true&amp;w=majority {&#34;code&#34;:100,&#34;message&#34;:&#34;Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置&#34;,&#34;version&#3"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚文章",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "🧱 工具",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/blog/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "hexo-\u003ehugo迁移",
+      "item": "https://liuz0123.gitee.io/zain/en/posts/blog/blog/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "hexo-\u003ehugo迁移",
+  "name": "hexo-\u003ehugo迁移",
+  "description": "hugo运行 hugo -F --cleanDestinationDir # 本地预览 hugo server 参考链接： https://www.sulvblog.cn/ https://www.jianshu.com/p/fa95c0c1fdab https://lishensuo.github.io/ https://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612 https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38 https://blog.csdn.net/qq_45975757/article/details/108923612 mongodb+srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true\u0026amp;w=majority {\u0026#34;code\u0026#34;:100,\u0026#34;message\u0026#34;:\u0026#34;Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置\u0026#34;,\u0026#34;version\u0026#3",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "hugo运行 hugo -F --cleanDestinationDir # 本地预览 hugo server 参考链接：\nhttps://www.sulvblog.cn/\nhttps://www.jianshu.com/p/fa95c0c1fdab\nhttps://lishensuo.github.io/\nhttps://freeze.org.cn/page/7/#main https://blog.csdn.net/qq_45975757/article/details/108923612\nhttps://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38\nhttps://blog.csdn.net/qq_45975757/article/details/108923612\nmongodb+srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites=true\u0026w=majority {\"code\":100,\"message\":\"Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置\",\"version\":\"1.6.7\"} 托管 为了提高访问速度托管在gitee上，迁移完成后将会同时托管到github中。 通过不同分支保存源码和静态网页内容，用br_hugo管理源码，master分支管理public 域名申请中…，个人域名审批流程真麻烦\nhexo # 清理缓存 hexo clean # 生成网页 hexo g # 启动本地服务端口 hexo s # 发布到github hexo d # 强制推送备份源码分支 git push -f origin backup GitHub Pages + Hexo使用及配置 github上创建一个 username.github.io 的工程，username 必须为github的用户名\n参考链接 https://www.jianshu.com/p/f82c76b90336\nhttps://www.jianshu.com/p/5d0b31032d55\nhttps://blog.csdn.net/weixin_41922289/article/details/95639870\nhttps://theme-next.org/\nhttps://hexo.io/zh-cn/docs/\nhttps://www.jianshu.com/p/3a05351a37dc\nhttps://www.zhyong.cn/posts/ca02/\nhttp://theme-next.iissnan.com/\nhttps://liam.page/\nhttps://liam.page/en/\n装饰 Hexo博客添加helper-live2d动态模型插件 https://blog.csdn.net/qq_30930805/article/details/\nemojiall 图标可嵌入博客中 https://www.emojiall.com/zh-hans/sub-categories/A15\n图床 vscode + PicGo + github\n# 快捷方式 # 上传剪贴板中的图片到服务器。 ctrl + alt + u # 打开文件浏览器选择图片上传。 ctrl + alt + e 参考链接： https://blog.csdn.net/qq_44314954/article/details/122951033 https://blog.csdn.net/qq_44314954/article/details/122951033 https://www.jianshu.com/p/868b3a2028f8 https://zhuanlan.zhihu.com/p/131584831\n",
+  "wordCount" : "419",
+  "inLanguage": "en",
+  "datePublished": "2022-05-05T00:18:23+08:00",
+  "dateModified": "2022-05-05T00:18:23+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "Zain"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://liuz0123.gitee.io/zain/en/posts/blog/blog/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "zain's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://liuz0123.gitee.io/zain/img/Q.gif"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://liuz0123.gitee.io/zain/en/" accesskey="h" title="Zain&#39;s Blog (Alt + H)">
+            <img src="https://liuz0123.gitee.io/zain/img/Q.gif" alt="logo" aria-label="logo"
+                 height="35">Zain&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/en/zain/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/posts" title="📚 文章">
+                <span>📚 文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/archives/" title="⏱ 时间轴">
+                <span>⏱ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://liuz0123.gitee.io/zain/en/links" title="🤝 闲言俗语">
+                <span>🤝 闲言俗语</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://liuz0123.gitee.io/zain/en/">主页</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/en/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://liuz0123.gitee.io/zain/en/posts/blog/">🧱 工具</a></div>
+            <h1 class="post-title">
+                hexo-&gt;hugo迁移
+            </h1>
+            <div class="post-meta">Create:&nbsp;<span title='2022-05-05 00:18:23 +0800 CST'>2022-05-05</span>&nbsp;|&nbsp;Update:&nbsp;2022-05-05&nbsp;|&nbsp;Words:&nbsp;419&nbsp;|&nbsp;&nbsp;1 min&nbsp;|&nbsp;
+&nbsp;Zain
+
+
+
+                &nbsp;|&nbsp;tags: &nbsp;
+                <ul class="post-tags-meta">
+                    <a href="https://liuz0123.gitee.io/zain/en/tags/blog/">blog</a>
+                </ul>
+
+                
+                <span id="busuanzi_container_page_pv">
+                &nbsp;| Viewers: <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+</div>
+        </header> 
+        <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">文章目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#hugo%e8%bf%90%e8%a1%8c" aria-label="hugo运行">hugo运行</a><ul>
+                        
+                <li>
+                    <a href="#%e6%89%98%e7%ae%a1" aria-label="托管">托管</a></li></ul>
+                </li>
+                <li>
+                    <a href="#hexo" aria-label="hexo">hexo</a><ul>
+                        
+                <li>
+                    <a href="#github-pages--hexo%e4%bd%bf%e7%94%a8%e5%8f%8a%e9%85%8d%e7%bd%ae" aria-label="GitHub Pages &#43; Hexo使用及配置">GitHub Pages + Hexo使用及配置</a></li>
+                <li>
+                    <a href="#%e5%8f%82%e8%80%83%e9%93%be%e6%8e%a5" aria-label="参考链接">参考链接</a></li>
+                <li>
+                    <a href="#%e8%a3%85%e9%a5%b0" aria-label="装饰">装饰</a></li>
+                <li>
+                    <a href="#%e5%9b%be%e5%ba%8a" aria-label="图床">图床</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        activeElement = Array.from(elements).find((element) => {
+            if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                return element;
+            }
+        }) || activeElement
+
+        elements.forEach(element => {
+            const id = encodeURI(element.getAttribute('id')).toLowerCase();
+            if (element === activeElement){
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+            } else {
+                document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+            }
+        })
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        
+        <div class="post-content"><h1 id="hugo运行">hugo运行<a hidden class="anchor" aria-hidden="true" href="#hugo运行">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>hugo -F --cleanDestinationDir
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 本地预览</span>
+</span></span><span style="display:flex;"><span>hugo server
+</span></span></code></pre></div><p>参考链接：</p>
+<ul>
+<li>
+<p><a href="https://www.sulvblog.cn/">https://www.sulvblog.cn/</a></p>
+</li>
+<li>
+<p><a href="https://www.jianshu.com/p/fa95c0c1fdab">https://www.jianshu.com/p/fa95c0c1fdab</a></p>
+</li>
+<li>
+<p><a href="https://lishensuo.github.io/">https://lishensuo.github.io/</a></p>
+</li>
+<li>
+<p><a href="https://freeze.org.cn/page/7/#main">https://freeze.org.cn/page/7/#main</a>
+<a href="https://blog.csdn.net/qq_45975757/article/details/108923612">https://blog.csdn.net/qq_45975757/article/details/108923612</a></p>
+</li>
+<li>
+<p><a href="https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38">https://luckyu.com.cn/index.html?_sw-precache=b052c2fa6d5b2f1a059fb72907f20d38</a></p>
+</li>
+<li>
+<p><a href="https://blog.csdn.net/qq_45975757/article/details/108923612">https://blog.csdn.net/qq_45975757/article/details/108923612</a></p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>mongodb+srv://twikoo:zhuang738191@cluster0.dzagnuh.mongodb.net/?retryWrites<span style="color:#f92672">=</span>true&amp;w<span style="color:#f92672">=</span>majority
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;code&#34;</span>:100,<span style="color:#e6db74">&#34;message&#34;</span>:<span style="color:#e6db74">&#34;Twikoo 云函数运行正常，请参考 https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2 完成前端的配置&#34;</span>,<span style="color:#e6db74">&#34;version&#34;</span>:<span style="color:#e6db74">&#34;1.6.7&#34;</span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="托管">托管<a hidden class="anchor" aria-hidden="true" href="#托管">#</a></h2>
+<p>  为了提高访问速度托管在gitee上，迁移完成后将会同时托管到github中。   <br>
+  通过不同分支保存源码和静态网页内容，用br_hugo管理源码，master分支管理public      <br>
+  域名申请中&hellip;，个人域名审批流程真麻烦</p>
+<h1 id="hexo">hexo<a hidden class="anchor" aria-hidden="true" href="#hexo">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 清理缓存</span>
+</span></span><span style="display:flex;"><span>hexo clean
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 生成网页</span>
+</span></span><span style="display:flex;"><span>hexo g
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 启动本地服务端口</span>
+</span></span><span style="display:flex;"><span>hexo s
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 发布到github</span>
+</span></span><span style="display:flex;"><span>hexo d
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 强制推送备份源码分支</span>
+</span></span><span style="display:flex;"><span>git push -f origin backup
+</span></span></code></pre></div><h2 id="github-pages--hexo使用及配置">GitHub Pages + Hexo使用及配置<a hidden class="anchor" aria-hidden="true" href="#github-pages--hexo使用及配置">#</a></h2>
+<p>github上创建一个  username.github.io 的工程，username 必须为github的用户名</p>
+<h2 id="参考链接">参考链接<a hidden class="anchor" aria-hidden="true" href="#参考链接">#</a></h2>
+<p><a href="https://www.jianshu.com/p/f82c76b90336">https://www.jianshu.com/p/f82c76b90336</a></p>
+<p><a href="https://www.jianshu.com/p/5d0b31032d55">https://www.jianshu.com/p/5d0b31032d55</a></p>
+<p><a href="https://blog.csdn.net/weixin_41922289/article/details/95639870">https://blog.csdn.net/weixin_41922289/article/details/95639870</a></p>
+<p><a href="https://theme-next.org/">https://theme-next.org/</a></p>
+<p><a href="https://hexo.io/zh-cn/docs/">https://hexo.io/zh-cn/docs/</a></p>
+<p><a href="https://www.jianshu.com/p/3a05351a37dc">https://www.jianshu.com/p/3a05351a37dc</a></p>
+<p><a href="https://www.zhyong.cn/posts/ca02/">https://www.zhyong.cn/posts/ca02/</a></p>
+<p><a href="http://theme-next.iissnan.com/">http://theme-next.iissnan.com/</a></p>
+<p><a href="https://liam.page/">https://liam.page/</a></p>
+<p><a href="https://liam.page/en/">https://liam.page/en/</a></p>
+<h2 id="装饰">装饰<a hidden class="anchor" aria-hidden="true" href="#装饰">#</a></h2>
+<ul>
+<li>
+<p>Hexo博客添加helper-live2d动态模型插件
+<a href="https://blog.csdn.net/qq_30930805/article/details/">https://blog.csdn.net/qq_30930805/article/details/</a></p>
+</li>
+<li>
+<p>emojiall 图标可嵌入博客中
+<a href="https://www.emojiall.com/zh-hans/sub-categories/A15">https://www.emojiall.com/zh-hans/sub-categories/A15</a></p>
+</li>
+</ul>
+<h2 id="图床">图床<a hidden class="anchor" aria-hidden="true" href="#图床">#</a></h2>
+<blockquote>
+<p>vscode + PicGo + github</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 快捷方式</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 上传剪贴板中的图片到服务器。</span>
+</span></span><span style="display:flex;"><span>ctrl + alt + u
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 打开文件浏览器选择图片上传。</span>
+</span></span><span style="display:flex;"><span>ctrl + alt + e
+</span></span></code></pre></div><p>参考链接：
+<a href="https://blog.csdn.net/qq_44314954/article/details/122951033">https://blog.csdn.net/qq_44314954/article/details/122951033</a>
+<a href="https://blog.csdn.net/qq_44314954/article/details/122951033">https://blog.csdn.net/qq_44314954/article/details/122951033</a>
+<a href="https://www.jianshu.com/p/868b3a2028f8">https://www.jianshu.com/p/868b3a2028f8</a>
+<a href="https://zhuanlan.zhihu.com/p/131584831">https://zhuanlan.zhihu.com/p/131584831</a></p>
+
+
+        </div>
+        <div class="post-reward">
+            <div style="padding: 0 0 0 0; margin: 0 0 0 0; width: 100%; font-size:16px; text-align: center;">
+                <div id="QR" style="opacity: 0;">
+                    <div id="wechat" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="wechat_qr" src="https://liuz0123.gitee.io/zain/img/wechat_pay.jpg" alt="wechat_pay"></a>
+                        <p>微信</p>
+                    </div>
+                    <div id="alipay" style="display: inline-block">
+                        <a class="fancybox" rel="group">
+                            <img id="alipay_qr" src="https://liuz0123.gitee.io/zain/img/alipay.jpg" alt="alipay"></a>
+                        <p>支付宝</p>
+                    </div>
+                </div>
+                <button id="rewardButton"
+                        onclick="
+                    var qr = document.getElementById('QR');
+                    if (qr.style.opacity === '0') {
+                        qr.style.opacity='1';
+                    } else {
+                        qr.style.opacity='0'
+                    }"
+                >
+                    <span>🧧 鼓励</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://liuz0123.gitee.io/zain/en/posts/tech/android/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>Android</span>
+  </a>
+  <a class="next" href="https://liuz0123.gitee.io/zain/en/posts/blog/linuxtool/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>linuxTool</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+
+
+<div>
+    <div class="pagination__title">
+        <span class="pagination__title-h" style="font-size: 20px;">💬评论</span>
+        <hr />
+    </div>
+
+    <div id="tcomment"></div>
+
+    <script src="https://cdn.staticfile.org/twikoo/1.6.7/twikoo.all.min.js">
+    </script>
+    
+
+    
+
+    <script>
+        twikoo.init({
+            envId: "https://twikoo.js.org/quick-start.html#%E5%89%8D%E7%AB%AF%E9%83%A8%E7%BD%B2", 
+            el: "#tcomment",
+            lang: 'zh-CN',
+            region: 'ap-guangzhou', 
+            path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+            
+            
+            
+            
+            
+            
+            
+        });
+    </script>
+
+</div>
+</article>
+</main>
+
+
+<script async src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        2020-2023 
+        <a href="https://liuz0123.gitee.io/zain/en/" style="color:#939393;">zain&#39;s Blog</a>
+         All Rights Reserved
+    </span>
+
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;">备案号申请中</a>&nbsp;
+
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="填自己的公安图标链接" style="float:left;margin: 0px 5px 0px 0px;"/>
+             公网安备
+        </a>
+    </span>
+
+    <span id="busuanzi_container">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        总访客数: <span id="busuanzi_value_site_uv"></span>
+        总访问量: <span id="busuanzi_value_site_pv"></span>
+    </span>
+    
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '📄复制';
+
+        function copyingDone() {
+            copybutton.innerText = '👌🏻已复制!';
+            setTimeout(() => {
+                copybutton.innerText = '📄复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"zain's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                    '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {
+            }
+            ;
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
