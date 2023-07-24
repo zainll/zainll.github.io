@@ -82,6 +82,9 @@ https://www.androidauthority.com/arm-cortex-x4-explained-3328008/
 [从A76到A78——在变化中学习ARM微架构](https://mp.weixin.qq.com/s?__biz=MzAxMDM0NjExNA==&mid=2247487613&idx=1&sn=d43fdd559d7282e8441ae8a43c93cc48&chksm=9b509b90ac271286204870dd8e9f2af58b385e863317c7f41e7e5333474eab6f4ea4db32c57e&scene=21#wechat_redirect)
 
 
+[深入了解汽车系统级芯片SoC连载](https://www.zhihu.com/org/zuo-si-qi-che-yan-jiu/posts?page=13)
+
+
 
 # 网站
 
