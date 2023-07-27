@@ -43,6 +43,10 @@ https://cs.android.com/
 
 [Android APP应用工程师转Android Framework系统工程师(仅此一篇够了)](https://blog.51cto.com/u_15455614/5997341)
 
+[Android Tech And Perf](https://androidperformance.com/)
+systrace,
+
+
 # ptrace
 
 
@@ -132,7 +136,7 @@ sudo ~/bin/repo sync -j12
 
 [lineageOS编译aosp源码并刷入小米](https://zhuanlan.zhihu.com/p/570745179)
 
-
+s
 
 
 
