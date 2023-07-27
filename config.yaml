@@ -45,8 +45,8 @@ languages:
       #params:
         enabled: true
         title: (〃'▽'〃)
-        subtitle: 
-        # subtitle: "在路上，记录生活💦 <br/>学而时习之，不亦说乎？🐣<br/> 有朋自远方来，不亦乐乎？🌈"
+        #subtitle: 
+        subtitle: "在路上，记录生活💦 <br/>学而时习之，不亦说乎？🐣<br/> 有朋自远方来，不亦乐乎？🌈"
         # subtitle: "🧨学而时习之，不亦说乎？有朋自远方来，不亦乐乎？<br/>👇联系方式"
         # 有时焦虑迷茫、有时充满精力、有时沉静如水
         imageUrl: "img/Q.gif"
