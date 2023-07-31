@@ -212,3 +212,11 @@ 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
 
 
 
+/srv/workspace/doc/代码随想录知识星球精华-最强八股文（第四版）
+
+
+gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile="输出文件.pdf" -c .setpdfwrite -f "输入文件.pdf"
+代码随想录知识星球精华（第四版）最强八股文-C++篇.pdf
+
+gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile="/srv/workspace/doc/C++.pdf" -c .setpdfwrite -f "/srv/workspace/doc/mima/C++.pdf"
+
