@@ -196,7 +196,7 @@
       <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/en/posts/tech/dynamorio/</guid>
-      <description>DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # Android 编译配置 mkdir build cd build cmake \ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android=arm64.cmake \ -DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \ -DDR_COPY_TO_DEVICE=OFF \ -DCMAKE_BUILD_TYPE=Debug \ -DBUILD_TESTS=OFF \ -DBUILD_SAMPLES=ON \ -DBUILD_CLIENTS=ON \ ../ ../dynamorio /home/zain/tool/android-ndk-r21e/toolchains -DANDROID_TOOLCHAIN=/android_toolchain_using \ # AArch64 树</description>
+      <description>DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # Android 编译配置 mkdir build cd build cmake \ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android_arm64.cmake \ -DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \ -DDR_COPY_TO_DEVICE=OFF \ -DCMAKE_BUILD_TYPE=Debug \ -DBUILD_TESTS=OFF \ -DBUILD_SAMPLES=ON \ -DBUILD_CLIENTS=ON \ ../dynamorio cmake \ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android.cmake \ -DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \ -DDR_COPY_TO_DEVICE=OFF</description>
     </item>
     
     <item>
