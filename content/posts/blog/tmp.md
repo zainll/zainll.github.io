@@ -220,3 +220,151 @@ gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile="输出文件.pdf" -c .se
 
 gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile="/srv/workspace/doc/C++.pdf" -c .setpdfwrite -f "/srv/workspace/doc/mima/C++.pdf"
 
+
+cmake \
+-DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android_arm64.cmake \
+-DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains/llvm/prebuilt/linux-x86_64 \
+-DDR_COPY_TO_DEVICE=OFF \
+-DCMAKE_BUILD_TYPE=Debug \
+-DBUILD_TESTS=OFF \
+-DBUILD_SAMPLES=ON \
+-DBUILD_CLIENTS=ON \
+../dynamorio
+
+/home/zain/tool/android-ndk-r25c-linux/android-ndk-r25c/toolchains/llvm/prebuilt/linux-x86_64
+
+
+cmake \
+-DCMAKE_TOOLCHAIN_FILE=/srv/workspace/code/dynamorio/make/toolchain-android_arm64.cmake \
+-DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \
+-DDR_COPY_TO_DEVICE=OFF \
+-DCMAKE_BUILD_TYPE=Debug \
+-DBUILD_TESTS=OFF \
+-DBUILD_SAMPLES=ON \
+-DBUILD_CLIENTS=ON \
+../
+
+cmake \
+-DCMAKE_TOOLCHAIN_FILE=../dynamorio-master/make/toolchain-android_arm64.cmake \
+-DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r14b_21_64 \
+-DDR_COPY_TO_DEVICE=OFF \
+-DCMAKE_BUILD_TYPE=Release \
+-DBUILD_TESTS=OFF \
+-DBUILD_SAMPLES=ON \
+-DBUILD_CLIENTS=ON \
+../dynamorio-master
+
+cmake \
+-DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android_arm64.cmake \
+-DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r14b_21_64 \
+-DDR_COPY_TO_DEVICE=OFF \
+-DCMAKE_BUILD_TYPE=Release \
+-DBUILD_TESTS=OFF \
+-DBUILD_SAMPLES=ON \
+-DBUILD_CLIENTS=ON \
+../dynamorio
+
+
+
+toolchain-android
+
+cmake \
+-DCMAKE_TOOLCHAIN_FILE=../make/toolchain-android=arm64.cmake \
+-DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \
+-DDR_COPY_TO_DEVICE=OFF \
+-DCMAKE_BUILD_TYPE=Debug \
+-DBUILD_TESTS=OFF \
+-DBUILD_SAMPLES=ON \
+-DBUILD_CLIENTS=ON \
+../
+
+
+'''c
+
+添加文件
+/srv/workspace/code/DynamoRIO/dynamorio/make/toolchain-android_arm64.cmake
+
+if (NOT DEFINED TARGET_ABI)
+  set(TARGET_ABI "aarch64-linux-android")
+endif ()
+if (TARGET_ABI MATCHES "aarch64")
+  set(CMAKE_SYSTEM_PROCESSOR aarch64)
+endif ()
+
+
+
+dynamorio/core/unix/include/siginfo.h
+
+
+
+
+
+
+dynamorio/core/unix/os_exports.h
+
+删除
+#        define __WORDSIZE 32
+
+
+删除？
+#            error NYI
+#        else
+
+
+
+#ifndef _NSIG_BPW
+    #    define _NSIG_BPW 64
+
+
+
+#ifndef _NSIG_WORDS
+    #    define _NSIG_WORDS (MAX_SIGNUM / _NSIG_BPW)
+
+
+/srv/workspace/code/DynamoRIO/dynamorio-master/core/unix/module_elf.h
+
+#ifndef EM_RISCV
+#    define EM_RISCV 243
+#endif
+
+
+
+/srv/workspace/code/DynamoRIO/dynamorio-master/core/drlibc/drlibc_module_elf.c
+// ELF_ADDR
+ptr_uint_t
+module_get_text_section(app_pc file_map, size_t file_size)
+
+
+
+decode_fpimm8_half
+__fp16
+
+if (DR_HOST_AARCH64 AND NOT ANDROID)
+  set(HAVE_HALF_FLOAT ON)
+else ()
+  set(HAVE_HALF_FLOAT OFF)
+endif ()
+
+/srv/workspace/code/DynamoRIO/dynamorio-master/core/unix/signal_private.h
+# if !defined(ANDROID) || !defined(AARCH64)
+#ifdef LINUX
+typedef unsigned int old_sigset_t;
+#endif
+
+/srv/workspace/code/DynamoRIO/dynamorio-master/core/unix/signal_private.h
+libc_sigismember(const sigset_t *set, int _sig)
+#if defined(MACOS) || (defined(ANDROID) && defined(ARM))
+
+
+
+/srv/workspace/code/DynamoRIO/dynamorio-master/core/lib/globals_api.h
+elif defined(ARM_64) || defined(ANDROID)
+
+
+
+
+/srv/workspace/code/DynamoRIO/dynamorio-master/CMakeLists.txt
+set(WARN "-Wall -Werror -Wwrite-strings -Wvla -Wno-unused-function")
+-Wno-unused-function
+
+'''

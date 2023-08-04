@@ -51,14 +51,25 @@ https://dynamorio.org/page_building.html
 mkdir build
 cd build
 cmake \
--DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android=arm64.cmake \
+-DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android_arm64.cmake \
 -DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \
 -DDR_COPY_TO_DEVICE=OFF \
 -DCMAKE_BUILD_TYPE=Debug \
 -DBUILD_TESTS=OFF \
 -DBUILD_SAMPLES=ON \
 -DBUILD_CLIENTS=ON \
-../
+../dynamorio
+
+
+cmake \
+-DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android.cmake \
+-DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \
+-DDR_COPY_TO_DEVICE=OFF \
+-DCMAKE_BUILD_TYPE=Debug \
+-DBUILD_TESTS=OFF \
+-DBUILD_SAMPLES=ON \
+-DBUILD_CLIENTS=ON \
+../dynamorio
 
 
 ../dynamorio
