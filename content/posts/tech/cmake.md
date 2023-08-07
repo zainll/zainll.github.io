@@ -166,3 +166,6 @@ cmake --build . --config Release
 cmake
 https://ukabuer.me/blog/more-modern-cmake/
 Makefile
+
+Cmake 3.5 官网文档
+https://www.w3cschool.cn/doc_cmake_3_5/

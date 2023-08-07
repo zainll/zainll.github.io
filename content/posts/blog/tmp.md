@@ -256,7 +256,7 @@ cmake \
 
 cmake \
 -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android_arm64.cmake \
--DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r14b_21_64 \
+-DANDROID_TOOLCHAIN=/home/zain/tool/build_tool/android-ndk-r14b_21_64  \
 -DDR_COPY_TO_DEVICE=OFF \
 -DCMAKE_BUILD_TYPE=Release \
 -DBUILD_TESTS=OFF \
@@ -310,52 +310,68 @@ dynamorio/core/unix/os_exports.h
 #            error NYI
 #        else
 
-
-
+添加
 #ifndef _NSIG_BPW
     #    define _NSIG_BPW 64
 
-
-
+添加
 #ifndef _NSIG_WORDS
     #    define _NSIG_WORDS (MAX_SIGNUM / _NSIG_BPW)
 
 
 /srv/workspace/code/DynamoRIO/dynamorio-master/core/unix/module_elf.h
-
+define EM_AARCH64 183
 #ifndef EM_RISCV
 #    define EM_RISCV 243
 #endif
 
 
 
-/srv/workspace/code/DynamoRIO/dynamorio-master/core/drlibc/drlibc_module_elf.c
-// ELF_ADDR
+dynamorio/core/drlibc/drlibc_module_elf.c
+// ELF_ADDR 改为 ptr_uint_t
 ptr_uint_t
 module_get_text_section(app_pc file_map, size_t file_size)
 
 
-
+报错
 decode_fpimm8_half
 __fp16
-
+dynamorio/CMakeLists.txt
 if (DR_HOST_AARCH64 AND NOT ANDROID)
   set(HAVE_HALF_FLOAT ON)
 else ()
   set(HAVE_HALF_FLOAT OFF)
 endif ()
 
-/srv/workspace/code/DynamoRIO/dynamorio-master/core/unix/signal_private.h
-# if !defined(ANDROID) || !defined(AARCH64)
+dynamorio/core/ir/aarch64/codec.c
+变量未初始化
+uint enc_value = 0;
+
+
+dynamorio/core/string.c
+注释掉？
+#ifdef _STRING_H
+#    error "Don't include <string.h>"
+#endif
+
+dynamorio/core/unix/signal_private.h
+添加
 #ifdef LINUX
+# if !defined(ANDROID) || !defined(AARCH64)
 typedef unsigned int old_sigset_t;
 #endif
 
-/srv/workspace/code/DynamoRIO/dynamorio-master/core/unix/signal_private.h
+
+dynamorio/core/unix/signal_private.h
 libc_sigismember(const sigset_t *set, int _sig)
 #if defined(MACOS) || (defined(ANDROID) && defined(ARM))
 
 
+cp -rf /home/zain/tool/android-ndk-r14b/sources/cxx-stl/gnu-libstdc++/4.9/include/* ./
+
+dynamorio/core/unix/module_elf.c
+(ptr_uint_t *)
+privload_redirect_sym(pd, (ptr_uint_t *)r_addr, name)
 
 /srv/workspace/code/DynamoRIO/dynamorio-master/core/lib/globals_api.h
 elif defined(ARM_64) || defined(ANDROID)
@@ -366,5 +382,12 @@ elif defined(ARM_64) || defined(ANDROID)
 /srv/workspace/code/DynamoRIO/dynamorio-master/CMakeLists.txt
 set(WARN "-Wall -Werror -Wwrite-strings -Wvla -Wno-unused-function")
 -Wno-unused-function
+
+
+
+export CC=/home/zain/tool/build_tool/android-ndk-r14b_21_64/bin/aarch64-linux-android-gcc
+export LD=/home/zain/tool/build_tool/android-ndk-r14b_21_64/bin/aarch64-linux-android-ld
+export AR=/home/zain/tool/build_tool/android-ndk-r14b_21_64/bin/aarch64-linux-android-ar
+export RANLIB=/home/zain/tool/build_tool/android-ndk-r14b_21_64/bin/aarch64-linux-android-ranlib
 
 '''
