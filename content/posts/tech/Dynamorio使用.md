@@ -32,7 +32,7 @@ cover:
 
 # DynamoRIO官方
 
-https://dynamorio.org/  <brs>
+https://dynamorio.org/  <br>
 https://github.com/DynamoRIO/dynamorio
 
 ```sh
@@ -42,7 +42,7 @@ git clone https://github.com/DynamoRIO/dynamorio.git  --recursive
 ```
 
 
-## 编译
+# 编译
 - 注意wsl中需要root用户编译
 https://dynamorio.org/page_building.html
 
@@ -141,6 +141,10 @@ make -j12
 bin64/drrun -debug -loglevel 2 -- ls
 ./bin64/drrun -attach <pid> 
 ```
+
+
+# 使用教程
+
 
 # Dynamorio代码学习
 
