@@ -95,7 +95,16 @@
       <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/en/posts/tech/dynamorio/</guid>
-      <description>DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # Android 编译配置 mkdir build cd build cmake \ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android_arm64.cmake \ -DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \ -DDR_COPY_TO_DEVICE=OFF \ -DCMAKE_BUILD_TYPE=Debug \ -DBUILD_TESTS=OFF \ -DBUILD_SAMPLES=ON \ -DBUILD_CLIENTS=ON \ ../dynamorio cmake \ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android.cmake \ -DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \ -DDR_COPY_TO_DEVICE=OFF</description>
+      <description>Dynamorio代码学习 drrun _tmain // drrun入口 tools/drdeploy.c dr_inject_process_create // 创建注入子进程？ dr_inject_info_t *info fork_suspended_child // fork子进程 dr_inject_process_inject // 进程注入？ core/unix/injector.c switch (info-&amp;gt;method) { case INJECT_EARLY: return inject_early(info, library_path); // exec 执行？ execute_exec // 执行</description>
+    </item>
+    
+    <item>
+      <title>Dynamorio使用</title>
+      <link>https://liuz0123.gitee.io/zain/en/posts/tech/dynamorio%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/en/posts/tech/dynamorio%E4%BD%BF%E7%94%A8/</guid>
+      <description>DynamoRIO官方 https://dynamorio.org/ https://github.com/DynamoRIO/dynamorio git clone https://github.com/DynamoRIO/dynamorio.git --recursive 编译 注意wsl中需要root用户编译 https://dynamorio.org/page_building.html # Android 编译配置 mkdir build cd build cmake \ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android_arm64.cmake \ -DANDROID_TOOLCHAIN=/home/zain/tool/build_tool/android-ndk-r14b_21_64 \ -DDR_COPY_TO_DEVICE=OFF \ -DCMAKE_BUILD_TYPE=Release \ -DBUILD_TESTS=OFF \ -DBUILD_SAMPLES=ON \ -DBUILD_CLIENTS=ON \ ../dynamorio cmake \ -DCMAKE_TOOLCHAIN_FILE=../dynamorio/make/toolchain-android.cmake \ -DANDROID_TOOLCHAIN=/home/zain/tool/android-ndk-r21e/toolchains \ -DDR_COPY_TO_DEVICE=OFF</description>
     </item>
     
     <item>
