@@ -132,7 +132,11 @@ dynamorio_app_init_part_two_finalize
 
 
 
-- 学习链接
+- 参考学习链接
+
+[DynamoRIO源码分析——劫持进程](https://zhuanlan.zhihu.com/p/623819001)
+[DynamoRIO源码分析(二)--基本块(Basic Blocks)和跟踪 (trace) ](https://bbs.kanxue.com/thread-276890.htm)
+
 DynamoRIO进阶指南
 https://blog.csdn.net/oShuangYue12/article/details/109780166
 DynamoRIO的入门指南（Ubuntu）

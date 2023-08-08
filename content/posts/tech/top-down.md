@@ -39,4 +39,14 @@ https://ieeexplore.ieee.org/document/6844459
 
 
 
+[What is Performance Modeling? 【什么是性能建模】](https://zhuanlan.zhihu.com/p/374331876)
+[systemc](https://systemc.org/)
+[Recoding Infrastructure for SystemC (RISC)](https://www.cecs.uci.edu/~doemer/risc.html)
 
+[Android Tech && Perf](https://www.zhihu.com/column/gracker)
+
+[让CPU黑盒不再黑——【TMA_自顶向下的CPU架构性能瓶颈分析方法】（一）What & Why](https://zhuanlan.zhihu.com/p/60569271)
+[让CPU黑盒不再黑——【TMA_自顶向下的CPU架构性能瓶颈分析方法】（二）How](https://zhuanlan.zhihu.com/p/60940902)
+[让CPU黑盒不再黑——【TMA_自顶向下的CPU架构性能瓶颈分析方法】（三）Frontend](https://zhuanlan.zhihu.com/p/61015720)
+[让CPU黑盒不再黑——【TMA_自顶向下的CPU架构性能瓶颈分析方法】（四）Speculation](https://zhuanlan.zhihu.com/p/64529137?from_voters_page=true)
+[让CPU黑盒不再黑——【TMA_自顶向下的CPU架构性能瓶颈分析方法】（五）Retiring](https://blog.csdn.net/m0_54437879/article/details/131717509)
