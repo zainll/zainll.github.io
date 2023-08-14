@@ -96,6 +96,27 @@ https://6xyun.cn/article/169
 [App逆向 | 安卓环境搭建-LineageOS刷机指南](https://zhuanlan.zhihu.com/p/147299441?utm_id=0)
 
 
+lineageos20 树莓派4串口
+
+
+
+[Raspberry Pi OS上如何使用串口](https://yangpaopao.space/2023/04/25/raspberrypi_os%E4%B8%8A%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E4%B8%B2%E5%8F%A3/)
+[minicom的使用](http://www.pczh.cn/news/22131.html)
+[Ubuntu串口驱动以及串口调试工具使用详解](https://blog.csdn.net/flowerspring/article/details/128957910)
+
+
+
+
+
+```sh
+
+adb connect 192.168.18.128
+adb root
+adb remount
+
+
+```
+
 # Android APK
 
 https://apkcombo.com/zh/youtube/com.google.android.youtube/
@@ -144,6 +165,21 @@ s
 https://mirrors.tuna.tsinghua.edu.cn/help/git-repo/
 https://mirrors.tuna.tsinghua.edu.cn/help/lineageOS/
 
+
+
+# APP启动
+
+
+```sh
+# logcat 查看启动 Activity，微博为例
+logcat | grep "com.sina.weibo"
+# 启动
+am start com.sina.weibo/.SplashActivity
+# 带参数
+am start -W  com.sina.weibo/.SplashActivity
+# 停止
+am force-stop com.sina.weibo
+```
 
 
 
