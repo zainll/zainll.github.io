@@ -183,4 +183,19 @@ am force-stop com.sina.weibo
 
 
 
+# Android查看进程、线程信息
+
+
+```sh
+
+top
+
+ps -T -p 10791
+
+
+
+```
+
+
+[无需手机端安装应用，安卓投屏神器scrcpy使用教程](https://zhuanlan.zhihu.com/p/144566954?utm_id=0)
 
