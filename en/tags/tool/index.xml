@@ -6,7 +6,16 @@
     <description>Recent content in tool on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 05 May 2022 00:18:23 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/en/tags/tool/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 15 Aug 2023 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/en/tags/tool/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>perfetto</title>
+      <link>https://liuz0123.gitee.io/zain/en/posts/tech/perfetto/</link>
+      <pubDate>Tue, 15 Aug 2023 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/en/posts/tech/perfetto/</guid>
+      <description>perfetto perfetto UI perfetto 官网 perfetto 开源代码 python3 record_android_trace -c /home/zain/work/code/opentool/config.pbtx -o /home/zain/work/tmp/ buffers: { size_kb: 63488 fill_policy: RING_BUFFER } buffers: { size_kb: 20480 fill_policy: RING_BUFFER } buffers: { size_kb: 63488 fill_policy: RING_BUFFER } data_sources: { config { name: &amp;#34;android.packages_list&amp;#34; target_buffer: 1 } } data_sources: { config { name: &amp;#34;linux.process_stats&amp;#34; target_buffer: 1 process_stats_config { scan_all_processes_on_start: true proc_stats_poll_ms: 1000 } } } data_sources: { config { name:</description>
+    </item>
+    
     <item>
       <title>Android</title>
       <link>https://liuz0123.gitee.io/zain/en/posts/tech/android/</link>

@@ -2790,8 +2790,8 @@ echo "+cpu" > cgroup.subtree_control<br>mkdir multimedia   # 创建"multimedia"�
 </span></span><span style="display:flex;"><span><span style="color:#75715e">// preempt是否抢占，true抢占调度，false主动调度
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> __sched notrace <span style="color:#a6e22e">__schedule</span>(<span style="color:#66d9ef">bool</span> preempt)
 </span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#ae81ff">1.</span> <span style="color:#960050;background-color:#1e0010">调用</span>pick_next_task<span style="color:#960050;background-color:#1e0010">选择下一个进程</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#ae81ff">2.</span> <span style="color:#960050;background-color:#1e0010">调用</span>context_switch<span style="color:#960050;background-color:#1e0010">切换进程</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ae81ff">1.</span> <span style="color:#960050;background-color:#1e0010">调用</span>pick_next_task选择下一个进程
+</span></span><span style="display:flex;"><span>	<span style="color:#ae81ff">2.</span> <span style="color:#960050;background-color:#1e0010">调用</span>context_switch切换进程
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><h4 id="1选择下一个进程-函数pick_next_task">1.选择下一个进程 函数pick_next_task<a hidden class="anchor" aria-hidden="true" href="#1选择下一个进程-函数pick_next_task">#</a></h4>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// linux-5.10.102/kernel/sched/core.c
@@ -3714,7 +3714,7 @@ echo <pid> > browser/cgroup.procs      <br>
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> arg_start, arg_end;  <span style="color:#75715e">// 参数字符串起始地址和结束地址
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span> env_start, env_end;  <span style="color:#75715e">// 环境变量的起始地址和结束地址
 </span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> mm_struct <span style="color:#f92672">*</span>mm;  <span style="color:#75715e">// 进程mm指向一个内存描述符，内核线程mm为空指针
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> mm_struct<span style="color:#960050;background-color:#1e0010">　</span><span style="color:#f92672">*</span>active_mm;  <span style="color:#75715e">// 进程的active_mm和mm总是指向同一个内存描述符
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">struct</span> mm_struct　<span style="color:#f92672">*</span>active_mm;  <span style="color:#75715e">// 进程的active_mm和mm总是指向同一个内存描述符
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">// 内核线程的active_mm在没有运行时是空指针，在运行时指向从上一个进程借用的内存描述符
 </span></span></span></code></pre></div><p> 进程地址空间随机化：  <br>
  （1）进程描述符成员personality是否设置ADDR_NO_RANDOMIZE   <br>
@@ -8300,6 +8300,9 @@ VM_READ、VM_WRITE、VM_EXEC、VM_SHARED、VM_GROWSDOWN、VM_DONTEXPAND、VM_ACC
 </div>
 </article>
 </main>
+
+
+<script async src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
 
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>

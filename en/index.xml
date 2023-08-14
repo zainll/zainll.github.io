@@ -6,7 +6,7 @@
     <description>Recent content on zain&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 12 Jul 2023 00:21:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/en/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 15 Aug 2023 00:17:58 +0800</lastBuildDate><atom:link href="https://liuz0123.gitee.io/zain/en/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>代码随想录</title>
       <link>https://liuz0123.gitee.io/zain/en/posts/tech/%E4%BB%A3%E7%A0%81%E9%9A%8F%E6%83%B3%E5%BD%95/</link>
@@ -41,6 +41,15 @@
       
       <guid>https://liuz0123.gitee.io/zain/en/posts/tech/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/</guid>
       <description>&lt;h2 id=&#34;1-程序性能&#34;&gt;1 程序性能&lt;/h2&gt;</description>
+    </item>
+    
+    <item>
+      <title>perfetto</title>
+      <link>https://liuz0123.gitee.io/zain/en/posts/tech/perfetto/</link>
+      <pubDate>Tue, 15 Aug 2023 00:17:58 +0800</pubDate>
+      
+      <guid>https://liuz0123.gitee.io/zain/en/posts/tech/perfetto/</guid>
+      <description>perfetto perfetto UI perfetto 官网 perfetto 开源代码 python3 record_android_trace -c /home/zain/work/code/opentool/config.pbtx -o /home/zain/work/tmp/ buffers: { size_kb: 63488 fill_policy: RING_BUFFER } buffers: { size_kb: 20480 fill_policy: RING_BUFFER } buffers: { size_kb: 63488 fill_policy: RING_BUFFER } data_sources: { config { name: &amp;#34;android.packages_list&amp;#34; target_buffer: 1 } } data_sources: { config { name: &amp;#34;linux.process_stats&amp;#34; target_buffer: 1 process_stats_config { scan_all_processes_on_start: true proc_stats_poll_ms: 1000 } } } data_sources: { config { name:</description>
     </item>
     
     <item>
@@ -112,7 +121,7 @@
       <pubDate>Sat, 15 Oct 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/en/posts/tech/%E6%80%A7%E8%83%BD%E5%B7%A5%E5%85%B7/</guid>
-      <description>perf &amp;amp; simpleperf perf sudo apt install linux-tools-common sudo apt install linux-tools-generic sudo apt install linux-cloud-tools-generic perf --version https://blog.csdn.net/qq_44158431/article/details/125199825 https://www.cnblogs.com/limstorm/p/16334539.html simpleperf simpleperf README 开源代码 simpleperf 二进制 perfetto perfetto UI perfetto 官网 perfetto 开源代码</description>
+      <description>perf &amp;amp; simpleperf perf sudo apt install linux-tools-common sudo apt install linux-tools-generic sudo apt install linux-cloud-tools-generic perf --version https://blog.csdn.net/qq_44158431/article/details/125199825 https://www.cnblogs.com/limstorm/p/16334539.html simpleperf simpleperf README 开源代码 simpleperf 二进制</description>
     </item>
     
     <item>
