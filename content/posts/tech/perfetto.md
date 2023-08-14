@@ -44,7 +44,8 @@ cover:
 ```sh
 
 python3 record_android_trace -c /home/zain/work/code/opentool/config.pbtx   -o /home/zain/work/tmp/
-
+# --app 参数为何存在抓取前几秒空白
+python3 record_android_trace_startup.py -c /home/zain/work/code/opentool/config.pbtx   -o /home/zain/work/tmp/ --app "com.sina.weibo"
 
 ```
 
