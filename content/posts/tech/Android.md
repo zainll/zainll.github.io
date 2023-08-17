@@ -175,12 +175,14 @@ https://mirrors.tuna.tsinghua.edu.cn/help/lineageOS/
 logcat | grep "com.sina.weibo"
 # 启动
 am start com.sina.weibo/.SplashActivity
+am start com.happyelements.AndroidAnimal/com.happyelements.hellolua.MainActivity
 # 带参数
 am start -W  com.sina.weibo/.SplashActivity
 # 停止
 am force-stop com.sina.weibo
 ```
 
+[APP启动流程分析](https://dgrt.cn/a/2266877.html?action=onClick)
 
 
 # Android查看进程、线程信息
