@@ -49,7 +49,7 @@
       <pubDate>Sat, 15 Oct 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/en/posts/tech/%E6%80%A7%E8%83%BD%E5%B7%A5%E5%85%B7/</guid>
-      <description>perf &amp;amp; simpleperf perf sudo apt install linux-tools-common sudo apt install linux-tools-generic sudo apt install linux-cloud-tools-generic perf --version https://blog.csdn.net/qq_44158431/article/details/125199825 https://www.cnblogs.com/limstorm/p/16334539.html Linux perf tool https://cs.rice.edu/~la5/doc/ simpleperf simpleperf README 开源代码 simpleperf 二进制 android中如何查看某个线程的logcat # 抓取perf.data</description>
+      <description>perf &amp;amp; simpleperf perf sudo apt install linux-tools-common sudo apt install linux-tools-generic sudo apt install linux-cloud-tools-generic perf --version https://blog.csdn.net/qq_44158431/article/details/125199825 https://www.cnblogs.com/limstorm/p/16334539.html Linux perf tool https://cs.rice.edu/~la5/doc/ 一文看懂 Linux 性能分析｜perf 源码实现（超详细~） simpleperf simpleperf README 开源代码 simpleperf 二进制 android中如何查</description>
     </item>
     
     <item>
