@@ -49,7 +49,7 @@
       <pubDate>Sat, 15 Oct 2022 00:17:58 +0800</pubDate>
       
       <guid>https://liuz0123.gitee.io/zain/en/posts/tech/%E6%80%A7%E8%83%BD%E5%B7%A5%E5%85%B7/</guid>
-      <description>perf &amp;amp; simpleperf perf sudo apt install linux-tools-common sudo apt install linux-tools-generic sudo apt install linux-cloud-tools-generic perf --version https://blog.csdn.net/qq_44158431/article/details/125199825 https://www.cnblogs.com/limstorm/p/16334539.html Linux perf tool https://cs.rice.edu/~la5/doc/ 一文看懂 Linux 性能分析｜perf原理（超详细~） 一文看懂 Linux 性能分析｜perf 源码实现（超详细~）</description>
+      <description>perf &amp;amp; simpleperf perf sudo apt install linux-tools-common sudo apt install linux-tools-generic sudo apt install linux-cloud-tools-generic perf --version https://blog.csdn.net/qq_44158431/article/details/125199825 https://www.cnblogs.com/limstorm/p/16334539.html Linux性能分析工具合集之——perf（一）：命令介绍 Linux性能分析工具合集之——perf（二</description>
     </item>
     
     <item>
