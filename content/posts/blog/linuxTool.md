@@ -122,6 +122,10 @@ flameshot gui -c -p <path>
 
 [ubuntu/linux系统知识（14）ubuntu 搜狗输入法不见了，重启方法](https://blog.csdn.net/HandsomeHong/article/details/125669922)
 
+https://w1.v2free.top/auth/login
+
+https://go.runba.cyou/auth/login
+
 ## free
 
 ```sh

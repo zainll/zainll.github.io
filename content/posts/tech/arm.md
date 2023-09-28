@@ -34,6 +34,10 @@ cover:
 ARM
 https://www.arm.com/
 
+[Learn the Architecture Guides](https://www.arm.com/architecture/learn-the-architecture)
+
+
+
 
 Arm klein  a510
 
@@ -104,3 +108,9 @@ https://chipsandcheese.com/2022/05/29/graviton-3-first-impressions/
 
 
 [GoodCommand arm](https://goodcommand.readthedocs.io/zh_CN/latest/index.html)
+
+
+
+
+
+https://zhuanlan.zhihu.com/p/656244517
